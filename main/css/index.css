@@ -1,0 +1,359 @@
+@charset 'utf-8';
+
+body {
+	background-color: #fff;
+}
+#container {
+	position: relative;
+	width: 100%;
+	font-family: 'Righteous', cursive;
+}
+/*收藏夹*/
+#collects {
+	position: fixed;
+	right: 10px;
+	/*top: 20px;*/
+	top: 100px;
+	width: 80px;
+	height: 50px;
+	border-radius: 10px;
+	background-color: #000;
+	color: #fff;
+	font-size: 20px;
+	text-align: center;
+	line-height: 50px;
+	z-index: 20;
+}
+#collects:after {
+	content: "";
+	position: absolute;
+	top: -20px;
+	left: 35px;
+	width: 10px;
+	height: 20px;
+	border-radius: 7px;
+	background-color: #000;
+}
+/* header */
+#header {
+	box-sizing: border-box;
+	position: fixed;
+	width: 100%;
+	height: 80px;
+	padding-top: 20px;
+	background-color: #fff;
+	text-align: center;
+	z-index: 10;
+}
+.h-shadow {
+	box-shadow:0 5px 10px #ccc;
+}
+/*logo*/
+#header h2 {
+	position: absolute;
+	left: 50px;
+	border-bottom: 3px solid #000;
+	font-size: 18px;
+}
+ul#nav li:hover {
+	color: #000;
+}
+input[name="search"] {
+	border-bottom: 1px solid #ccc;
+	width: 100px;
+	color: #aaa;
+	transition-duration: .3s;
+}
+input[name="search"]:focus {
+	width: 120px;
+}
+/* 登录注册 */
+#regitLog {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.5);
+	font-size: 18px;
+	z-index: 20;
+}
+/* 注册 */
+.regit,
+.login {
+	position: absolute;
+	box-sizing: border-box;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 400px;
+	height: 400px;
+	padding: 30px;
+	margin: auto;
+	border-radius: 10px;
+	background-color: #fff;
+	text-align: center;
+}
+.regit {
+	display: none;
+	height: 460px;
+}
+.login {
+	height: 350px;
+}
+@media screen and (max-width: 400px) and (min-width: 315px) {
+	.regit,
+	.login {
+		width: 100%;
+	}
+}
+.regit h4,
+.login h4 {
+	margin-bottom: 20px;
+}
+.login h4 span {
+	font-size: 12px;
+	color: #aaa;
+}
+.login h4 span:first-child {
+	margin-left: 20px;
+}
+#regitLog i {
+	display: inline-block;
+	font-size: 30px;
+	vertical-align: middle;
+	margin-bottom: 30px;
+	margin-right: 20px;
+}
+#regitLog input:not([type="button"]):not([type="submit"]) {
+	display: inline-block;
+	width: 80%;
+	margin-bottom: 30px;
+	border-bottom: 1px solid #ccc;
+	vertical-align: middle;
+	font-size: 14px;
+	letter-spacing: 2px;
+	transition-duration: .3s;
+}
+#regitLog input:not([type="submit"]):not([type="button"]):focus {
+	border-color: #000;
+}
+#regitLog input[type="submit"] {
+	margin-right: 20px;
+}
+input[type="submit"],
+input[type="button"] {
+	width: 80px;
+	height: 30px;
+	border-radius: 5px;
+	background-color: #000;
+	color: #fff;
+	line-height: 30px;
+	transition-duration: .3s;
+	cursor: pointer;
+}
+input[type="submit"]:hover,
+input[type="button"]:hover {
+	background-color: #ccc;
+	color: #000;
+}
+/* 登录 */
+a{
+	color: #aaa;
+}
+a:hover {
+	color: #000;
+}
+/*content*/
+#content {
+	width: 100%;
+	/*height: 1000px;*/
+	padding-top: 80px;
+	padding-bottom: 80px;
+	background-color: #fff;
+}
+#canvas {
+	width: 100%;
+	height: 450px;
+	background-color: rgb(236,238,240);
+	overflow: hidden;
+}
+#canvas p {
+	font-size: 120px;
+	/*font-size: 10em;*/
+	font-weight: bold;
+	text-indent: 500px;
+	line-height: 450px;
+	white-space: nowrap;
+	color: #000;
+	text-shadow: -5px 7px 7px #ccc;
+	user-select: none;
+	animation-fill-time: both;
+	animation: contentPlay 20s infinite ;
+}
+@keyframes contentPlay {
+	from{
+		transfrom: translateX(0px);
+	}
+	to{
+		transform: translateX(-2900px);
+	}
+}
+/**/
+#content-center {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	flex-basis: 
+	width: 100%;
+	padding-top: 20px;
+	height: auto;
+}
+#content-center li{
+	width: 350px;
+	height: 350px;
+	margin-bottom: 20px;
+	/*background-color: rgb(242,245,248);*/
+}
+#content-center .img {
+	position: relative;
+	overflow: hidden;
+	width: 210px;
+	height: 210px;
+	border: 1px solid rgb(242,245,248);
+	margin: 20px auto;
+	border-radius: 50%;
+	background-color: #fff;
+}
+#content-center .img .cover{
+	overflow: hidden;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 210px;
+	height: 0;
+	margin: auto;
+	text-align: center;
+	background-color: rgba(0,0,0,.3);
+	border-radius:50%;
+	transition-duration: .2s;
+}
+#content-center .img .cover i {
+	font-size: 30px;
+	color: #000;
+	line-height: 210px;
+	text-shadow: 0 0 20px #fff;
+	transition-duration: .3s;
+}
+
+#content-center .img img{
+	width: 100%;
+}
+#content-center p,
+#content-center h3 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+@media screen and (min-width: 400px) and (max-width:800px) {
+	#content-center li{
+		width: 50%;
+		height: 300px;
+		background-color: rgb(242,245,248);
+	}	
+}
+/*footer*/
+#footer {
+	box-sizing: border-box;
+	width: 100%;
+	height: 200px;
+	padding: 20px 20px;
+	background-color: #000;
+	color: #fff;
+	font-family: "Microsoft Yahei", "Helvetica", "sans-serif";
+}
+#footer p{
+	margin-bottom: 10px;
+	line-height: 20px;
+	text-align: center;
+}
+#footer span {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+/*响应式前*/
+@media screen and (min-width: 800px){
+	ul#nav {
+		display: inline-block;
+		width: auto;
+		margin-top: 5px;
+	}
+	ul#nav li{
+		display: inline-block;
+		margin-right: 40px;
+		color: #aaa;
+		transition-duration: .2s;
+	}
+	ul#nav li:hover{
+		border-bottom: 1px solid #000;
+	}
+	#menu {
+		display: none;
+	}
+} 
+/*响应式后*/
+
+/*右边菜单键*/
+@media screen and (max-width: 800px){
+	#menu {
+		position: absolute;
+		top: 0;
+		right: 20px;
+		line-height: 80px;
+	}
+	i#menu{
+		font-size: 30px;
+		color: #aaa;
+	}
+	i#menu:hover {
+		color: #000;
+	}
+	ul#nav {
+		position: absolute;
+		right: 0;
+		top: 80px;
+		width: auto;
+		transform: translateX(160px);
+		transition-duration: .3s;
+	}
+	ul#nav li{
+		box-sizing: border-box;
+		display: block;
+		line-height: 50px;
+		padding: 0 20px;
+		color: #fff;
+		background-color: #aaa;
+		transition-duration: .2s;
+	}
+	ul#nav li:hover {
+		background-color: #fff;
+		color: #000;
+	}
+	ul#nav li a {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+		color: #fff;
+	}
+	ul#nav li a:hover {
+		color: #000;
+	}
+	/*收藏夹*/
+	#collects {
+		left: 0;
+	}
+}

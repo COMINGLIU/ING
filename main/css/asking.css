@@ -1,0 +1,22 @@
+@charset 'utf-8';
+body {
+  background-color: #fff;
+}
+#header h2 {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+/* content */
+#content {
+  width: 800px;
+  margin: auto;
+  font-size: 14px;
+  color: rgb(31,34,69);
+  /* background-color: #ccc; */
+}
+#content span {
+  font-weight: bold;
+  color: #000;
+}
