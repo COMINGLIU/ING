@@ -7,20 +7,25 @@
 	<link rel="stylesheet" type="text/css" href="commonCss/reset.css">
 	<link rel="stylesheet" type="text/css" href="commonCss/iconfont.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="shortcut icon" href="imgs/logo.ico">
 </head>
 <body>
 	<div id="container">
 		<!-- header -->
 		<div id="header">
+			<div id="searchBox">
+				<input type="text" name="search" autofocus="true">
+				<i class="iconfont icon-close-circle" id="searchCloseBtn"></i>
+			</div>
 			<h2>book-store</h2>
 			<ul id="nav">
-				<!-- <li><input type="text" name="search"><i class="iconfont icon-search"></i></li> -->
 				<li>HOME</li>
 				<li>STORES</li>
 				<li>ADD MY STORE<i class="iconfont icon-plus-circle"></i></li>
 				<li id="regitBtn">LOGIN</li>
 				<li><i class="iconfont icon-user"></i></li>
 				<li><a href="asking.html"><i class="iconfont icon-question-circle"></i></a></li>
+				<li id="searchBtnLi"><i class="iconfont icon-search" id="searchBtn"></i></li>
 			</ul>
 			<i class="iconfont icon-menu" id="menu"></i>
 		</div>
@@ -122,7 +127,7 @@
 			<p><span>设计者：<span>QPQ</p>
 			<p><span>备注：</span>如有志同道合者欢迎交流，联系方式：2876224574（qq）</p>
 			<p><span>其他：</span>该网站全由本人完成，如有bug或需要改进的地方望留下宝贵意见，感谢！</p>
-			<P><span>应用初衷：</span> 很多大学生的专业书籍在毕业离校之际都没法带走，可能有一些处理不了的直接就扔掉了，很大一部分造成了书籍的浪费，希望这个平台可以让二手专业书籍找到需要它的主人，同时方便自己也方便别人能更好的处理身边的二手书籍</P>
+			<P><span>设计初衷：</span> 很多大学生的专业书籍在毕业离校之际都没法带走，可能有一些处理不了的直接就扔掉了，很大一部分造成了书籍的浪费，希望这个平台可以让二手专业书籍找到需要它的主人，同时方便自己也方便别人能更好的处理身边的二手书籍</P>
 		</div>
 	</div>
 	<!-- 登录注册框 -->
@@ -134,7 +139,7 @@
 			<i class="iconfont icon-mail"></i><input type="email" name="email" value="" placeholder="email"><br>
 			<i class="iconfont icon-location"></i><input type="text" name="addr" value="" placeholder="college">
 			<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password">
-			<input type="submit" name="sub" value="ok"><input type="button" name="login" value="login" id="loginBtn">
+			<input type="submit" name="sub" value="ok"><input type="button" name="login" value="login" id="loginChange">
 		</div>
 		<div class="login">
 			<h4>login</h4>
@@ -143,9 +148,10 @@
 			<i class="iconfont icon-user"></i><input type="text" name="tel/email" value="" placeholder="username"><br>
 			<i class="iconfont icon-location"></i><input type="text" name="addr" value="" placeholder="college">
 			<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password">
-			<input type="submit" name="sub" value="ok"><input type="button" name="regit" value="regit" id="regitBtn">
+			<input type="submit" name="sub" value="ok"><input type="button" name="regit" value="regist" id="regitChange">
 		</div>
 	</div>
 </body>
+<script src="commonJs/module/sea.js"></script>
 <script src="js/index.js"></script>
 </html>

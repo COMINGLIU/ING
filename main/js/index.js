@@ -7,17 +7,25 @@
     value: Index
   })
   function Index() {
-    // 登录注册的事件委托
-    this.regitLogin();
-    // header部分的事件委托
-    this.headerEvent();
+    // 执行header模块里边的函数
+    this.getHeaderModule();
     // 控制收藏处
     this.controLike();
-    // 操作header的阴影
-    this.scrollHeader();
   }
   var obj = doc.querySelector('#canvas p');
   Index.prototype = {
+    // 获取header里边的方法
+    getHeaderModule: function(){
+      seajs.use('header.js',function(header){
+          var header = header;
+          // header部分的事件委托
+          header.headerEvent();
+          // 登录注册部分的事件委托 
+          header.regitLogin();
+          // 滚动操作header阴影
+          header.scrollHeader();
+      })
+    },
     DoEvent: {
       addEvent: function(element,type,handle){
         if(element.addEventListener){
@@ -44,61 +52,6 @@
           e.cancelBubble = true;
         }
       }
-    },
-    // 抓数据
-    init: function(){
-      console.log('init');
-    },
-    // header
-    headerEvent: function() {
-      var header = doc.getElementById('header'),
-          oNav = doc.getElementById('nav');
-      var count = 0;
-      this.DoEvent.addEvent(header,'click',function(e){
-        e = e||window.e;
-        var target = e.target||e.srcElement;
-        switch(target.id) {
-          case 'menu':
-            count++;
-            if(count%2!=0) {
-              oNav.style.transform = 'translateX(0)';
-            }else {
-              oNav.style.transform = 'translateX(160px)';
-            }
-            break;
-        }
-      })
-    },
-    // 注册登录
-    regitLogin: function() {
-      var oLogingBtn = doc.getElementById("regitBtn"),
-          oRegitLog = doc.getElementById("regitLog"),
-          oRegit = doc.getElementsByClassName('regit')[0],
-          oLogin = doc.getElementsByClassName('login')[0];
-      console.log(oLogingBtn);
-      this.DoEvent.addEvent(oLogingBtn,'click',function(e){
-        e = e||window.e;
-        Index.prototype.DoEvent.stop(e);
-        oRegitLog.style.display = "block";
-      })
-      this.DoEvent.addEvent(oRegitLog,'click',function(e){
-        e = e||window.e;
-        var target = e.target||e.srcElement;
-        Index.prototype.DoEvent.stop(e);
-        switch(target.id){
-          case 'regitLog':
-            oRegitLog.style.display = "none";
-            break;
-          case 'loginBtn':
-            oRegit.style.display = 'none';
-            oLogin.style.display = 'block';
-            break;
-          case 'regitBtn':
-            oRegit.style.display = 'block';
-            oLogin.style.display = 'none';
-            break;
-        }
-      })
     },
     aboutCanvas: function(){
       var oCanvas = doc.getElementById('canvas'),
@@ -129,7 +82,9 @@
               aCovers[i].style.height = '0';
             }
           })
-          Index.prototype.DoEvent.addEvent(oLike,'click',function(){
+          Index.prototype.DoEvent.addEvent(oLike,'click',function(e){
+            e=e||window.e;
+            Index.prototype.DoEvent.stop(e);
             oLike.style.cssText = "color: #fff;text-shadow: 0 0 20px #000;";
             like_n++;
             window.sessionStorage.getItem('likes',like_n);
@@ -145,19 +100,6 @@
           })
         })(i)
       }
-    },
-    // 滚动操作header
-    scrollHeader: function(){
-      var oHeader = doc.getElementById('header');
-      this.DoEvent.addEvent(window,'scroll',function(e){
-        e=e||window.e;
-        var oTop = document.documentElement.scrollTop;
-        if(oTop>200){
-          oHeader.className = 'h-shadow';
-        }else {
-          oHeader.className ='';
-        }
-      })
     },
     getStyle: function(obj,attr){
       return getComputedStyle?getComputedStyle(obj)[attr]:obj.currentStyle[attr];
