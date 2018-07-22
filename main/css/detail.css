@@ -1,1 +1,185 @@
 @charset 'utf-8';
+#content {
+	width: 100%;
+	padding-top: 80px;
+}
+/*书籍信息*/
+#bookinfo,
+#comments {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	width: 100%;
+	margin-top: 100px;
+	font-size: 0;
+}
+#comments {
+	height: 500px;
+}
+#comments li {
+	width: 40%;
+	height:　400px;
+	background-color: #fff;
+	font-size: 12px;
+}
+.chatRoom {
+	position: relative;
+}
+.chatRoom:before {
+	content: "";
+	position: absolute;
+	top: -100px;
+	left: calc(50% - 10px);
+	width: 20px;
+	height: 100px;
+	background-color: #000;
+	border-radius: 10px;
+}
+/**/
+#bookinfo li{
+	width: 40%;
+	height: 400px;
+	background-color: #fff;
+	font-size: 12px;
+}
+@media screen and (max-width: 800px) {
+	#comments li,
+	#bookinfo li {
+		width: 100%;
+		height: auto;
+	}
+	#comments {
+		margin-top: 0;
+	}
+	#comments li:nth-child(2) {
+		margin-top: 100px;
+	}
+	.comments-record:after {
+		right: 50px;
+	}
+}
+#bookinfo .bookimg {
+	position: relative;
+}
+.bookimg img {
+	width: 100%;
+	vertical-align: middle;
+}
+.bookimg div {
+	overflow: hidden;
+	width: 300px;
+	height: 300px;
+	margin: 20px auto;
+	border-radius: 50%;
+	background-color: #fff;
+}
+.bookimg em {
+	position: absolute;
+	top: -100px;	
+	left: calc(50% - 10px);
+	width:20px;
+	height: 100px;
+	border-radius: 10px;
+	background-color: #000;
+}
+/*书籍信息*/
+.bookins {
+	box-sizing: border-box;
+	padding: 30px 50px;
+	color: #000;
+	vertical-align: top;
+}
+.bookins h3 {
+	font-size: 18px;
+	text-align: center;
+	line-height: 30px;
+}
+.bookins p {
+	border-bottom: 1px solid #000;
+	line-height: 30px;
+	/*max-height: 90px;*/
+}
+.bookins i {
+	display: block;
+	margin-top: 20px;
+	font-size: 20px;
+	text-align: center;
+	vertical-align: middle;
+}
+.bookins i span {
+	font-size: 12px;
+	vertical-align: middle;
+}
+/*评论#comments*/
+.comments-record {
+	position: relative;
+	overflow: hidden;
+	overflow: auto;
+	box-sizing: border-box;
+	line-height: 30px;
+	padding: 50px;
+}
+.comments-record:after {
+	content: "+";
+	position: absolute;
+	top: -20px;
+	right: 50px;
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	background-color: #000;
+	color: #fff;
+	font-size: 40px;
+	text-align: center;
+	line-height: 70px;
+}
+/*相关书籍*/
+#relaBooks {
+	position: relative;
+	width: 100%;
+	height: 400px;
+	margin-top: 100px;
+	background-color: #fff;
+}
+#relaBooks h3 {
+	text-align: center;
+	font-size: 18px;
+	line-height: 100px;
+}
+#relaBooks-box {
+	overflow: auto;
+	width: 90%;
+	margin: auto;
+	height:　300px;
+	/*padding: 0 50px;*/
+	/*border: 1px solid #000;*/
+}
+#relaBooks-box ul {
+	width: 2000px;
+	height: 240px;
+}
+#relaBooks ul li {
+	overflow: hidden;
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	margin-right: 30px;
+	background-color: #fff;
+}
+#relaBooks ul li p {
+	font-size: 10px;
+	text-align: center;
+	line-height: 50px;
+}
+#relaBooks ul li img {
+	width: 100%;
+}
+/**/
+#footer {
+	width: 100%;
+	height: 200px;
+	margin-top: 20px;
+	background-color: #fff;
+}
+
+
