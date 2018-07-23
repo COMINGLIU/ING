@@ -17,7 +17,7 @@
     // 获取header里边的方法
     getHeaderModule: function(){
       seajs.use('header.js',function(header){
-          var header = header;
+          console.log(header);          
           // header部分的事件委托
           header.headerEvent();
           // 登录注册部分的事件委托 

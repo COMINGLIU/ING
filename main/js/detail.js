@@ -16,6 +16,12 @@
 		getHeaderModule: function(){
 			seajs.use('header.js',function(header){
 				console.log(header);
+				// header部分的事件委托
+		        header.headerEvent();
+		        // 登录注册部分的事件委托 
+		        header.regitLogin();
+		        // 滚动操作header阴影
+		        header.scrollHeader();
 			})
 		},
 		getDoEventModule: function(){

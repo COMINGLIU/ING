@@ -8,11 +8,11 @@ define(function(require,exports,module){
 	  })
 	  function Header() {
 	    // 登录注册的事件委托
-	    this.regitLogin();
+	    // this.regitLogin();
 	    // header部分的事件委托
-	    this.headerEvent();
+	    // this.headerEvent();
 	    // 操作header的阴影
-	    this.scrollHeader();
+	    // this.scrollHeader();
 	  }
 	  var obj = doc.querySelector('#canvas p');
 	  Header.prototype = {
@@ -59,14 +59,21 @@ define(function(require,exports,module){
 	            count++;
 	            if(count%2!=0) {
 	              oNav.style.transform = 'translateX(0)';
+	              target.className = "iconfont icon-pause";
 	            }else {
 	              oNav.style.transform = 'translateX(100%)';
+	              target.className = "iconfont icon-menu";
 	            }
 	            break;
 	          case 'searchBtnLi':
 	          case 'searchBtn':
 	            oSearchBox.style.height = "80px";
-	            oSearchBox.style.boxShadow = "0 0 10px #000"
+		        oSearchBox.style.boxShadow = "0 0 10px #000";
+	            if(Header.prototype.getStyle(oNav,'right')=="0px") 	{
+	              oNav.style.transform = 'translateX(100%)';	
+	              count++;
+	            }
+	            doc.getElementById("menu").className = "iconfont icon-menu";
 	            break;
 	          case 'searchCloseBtn':
 	            oSearchBox.style.height = "0";
@@ -122,6 +129,9 @@ define(function(require,exports,module){
 	          oHeader.className ='';
 	        }
 	      })
+	    },
+	    getStyle: function(obj,attr) {
+	    	return getComputedStyle?getComputedStyle(obj)[attr]:obj.currentStyle[attr];
 	    }
 	  };
 	  var index = new Header();

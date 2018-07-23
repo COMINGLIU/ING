@@ -23,7 +23,6 @@ html,body {
 	height: 100%;
 }
 body {
-    background-color: rgb(236,238,240);
     font-family: 'Microsoft YaHei';
     font-size: 12px;
     -webkit-tap-highlight-color:transparent;
