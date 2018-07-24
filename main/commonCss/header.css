@@ -10,6 +10,13 @@
 	text-align: center;
 	z-index: 10;
 }
+/*logo*/
+#header h2 {
+	position: absolute;
+	left: 50px;
+	border-bottom: 3px solid #000;
+	font-size: 18px;
+}
 .h-shadow {
 	box-shadow:0 5px 10px #ccc;
 }
@@ -47,13 +54,6 @@
 }
 #searchBox i:hover {
 	transform: rotate(180deg);
-}
-/*logo*/
-#header h2 {
-	position: absolute;
-	left: 50px;
-	border-bottom: 3px solid #000;
-	font-size: 18px;
 }
 ul#nav li:hover {
 	color: #000;

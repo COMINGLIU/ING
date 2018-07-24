@@ -1,0 +1,192 @@
+@charset 'utf-8';
+body {
+
+}
+#container {
+	width: 100%;
+	/*height: 100%;*/
+}
+#header {
+	position: fixed;
+	box-sizing: border-box;
+	width: 100%;
+	height: 80px;
+	padding-top: 20px;
+	/*box-shadow: 0 0 10px #ccc;*/
+	border-bottom: 4px solid #000;
+	background-color: #fff;
+	text-align: center;
+	z-index: 10;
+}
+#logo {
+	position: absolute;
+	left: 50px;
+	border-bottom: 3px solid #000;
+	font-size: 18px;
+}
+/**/
+#content {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	height: 700px;
+	padding-top: 80px;
+}
+#content ul {
+	width: 200%;
+	font-size: 0;
+	transition-duration: .3s;
+}
+#content ul li {
+	height: 900px;
+	width: 50%;
+	display: inline-block;
+	vertical-align: middle;
+	background-color: #fff;
+}
+/*下面这个就是#userNav*/
+#userNav {
+	position: fixed;
+	top: 80px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 300px;
+	height: 900px;
+	border-left: 300px solid #fff;
+	background-color: #000;
+	color: #fff;
+	perspective: 1000px;
+	transition-duration: .5s;
+}
+#userNav p{
+	position: absolute;
+	left: -50px;
+	width: 350px;
+	font-size: 20px;
+	color: #fff;
+	text-align: center;
+	line-height: 100px;
+	transform-style: preserve-3d;
+	transform-origin: right;
+	transform: rotateZ(-30deg) rotateY(-10deg);
+	transition-duration: .3s;
+}
+#userNav p:nth-child(2) {
+	top: 100px;
+}
+#userNav p:hover {
+	transform: rotateZ(-30deg) rotateY(0);
+}
+/*infoModi*/
+#infoModi {
+	box-sizing: border-box;
+	font-size: 12px;
+	padding-right: 300px;
+}
+#infoModi h3 {
+	text-align: center;
+	background: #fff;
+	margin-top: 50px;
+	margin-bottom: 30px;
+}
+#infoModi h3 i {
+	font-size: 60px;
+}
+#infoModi p {
+	height: 50px;
+	/*margin-top: 50px;*/
+	text-align: center;
+	background-color: #fff;
+}
+#infoModi span {
+	display: inline-block;
+	width: 60px;
+	margin-right: 30px;
+	text-align: left;
+	vertical-align: middle;
+}
+#infoModi input {
+	width: 200px;
+	border-bottom: 1px solid #ccc;
+	background-color: transparent;
+	vertical-align: middle;
+	cursor: pointer;
+}
+#infoModi .reset {
+ 	text-align: center;
+}
+#infoModi .reset i {
+	margin-right: 20px;
+}
+#infoModi .reset i:hover {
+	color: #aaa;
+}
+#infoModi .reset button {
+	display: none;
+	margin-right: 20px;
+	background-color: transparent;
+	cursor: pointer;
+}
+#infoModi .reset button:hover {
+	color: #aaa;
+	text-decoration: underline;
+}
+/**/
+#welcome {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 600px;
+	height: 400px;
+	margin: auto;
+	background-color: #000;
+	color: #fff;
+	transition: .5s;
+}
+#welcome h3 {
+	position: relative;
+	text-align: center;
+	margin-top: 150px;
+	font-size: 20px;
+}
+#welcome h3 i {
+	position: absolute;
+	top: 30px;
+	left: 50%;
+	border-bottom: 1px solid #fff;
+	font-size: 12px;
+	font-weight: normal;
+	transition-duration: .3s;
+}
+/*响应*/
+@media screen and (max-width: 800px) and (min-width: 450px){
+	#welcome {
+		width: 400px;
+		height: 300px;
+	}
+	#welcome h3 {
+		margin-top: 130px;
+	}
+}
+@media screen and (max-width: 390px) and (min-width: 380px) {
+	#welcome {
+		width: 350px;
+		height: 120px;
+	}
+	#welcome h3 {
+		margin-top: 130px;
+	}
+}
+@media screen and (max-width: 450px) {
+	#welcome {
+		width: 300px;
+		height: 150px;
+	}
+	#welcome h3 {
+		margin-top: 50px;
+	}
+}

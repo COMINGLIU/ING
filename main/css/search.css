@@ -1,5 +1,8 @@
 @charset 'utf-8';
 /*searchBox*/
+body {
+	background-color: rgb(236,238,240);
+}
 #container {
 
 }
@@ -37,6 +40,7 @@
 	display: inline-block;
 	margin-right: 20px;
 	margin-bottom: 20px;
+
 	line-height: 40px;
 	cursor: pointer;
 }
@@ -63,6 +67,7 @@
 	box-shadow: 0 0 10px #ccc;
 	margin-right: 20px;
 	margin-bottom: 40px;
+	background-color: #fff;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
