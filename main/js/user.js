@@ -6,6 +6,8 @@
 		this.welPage();
 		// 控制导航
 		this.controlNav();
+		// 打开导航
+		this.openNav();
 		// 
 		this.modEvent();
 	}
@@ -45,6 +47,22 @@
 		welPage: function(){
 			var oWelBtn = doc.querySelector("#welcome i"),
 				oWelPage = doc.getElementById("welcome");
+			var oWelContent = [
+				"你来啦",
+				"我等你好久了",
+				"welcome to the page",
+				"没有什么能够阻挡",
+				"你对自由的向往",
+				"天马行空的微笑",
+				"你的笑了无牵挂",
+				"欢迎欢迎，热烈欢迎",
+				"就知道你会点进来",
+				"想知道下一句吗",
+				"哈哈，就不告诉你",
+			];
+			// var key = Math.floor(Math.random()*oWelContent.length);
+			// console.log(key);
+			// oWelBtn.innerHTML = oWelContent[key];
 			this.doEvent.addEvent(oWelBtn,'click',function(){
 				oWelPage.style.height = '0';
 			})
@@ -72,6 +90,44 @@
 				oUl.style.transform = 'translate(-50%)';
 				oNav.style.right = 'calc( 100% - 300px)';
 				oNav.style.border = "0";
+			})
+		},
+		// 打开导航
+		openNav: function(){
+			var oHeader = doc.getElementById("header"),
+				oNavBtn = doc.getElementById("user-menu"),
+				oNavBtnI = doc.getElementById("user-menu"),
+				oMenu = doc.getElementById("menuUl"),
+				oUl = doc.querySelector("#content>ul"),
+				count = 0;
+			this.doEvent.addEvent(oHeader,'click',function(e){
+				e = e||window.e;
+				var target = e.target||e.srcElement;
+				console.log(target);	
+				switch(target.id){
+					case 'user-menu':
+						count++;
+						if(count%2==1){
+							oNavBtnI.className = 'iconfont icon-guanbi';
+							oMenu.style.transform = "translate(0)";
+						}else {
+							oNavBtnI.className = 'iconfont icon-menu';
+							oMenu.style.transform = "translate(100%)";
+						}
+					break;
+					case 'resetInfo-li':
+						oUl.style.transform = 'translate(0)';
+						oNavBtnI.className = 'iconfont icon-menu';
+						oMenu.style.transform = "translate(100%)";
+						count++;
+					break;
+					case 'collects-li':
+						oUl.style.transform = 'translate(-50%)';
+						oNavBtnI.className = 'iconfont icon-menu';
+						oMenu.style.transform = "translate(100%)";
+						count++;
+					break;
+				}
 			})
 		},
 		//左侧个人信息 
