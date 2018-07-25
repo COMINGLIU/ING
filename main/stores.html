@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0,minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="commonCss/reset.css">
+	<link rel="stylesheet" type="text/css" href="commonCss/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="commonCss/header.css">
+	<link rel="stylesheet" type="text/css" href="commonCss/addStore.css">
+	<link rel="stylesheet" type="text/css" href="css/stores.css">
+	<link rel="shortcut icon" href="imgs/logo.ico">
+	<title>stores</title>
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<div id="searchBox">
+				<input type="text" name="search" autofocus="true">
+				<i class="iconfont icon-guanbi" id="searchCloseBtn"></i>
+			</div>
+			<h2>book-store</h2>
+			<ul id="nav">
+				<li>HOME</li>
+				<li>STORES</li>
+				<li id="addStoreBtn">ADD MY STORE<i class="iconfont icon-plus-circle"></i></li>
+				<li id="regitBtn">LOGIN</li>
+				<li><i class="iconfont icon-user"></i></li>
+				<li><a href="asking.html"><i class="iconfont icon-question-circle"></i></a></li>
+				<li id="searchBtnLi"><i class="iconfont icon-search" id="searchBtn"></i></li>
+			</ul>
+			<i class="iconfont icon-menu" id="menu"></i>
+		</div>
+		<div id="content">
+			<ul id="store-list">
+				<li>
+					<div class="store-info">
+						<div class="store-img">
+							<img src="imgs/5.jpg">
+						</div>
+						<h3 class="store-name">小姜图书</h3>
+					</div>
+					<p class="store-time">2018.05.06</p>
+				</li>
+				<li>
+					<div class="store-info">
+						<div class="store-img">
+							<img src="imgs/5.jpg">
+						</div>
+						<h3 class="store-name">小姜图书</h3>
+					</div>
+					<p class="store-time">2018.05.06</p>
+				</li>
+				<li>
+					<div class="store-info">
+						<div class="store-img">
+							<img src="imgs/5.jpg">
+						</div>
+						<h3 class="store-name">小姜图书</h3>
+					</div>
+					<p class="store-time">2018.05.06</p>
+				</li>
+				<li>
+					<div class="store-info">
+						<div class="store-img">
+							<img src="imgs/5.jpg">
+						</div>
+						<h3 class="store-name">小姜图书</h3>
+					</div>
+					<p class="store-time">2018.05.06</p>
+				</li>
+				<li>
+					<div class="store-info">
+						<div class="store-img">
+							<img src="imgs/5.jpg">
+						</div>
+						<h3 class="store-name">小姜图书</h3>
+					</div>
+					<p class="store-time">2018.05.06</p>
+				</li>
+			</ul>
+		</div>
+		<div id="footer"></div>
+	</div>
+	<!-- 登录注册框 -->
+	<div id="regitLog">
+		<div class="regit">
+			<h4>regist</h4>
+			<i class="iconfont icon-user"></i><input type="text" name="username" value="" placeholder="username"><br>
+			<i class="iconfont icon-phone"></i><input type="tel" name="tel" value="" placeholder="tel"><br>
+			<i class="iconfont icon-mail"></i><input type="email" name="email" value="" placeholder="email"><br>
+			<i class="iconfont icon-location"></i><input type="text" name="addr" value="" placeholder="college">
+			<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password">
+			<input type="submit" name="sub" value="ok"><input type="button" name="login" value="login" id="loginChange">
+		</div>
+		<div class="login">
+			<h4>login</h4>
+			<!-- <i class="iconfont icon-phone"></i><input type="tel" name="tel" value="" placeholder="tel"><br>
+			<i class="iconfont icon-mail"></i><input type="email" name="email" value="" placeholder="email"><br> -->
+			<i class="iconfont icon-user"></i><input type="text" name="tel/email" value="" placeholder="username"><br>
+			<i class="iconfont icon-location"></i><input type="text" name="addr" value="" placeholder="college">
+			<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password">
+			<input type="submit" name="sub" value="ok"><input type="button" name="regit" value="regist" id="regitChange">
+		</div>
+	</div>
+	<div id="add-store">
+		<ul>
+			<i class="iconfont icon-guanbi" id="addStoreCloseBtn"></i>
+			<li class="add-img">
+				<div>
+					<img src="">
+					<input type="file" name="img" id="imgup">
+					<i class="iconfont icon-smile"></i>
+				</div>
+			</li>
+			<li>
+				<span>小店名：</span>
+				<input type="text" name="storeName" placeholder="">
+			</li>
+			<li>
+				<span>小店描述：</span>
+				<textarea cols="" rows="" placeholder=""></textarea>
+			</li>
+			<li>
+				<button>提交</button>
+				<button>跳转去看看</button>
+			</li>
+		</ul>
+	</div>
+
+	<script src="commonJs/module/sea.js"></script>
+	<script src="js/stores.js"></script>
+</body>
+</html>

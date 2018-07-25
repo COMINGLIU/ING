@@ -11,6 +11,8 @@
     this.getHeaderModule();
     // 控制收藏处
     this.controLike();
+    // 获取add-store处的方法并执行
+    this.getAddStoreModule();
   }
   var obj = doc.querySelector('#canvas p');
   Index.prototype = {
@@ -26,6 +28,13 @@
           header.scrollHeader();
       })
     },
+    // 获取add-store方法并执行
+    getAddStoreModule: function(){
+      seajs.use('addStore.js',function(ADDSTORE){ 
+        console.log(ADDSTORE);
+      })
+    },
+    // 元素事件
     DoEvent: {
       addEvent: function(element,type,handle){
         if(element.addEventListener){
@@ -65,6 +74,7 @@
         oBubble.style.top = (e.clientY-110) + 'px';
       })
     },
+    // 控制收藏box
     controLike: function(){
       var aLis = doc.getElementById("content-center").getElementsByTagName("li");
       var aCovers = doc.getElementsByClassName("cover");

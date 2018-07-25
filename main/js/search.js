@@ -5,6 +5,8 @@
 		this.getHeaderModule();
 		// 获取ajax模块
 		this.getAjaxModule();
+		// 获取add-store模块方法
+		this.getAddStoreModule();
 	}
 	Object.defineProperty(Search.prototype,'constructor',{
 		enumerable: false,
@@ -26,7 +28,9 @@
 		        function headerEvent(){
 		        	var oHeader = doc.getElementById('header'),
 			        oNav = doc.getElementById('nav'),
-			        oSearchBox = doc.getElementById("searchBox");
+			        oSearchBox = doc.getElementById("searchBox"),
+			        oAddStore = doc.getElementById("add-store"),
+	          		oMenu = doc.getElementById("menu");
 			        var count = 0;
 			        HEADER.DoEvent.addEvent(oHeader,'click',function(e){
 			        	e = e||window.e;
@@ -56,15 +60,29 @@
 						    case 'searchCloseBtn':
 						  	    oSearchBox.style.height = "0";
 						    break;
+						    case 'addStoreBtn':
+					           	oAddStore.style.height = "100%";
+					           	if(Search.prototype.getStyle(oMenu,"display")=="none"){
+						            count++;
+					           	}
+					        break;
 						}
 					})
 		        }
 		    })
 		},
+		getAddStoreModule: function(){
+			seajs.use('addStore.js',function(ADDSTORE){
+				console.log(ADDSTORE);
+			})
+		},
 		getAjaxModule: function(){
 			seajs.use('ajax.js',function(ajax){
 
 			})
+		},
+		getStyle: function(obj,attr){
+			return getComputedStyle?getComputedStyle(obj)[attr]:obj.currentStyle[attr];
 		}
 	};
 	var search = new Search();

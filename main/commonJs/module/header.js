@@ -47,7 +47,9 @@ define(function(require,exports,module){
 	    headerEvent: function() {
 	      var header = doc.getElementById('header'),
 	          oNav = doc.getElementById('nav'),
-	          oSearchBox = doc.getElementById("searchBox");
+	          oSearchBox = doc.getElementById("searchBox"),
+	          oAddStore = doc.getElementById("add-store"),
+	          oMenu = doc.getElementById("menu");
 	      var count = 0;
 	      this.DoEvent.addEvent(header,'click',function(e){
 	        e = e||window.e;
@@ -78,6 +80,12 @@ define(function(require,exports,module){
 	          case 'searchCloseBtn':
 	            oSearchBox.style.height = "0";
 	            break;
+	          case 'addStoreBtn':
+	           	oAddStore.style.height = "100%";
+	           	if(Header.prototype.getStyle(oMenu,"display")=="none"){
+		            count++;
+	           	}
+	        	break;
 	        }
 	      })
 	    },

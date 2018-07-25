@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="commonCss/reset.css">
 	<link rel="stylesheet" type="text/css" href="commonCss/iconfont.css">
 	<link rel="stylesheet" type="text/css" href="commonCss/header.css">
+	<link rel="stylesheet" type="text/css" href="commonCss/addStore.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 	<link rel="shortcut icon" href="imgs/logo.ico">
 </head>
@@ -22,7 +23,7 @@
 			<ul id="nav">
 				<li>HOME</li>
 				<li>STORES</li>
-				<li>ADD MY STORE<i class="iconfont icon-plus-circle"></i></li>
+				<li id="addStoreBtn">ADD MY STORE<i class="iconfont icon-plus-circle"></i></li>
 				<li id="regitBtn">LOGIN</li>
 				<li><i class="iconfont icon-user"></i></li>
 				<li><a href="asking.html"><i class="iconfont icon-question-circle"></i></a></li>
@@ -151,6 +152,30 @@
 			<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password">
 			<input type="submit" name="sub" value="ok"><input type="button" name="regit" value="regist" id="regitChange">
 		</div>
+	</div>
+	<div id="add-store">
+		<ul>
+			<i class="iconfont icon-guanbi" id="addStoreCloseBtn"></i>
+			<li class="add-img">
+				<div>
+					<img src="">
+					<input type="file" name="img" id="imgup">
+					<i class="iconfont icon-smile"></i>
+				</div>
+			</li>
+			<li>
+				<span>小店名：</span>
+				<input type="text" name="storeName" placeholder="">
+			</li>
+			<li>
+				<span>小店描述：</span>
+				<textarea cols="" rows="" placeholder=""></textarea>
+			</li>
+			<li>
+				<button>提交</button>
+				<button>跳转去看看</button>
+			</li>
+		</ul>
 	</div>
 </body>
 <script src="commonJs/module/sea.js"></script>

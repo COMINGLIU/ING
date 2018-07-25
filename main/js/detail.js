@@ -5,8 +5,8 @@
 		this.getHeaderModule();
 		// 获取DoEventModule模块方法并执行
 		this.getDoEventModule();
-		// 获取ajax模块方法
-		// this.getAjaxModule();
+		// 获取add-store模块方法
+		this.getAddStore();
 	}
 	Object.defineProperty(Detail.prototype,'constructor',{
 		enumerable: false,
@@ -27,6 +27,11 @@
 		getDoEventModule: function(){
 			seajs.use('doEvent.js',function(doEvent){
 				console.log(doEvent);
+			})
+		},
+		getAddStore: function(){
+			seajs.use('addStore.js',function(ADDSTORE){
+				console.log(ADDSTORE);
 			})
 		},
 		getAjaxModule: function(){

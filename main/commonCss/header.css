@@ -55,9 +55,6 @@
 #searchBox i:hover {
 	transform: rotate(180deg);
 }
-ul#nav li:hover {
-	color: #000;
-}
 /* 登录注册 */
 #regitLog {
 	position: fixed;
@@ -161,6 +158,7 @@ a{
 a:hover {
 	color: #000;
 }
+
 /*响应式前*/
 @media screen and (min-width: 800px){
 	ul#nav {
@@ -217,6 +215,7 @@ a:hover {
 	ul#nav li:hover {
 		background-color: #000;
 		color: #fff;
+		transform: scale(1.5);
 	}
 	ul#nav li a {
 		display: inline-block;
