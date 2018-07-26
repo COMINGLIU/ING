@@ -1,8 +1,5 @@
 @charset 'utf-8';
 /*searchBox*/
-body {
-	background-color: rgb(236,238,240);
-}
 #container {
 
 }
@@ -40,7 +37,6 @@ body {
 	display: inline-block;
 	margin-right: 20px;
 	margin-bottom: 20px;
-
 	line-height: 40px;
 	cursor: pointer;
 }
@@ -72,6 +68,9 @@ body {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+#content .books li a {
+	color: #000;
+}
 #content .books div {
 	overflow: hidden;
 	width: 200px;
@@ -90,49 +89,23 @@ body {
 i.icon-heart-fill {
 	box-sizing: border-box;
 	position: absolute;
-	top: 20px;
+	top: 80px;
+	left: 0;
 	right: 0;
 	width: 40px;
 	height: 40px;
+	margin: auto;
 	border-radius: 50%;
 	background-color: rgba(255,255,255,.7);
 	font-size: 26px;
 	text-align: center;
 	line-height: 45px;
 	cursor: pointer;
-	transform-origin: 20px -20px;
+	transform: translateY(-120px);
+	transition-duration: .3s;
 }
-i.icon-heart-fill:hover {
-	animation: swing1 4s infinite;
-}
-i.icon-heart-fill:nth-child(2n){
-}
-i.icon-heart-fill:nth-child(2n+1){
-	/*animation: swing2 4s infinite;*/
-}
-i.icon-heart-fill:after {
-	content: "";
-	overflow: hidden;
-	position: absolute;
-	top: -20px;
-	left: 20px;
-	width: 2px;
-	height: 20px;
-	background-color: #fff;
-}
-@keyframes swing1{
-	0%{
-		transform: rotate(0deg);
-	}	
-	20% {
-		transform: rotate(10deg);
-	}
-	60%{
-		transform: rotate(-10deg);
-	}
-	100%{
-		transform: rotate(10deg);	
-	}
+#content .books li:hover i.icon-heart-fill {
+	transform: translateY(0);	
 }
 /**/
 #addMore {

@@ -12,7 +12,6 @@ body {
 #collects {
 	position: fixed;
 	right: 10px;
-	/*top: 20px;*/
 	top: 100px;
 	width: 80px;
 	height: 50px;
@@ -34,7 +33,23 @@ body {
 	border-radius: 7px;
 	background-color: #000;
 }
-
+#collects span {
+	position: absolute;
+	top: 0;
+	left: -90px;
+	width: 80px;
+	height: 30px;
+	border-radius: 20px;
+	font-size: 12px;
+	line-height: 30px;
+	background-color: #000;
+	color: #fff;
+	opacity: 0;
+	transition-duration: .6s;	
+}
+#collects:hover span {
+	opacity: 1;
+}
 /*content*/
 #content {
 	width: 100%;
@@ -80,13 +95,12 @@ body {
 	height: auto;
 }
 #content-center li{
+	position: relative;
 	width: 350px;
 	height: 350px;
 	margin-bottom: 20px;
-	/*background-color: rgb(242,245,248);*/
 }
 #content-center .img {
-	position: relative;
 	overflow: hidden;
 	width: 210px;
 	height: 210px;
@@ -95,29 +109,31 @@ body {
 	border-radius: 50%;
 	background-color: #fff;
 }
-#content-center .img .cover{
+#content-center .cover{
 	overflow: hidden;
 	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
+	right: 20px;
 	bottom: 0;
-	width: 210px;
-	height: 0;
-	margin: auto;
+	width: 30px;
+	height: 30px;
 	text-align: center;
-	background-color: rgba(0,0,0,.3);
-	border-radius:50%;
-	transition-duration: .2s;
+	background-color: transparent;
+	opacity: 0;
+	cursor: pointer;
 }
-#content-center .img .cover i {
+#content-center li:hover .cover {
+	opacity: 1;
+}
+@media screen and (max-width: 800px) {
+	#content-center .cover{
+		opacity: 1;
+	}
+}
+#content-center .cover i {
 	font-size: 30px;
 	color: #000;
-	line-height: 210px;
-	text-shadow: 0 0 20px #fff;
-	transition-duration: .3s;
+	line-height: 30px;
 }
-
 #content-center .img img{
 	width: 100%;
 }
@@ -125,11 +141,11 @@ body {
 #content-center h3 {
 	text-align: center;
 	margin-bottom: 20px;
+	color: #000;
 }
 @media screen and (min-width: 400px) and (max-width:800px) {
 	#content-center li{
 		width: 50%;
-		height: 320px;
 	}	
 }
 /*footer*/
@@ -152,10 +168,6 @@ body {
 	font-size: 16px;
 }
 
-/*响应式前*/
-@media screen and (min-width: 800px){
-	
-} 
 /*响应式后*/
 
 /*右边菜单键*/

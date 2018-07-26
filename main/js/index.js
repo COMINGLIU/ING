@@ -19,14 +19,14 @@
     // 获取header里边的方法
     getHeaderModule: function(){
       seajs.use('header.js',function(header){
-          console.log(header);          
+        console.log(header);          
           // header部分的事件委托
           header.headerEvent();
           // 登录注册部分的事件委托 
           header.regitLogin();
           // 滚动操作header阴影
           header.scrollHeader();
-      })
+        })
     },
     // 获取add-store方法并执行
     getAddStoreModule: function(){
@@ -64,7 +64,7 @@
     },
     aboutCanvas: function(){
       var oCanvas = doc.getElementById('canvas'),
-          oBubble = doc.getElementById('bubble');
+      oBubble = doc.getElementById('bubble');
       this.DoEvent.addEvent(oCanvas,'mousemove',function(e){
         e = e||window.e;
         Index.prototype.DoEvent.stop(e);
@@ -81,32 +81,24 @@
       var oLikeN = doc.getElementById("collects");  
       for(var i=0,len=aLis.length;i<len;i++) {
         (function(i){
-          Index.prototype.DoEvent.addEvent(aLis[i],'mouseenter',function(){
-            aCovers[i].style.height = '210px';
-          })
-          var oLike = aCovers[i].getElementsByTagName('i')[0];
-          Index.prototype.DoEvent.addEvent(aLis[i],'mouseleave',function(){
-            if(Index.prototype.getStyle(oLike,'color')!="rgb(0, 0, 0)") {
-              aCovers[i].style.height = '210px';
-            }else {
-              aCovers[i].style.height = '0';
-            }
-          })
+          var oLike = aCovers[i];
+          var oLikeI = aCovers[i].getElementsByTagName('i')[0];
           Index.prototype.DoEvent.addEvent(oLike,'click',function(e){
             e=e||window.e;
             Index.prototype.DoEvent.stop(e);
-            oLike.style.cssText = "color: #fff;text-shadow: 0 0 20px #000;";
-            like_n++;
-            window.sessionStorage.getItem('likes',like_n);
-            oLikeN.innerHTML = like_n;
-            oLike.onclick = null;
-            Index.prototype.DoEvent.addEvent(aLis[i],'mouseleave',function(){
-              if(Index.prototype.getStyle(oLike,'color')=="rgb(255, 255, 255)") {
-                aCovers[i].style.height = '210px';
-              }else {
-                aCovers[i].style.height = '0';
-              }
-            })
+            console.log(Index.prototype.getStyle(oLike,"color"));
+            if(Index.prototype.getStyle(oLikeI,"color")=="rgb(0, 0, 0)") {
+              oLike.style.opacity = '1';
+              oLikeI.style.color = "#900";
+              like_n++;
+              window.sessionStorage.getItem('likes',like_n);
+              oLikeN.innerHTML = like_n;
+            }else {
+              oLikeI.style.color = "#000";
+              like_n--;
+              window.sessionStorage.getItem('likes',like_n);
+              oLikeN.innerHTML = like_n;
+            }
           })
         })(i)
       }

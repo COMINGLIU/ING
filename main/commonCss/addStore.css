@@ -101,6 +101,7 @@
 	line-height: 20px;
 	transition-duration: .2s;
 	margin-right: 20px;
+	margin-top: 20px;
 	border-bottom: 1px solid #000;
 }
 #add-store button:hover {

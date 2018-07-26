@@ -72,14 +72,27 @@ ul#uped {
 	width: 50px;
 	vertical-align: middle;
 }
-#uped li.bookInfo input {
+#uped li.bookInfo input:not([type="button"]) {
 	overflow: hidden;
 	width: calc(100% - 60px);
 	background-color: transparent;
 	vertical-align: middle;
 }
+#uped li.bookInfo button{
+	overflow: hidden;
+	width: 0;
+	margin-left: 20px;
+	background-color: transparent;
+	cursor: pointer;
+}
+#uped li.bookInfo button:hover {
+	text-decoration: underline;
+}
 #uped li.bookInfo li:last-child{
 	text-align: center;
+}
+#uped .icon-edit-square:hover {
+	color: #aaa;
 }
 /**/
 #content #add {

@@ -29,8 +29,10 @@
 		        	var oHeader = doc.getElementById('header'),
 			        oNav = doc.getElementById('nav'),
 			        oSearchBox = doc.getElementById("searchBox"),
+			        oSearchInput = oSearchBox.getElementsByTagName('input')[0],
 			        oAddStore = doc.getElementById("add-store"),
-	          		oMenu = doc.getElementById("menu");
+	          		oMenu = doc.getElementById("menu"),
+	          		oKeySearch = doc.getElementById("keyword-search");
 			        var count = 0;
 			        HEADER.DoEvent.addEvent(oHeader,'click',function(e){
 			        	e = e||window.e;
@@ -55,6 +57,7 @@
 							  	    oNav.style.transform = 'translateX(100%)';	
 							  	    count++;
 							    }
+							    oSearchInput.focus();
 							    doc.getElementById("menu").className = "iconfont icon-menu";
 							break;
 						    case 'searchCloseBtn':
@@ -67,6 +70,15 @@
 					           	}
 					        break;
 						}
+					})
+					HEADER.DoEvent.addEvent(oKeySearch,'click',function(){
+						oSearchBox.style.height = "138px";
+					    if(HEADER.getStyle(oNav,'right')=="0px") 	{
+					  	    oNav.style.transform = 'translateX(100%)';	
+					  	    count++;
+					    }
+					    oSearchInput.focus();
+					    doc.getElementById("menu").className = "iconfont icon-menu";
 					})
 		        }
 		    })

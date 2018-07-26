@@ -38,6 +38,17 @@ button {
     outline: none;
     border: 0;
 }
+.transfrom-speedup {
+    -webkit-transform: translate3d(0,0);
+    -moz-transform: translate3d(0,0);
+    -ms-transform: translate3d(0,0);
+    -o-transform: translate3d(0,0);
+    /*或者*/
+    /*-webkit-transform: translatez(0);
+    -moz-transform: translatez(0);
+    -ms-transform: translatez(0);
+    -o-transform: translatez(0);*/
+}
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
     width: 5px;
