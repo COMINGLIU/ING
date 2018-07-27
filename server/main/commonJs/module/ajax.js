@@ -21,29 +21,34 @@ define(function(require,exports,module){
 	        for(var key in config.data){
 	            arr.push(key+"="+config.data[key]);
 	        }
-	    }
-	    if(arr.length>1){
-	        sendData=arr.join("&");
+					if(arr.length>1){
+			        sendData="?"+arr.join("&");
+			    }else {
+			        sendData="?"+arr[0];
+			    }
 	    }else {
-	        sendData=arr[0];
-	    }
+				sendData = '';
+			}
+
 	    if(config.method.toLowerCase()=="get"){
-	        xhr.open('get',config.url+'?'+sendData,true);
+	        xhr.open('get',config.url+sendData,true);
 	        // 解决超时问题
-	        xhr.timeout=1000;
-	        xhr.ontimeout = function(){
-	            alert("超时");
-	        }
+	        // xhr.timeout=3000;
+	        // xhr.ontimeout = function(){
+	        //     alert("超时");
+	        // }
 	        xhr.send(null);
-	    }else if(config.method.toUpperCase()=='post'){
-	        xhr.open('post',config.url);
+	    }else if(config.method.toLowerCase()=='post'){
+	        xhr.open('post',config.url,true);
 	        xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	        xhr.timeout=1000;
-	        xhr.ontimeout = function(){
-	            alert("超时");
-	        }
-	        console.log(sendData);
+					if(sendData.indexOf('?')!=-1){
+						sendData = sendData.split('?')[1];
+					}
 	        xhr.send(sendData);
+					// xhr.timeout=4000;
+	        // xhr.ontimeout = function(){
+	        //     alert("超时");
+	        // }
 	    }
 	    // 拿到ajax的对象
 	    function createXHR(){

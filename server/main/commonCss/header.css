@@ -92,7 +92,7 @@
 	height: 460px;
 }
 .login {
-	height: 350px;
+	height: 300px;
 }
 @media screen and (max-width: 400px) and (min-width: 315px) {
 	.regit,

@@ -1,12 +1,15 @@
 (function(window,document){
 	var doc = document;
 	function Search(){
+		this.init();
 		// 获取header模块方法
 		this.getHeaderModule();
 		// 获取ajax模块
 		this.getAjaxModule();
 		// 获取add-store模块方法
 		this.getAddStoreModule();
+		// 多功能搜索
+		this.searchPulsBook();
 	}
 	Object.defineProperty(Search.prototype,'constructor',{
 		enumerable: false,
@@ -16,8 +19,8 @@
 		getHeaderModule: function(){
 			seajs.use('header.js',function(HEADER){
 				console.log(HEADER);
-				// header部分的事件委托		          
-		        // 登录注册部分的事件委托 
+				// header部分的事件委托
+		        // 登录注册部分的事件委托
 		        HEADER.regitLogin();
 		        // 滚动操作header阴影
 		        HEADER.scrollHeader();
@@ -54,7 +57,7 @@
 			        		case 'searchBtn':
 				        		oSearchBox.style.height = "138px";
 							    if(HEADER.getStyle(oNav,'right')=="0px") 	{
-							  	    oNav.style.transform = 'translateX(100%)';	
+							  	    oNav.style.transform = 'translateX(100%)';
 							  	    count++;
 							    }
 							    oSearchInput.focus();
@@ -74,7 +77,7 @@
 					HEADER.DoEvent.addEvent(oKeySearch,'click',function(){
 						oSearchBox.style.height = "138px";
 					    if(HEADER.getStyle(oNav,'right')=="0px") 	{
-					  	    oNav.style.transform = 'translateX(100%)';	
+					  	    oNav.style.transform = 'translateX(100%)';
 					  	    count++;
 					    }
 					    oSearchInput.focus();
@@ -83,14 +86,69 @@
 		        }
 		    })
 		},
+		init: function(){
+			var sentData = decodeURI(window.location.search).split('?')[1].split('=')[1];
+			console.log(sentData);
+			this.getAjaxModule(function(ajax){
+				ajax({
+					url:'/',
+					data: {act:'searchBook',bookName: sentData},
+					method: 'get',
+					error: function(status){
+						alert('error:'+status);
+					},
+					success: function(res){
+						var data = JSON.parse(res);
+						console.log(data);
+					}
+				})
+			})
+		},
 		getAddStoreModule: function(){
 			seajs.use('addStore.js',function(ADDSTORE){
 				console.log(ADDSTORE);
 			})
 		},
-		getAjaxModule: function(){
+		// 多元素搜索功能
+		searchPulsBook: function(){
+			var searchEle = {
+					oBookName: doc.getElementsByName("bookName")[0],
+					oPublic: doc.getElementsByName("public")[0],
+					oCollege: doc.getElementsByName("college")[0]
+			};
+			console.log(searchEle);
+			for(var key in searchEle) {
+				console.log(searchEle[key]);
+				(function(key){
+						searchEle[key].onchange = function(){
+							if(searchEle.oBookName.value!=""||searchEle.oPublic.value!=""||searchEle.oCollege.value!=""){
+								Search.prototype.getAjaxModule(function(ajax){
+									ajax({
+										url: '/',
+										data: {
+											act: 'searchBook',
+											bookName: searchEle.oBookName.value,
+											bookPublic: searchEle.oPublic.value,
+											bookCollege: searchEle.oCollege.value
+										},
+										method: 'get',
+										error: function(status){
+											alert('err:'+status);
+										},
+										success: function(res){
+											var data = JSON.parse(res);
+											console.log(data);
+										}
+									})
+								})
+							}
+						}
+				})(key)
+			}
+		},
+		getAjaxModule: function(callback){
 			seajs.use('ajax.js',function(ajax){
-
+				callback&&callback(ajax);
 			})
 		},
 		getStyle: function(obj,attr){

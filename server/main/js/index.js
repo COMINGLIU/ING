@@ -7,6 +7,7 @@
     value: Index
   })
   function Index() {
+    this.init();
     // 执行header模块里边的函数
     this.getHeaderModule();
     // 控制收藏处
@@ -16,13 +17,30 @@
   }
   var obj = doc.querySelector('#canvas p');
   Index.prototype = {
+    init: function(){
+      // 请求首页数据并渲染
+      this.getAjaxModule(function(ajax){
+        ajax({
+          url:"/",
+          method: 'get',
+          data:{act:'indexBook'},
+          error: function(status) {
+            console.log('error:'+status);
+          },
+          success: function(res){
+            data = JSON.parse(res);
+            console.log(data);
+          }
+        })
+      })
+    },
     // 获取header里边的方法
     getHeaderModule: function(){
       seajs.use('header.js',function(header){
-        console.log(header);          
+        console.log(header);
           // header部分的事件委托
           header.headerEvent();
-          // 登录注册部分的事件委托 
+          // 登录注册部分的事件委托
           header.regitLogin();
           // 滚动操作header阴影
           header.scrollHeader();
@@ -30,8 +48,14 @@
     },
     // 获取add-store方法并执行
     getAddStoreModule: function(){
-      seajs.use('addStore.js',function(ADDSTORE){ 
+      seajs.use('addStore.js',function(ADDSTORE){
         console.log(ADDSTORE);
+      })
+    },
+    // 获取ajax模块
+    getAjaxModule: function(callback){
+      seajs.use('ajax.js',function(ajax){
+        callback&&callback(ajax);
       })
     },
     // 元素事件
@@ -78,7 +102,7 @@
     controLike: function(){
       var aLis = doc.getElementById("content-center").getElementsByTagName("li");
       var aCovers = doc.getElementsByClassName("cover");
-      var oLikeN = doc.getElementById("collects");  
+      var oLikeN = doc.getElementById("collects");
       for(var i=0,len=aLis.length;i<len;i++) {
         (function(i){
           var oLike = aCovers[i];
