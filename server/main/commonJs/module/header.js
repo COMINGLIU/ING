@@ -1,7 +1,11 @@
 define(function(require,exports,module){
 	var doc = document;
 	var like_n=0;
+	var preventSqlWords = /select|update|delete|exec|count|'|"|=|<|>|%/i;
+	// 保存收藏的
 	window.sessionStorage.setItem('likes','');
+	// 保存用户信息
+	window.sessionStorage.setItem('user');
 	Object.defineProperty(Header.prototype,'constructor',{
 		enumerable: false,
 		value: Header
@@ -117,15 +121,49 @@ define(function(require,exports,module){
 	    		oEmail: registForm.querySelector("input[name='email']"),
 	    		oAddr: registForm.querySelector("input[name='addr']"),
 	    		oPass: registForm.querySelector("input[name='pass']"),
-	    		oSub: registForm.querySelector("input[name='sub']")
 	    	};
+				var registArr = [];
 	    	// login表单元素
 	    	var loginForm = doc.getElementById("login-form");
 	    	var loginEle = {
 	    		oTelEmail: loginForm.querySelector("input[name='telEmail']"),
 	    		oPass: loginForm.querySelector("input[name='pass']"),
-	    		oSub: loginForm.querySelector("input[name='sub']")
 	    	};
+				// 表单输入完进行判断
+				// preventSqlWords
+				for(var key in registEle) {
+					(function(key){
+						registEle[key].onblur = function(){
+							if(preventSqlWords.test(registEle[key].value)){
+								// 在此处阻止
+								// alert('请不要尝试输入sql特殊字符，没戏');
+								console.log('错了');
+								doc.getElementById(key).innerHTML = '请不要尝试输入sql特殊字符，没戏';
+								registEle[key].style.borderColor = 'red';
+								if(registArr.indexOf(key)==-1){
+									registArr.push(key);
+								}
+							}else {
+								doc.getElementById(key).innerHTML = "";
+								registEle[key].style.borderColor = '#ccc';
+							}
+							if(key=='oTel'&&(/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/).test(registEle[key].value)==false) {
+								doc.getElementById(key).innerHTML = '手机号格式错误';
+								registEle[key].style.borderColor = 'red';
+								if(registArr.indexOf(key)==-1){
+									registArr.push(key);
+								}
+							}
+							if(key=='oEmail'&&(/^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$/).test(registEle[key].value)==false){
+								doc.getElementById(key).innerHTML = '邮箱格式错误';
+								registEle[key].style.borderColor = 'red';
+								if(registArr.indexOf(key)==-1){
+									registArr.push(key);
+								}
+							}
+						}
+					})(key)
+				}
 	    	// 阻止表单默认事件
 	    	registForm.onsubmit = function(e){
 	    		e = e||window.e;
@@ -164,26 +202,36 @@ define(function(require,exports,module){
 		    			break;
 		    		case 'registSubBtn':
 		    			// 发送数据
-			    		Header.prototype.getAjaxModule(function(ajax){
-								ajax({
-				    			url: "/",
-				    			data: {
-										act: "regist",
-				    				username: registEle.oUserName.value,
-				    				tel:registEle.oTel.value,
-				    				email:registEle.oEmail.value,
-				    				college: registEle.oAddr.value,
-				    				pass: registEle.oPass.value
-				    			},
-				    			method: 'post',
-				    			error: function(status){
-				    				alert('error:'+status);
-				    			},
-				    			success: function(res){
-				    				console.log(res);
-				    			}
-				    		})
-							})
+							if(registArr.length==0) {
+								Header.prototype.getAjaxModule(function(ajax){
+									ajax({
+										url: "/",
+										data: {
+											act: "regist",
+											username: registEle.oUserName.value,
+											tel:registEle.oTel.value,
+											email:registEle.oEmail.value,
+											college: registEle.oAddr.value,
+											pass: registEle.oPass.value
+										},
+										method: 'post',
+										error: function(status){
+											alert('error:'+status);
+										},
+										success: function(res){
+											res = JSON.parse(res);
+											if(res.status=='success'){
+												// 注册成功
+												oRegit.style.display = 'none';
+							    			oLogin.style.display = 'block';
+											}else if(res.status=='fail') {
+												// 注册失败
+												doc.getElementById("registOk").innerHTML = res.msg;
+											}
+										}
+									})
+								})
+							}
 			    		break;
 			    	case 'loginSubBtn':
 			    		console.log('login');
@@ -201,24 +249,18 @@ define(function(require,exports,module){
 				    				console.log('error'+status);
 				    			},
 				    			success: function(res){
-				    				console.log(res);
+				    				res = JSON.parse(res);
+										console.log(res);
+										if(res.status == 'success'){
+											// 登录成功
+											oRegitLog.style.display = 'none';
+										}else if(res.status == 'fail') {
+											// 登录失败
+											doc.getElementById('loginOk').innerHTML = res.msg;
+										}
 				    			}
 				    		})
 							})
-						// 	var xhr = new XMLHttpRequest();
-						// 	xhr.onreadystatechange = function(){
-						// 		console.log(xhr.readyState);
-						// 		console.log(xhr.status);
-						// 		if(xhr.readyState==4){
-						// 			if(xhr.status==200||xhr.status==304){
-						// 				var data = xhr.xhr.responseText();
-						// 				console.log(data);
-						// 			}
-						// 		}
-						// 	}
-						// 	xhr.open('post','/',true);
-						// 	xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-						// 	xhr.send('act=login&username=qpq&tel=3028302&pass=222');
 			    	break;
 	    		}
 	    	})

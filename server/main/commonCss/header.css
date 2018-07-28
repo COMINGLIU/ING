@@ -58,7 +58,7 @@
 /* 登录注册 */
 #regitLog {
 	position: fixed;
-	display: none;	
+	display: none;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -113,10 +113,27 @@
 }
 #regitLog i {
 	display: inline-block;
+	position: relative;
 	font-size: 30px;
 	vertical-align: middle;
 	margin-bottom: 30px;
 	margin-right: 20px;
+}
+#regitLog i em {
+	position: absolute;
+	font-size: 12px;
+	left: 30px;
+	top: 30px;
+	width: 200px;
+	color: #f00;
+	text-align: left;
+	transform: scale(0.8);
+}
+#registOk,
+#loginOk {
+	font-size: 12px;
+	color: #f00;
+	transform: scale(0.8);
 }
 #regitLog input:not([type="button"]):not([type="submit"]) {
 	display: inline-block;
@@ -153,7 +170,7 @@ input[type="button"]:hover {
 /* 登录 */
 a{
 	color: #aaa;
-	
+
 }
 a:hover {
 	color: #000;
@@ -179,7 +196,7 @@ a:hover {
 	#menu {
 		display: none;
 	}
-} 
+}
 
 /*响应式后*/
 /*右边菜单键*/

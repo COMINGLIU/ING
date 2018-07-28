@@ -152,13 +152,14 @@
 		<div class="regit" method="post">
 			<h4>regist</h4>
 			<form id="regist-form" method= 'post'>
-				<i class="iconfont icon-user"></i><input type="text" name="username" value="" placeholder="username" required><br>
-				<i class="iconfont icon-phone"></i><input type="tel" name="tel" value="" placeholder="tel" pattern="^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$" required><br>
-				<i class="iconfont icon-mail"></i><input type="email" name="email" value="" placeholder="email" pattern="(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)" required><br>
-				<i class="iconfont icon-location"></i><input type="text" name="addr" value="" placeholder="college" required>
-				<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password" required>
+				<i class="iconfont icon-user"><em id="oUserName"></em></i><input type="text" name="username" value="" placeholder="username" required><br>
+				<i class="iconfont icon-phone"><em id="oTel"></em></i><input type="tel" name="tel" value="" placeholder="tel" pattern="^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$" required><br>
+				<i class="iconfont icon-mail"><em id="oEmail"></em></i><input type="email" name="email" value="" placeholder="email" pattern="(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)" required><br>
+				<i class="iconfont icon-location"><em id="oAddr"></em></i><input type="text" name="addr" value="" placeholder="college" required>
+				<i class="iconfont icon-edit-square"><em id="oPass"></em></i><input type="password" name="pass" value="" placeholder="password" required>
 				<input type="submit" name="sub" value="ok" id="registSubBtn"><input type="button" name="login" value="login" id="loginChange">
 			</form>
+			<em id='registOk'></em>
 		</div>
 		<div class="login">
 			<h4>login</h4>
@@ -167,31 +168,34 @@
 				<i class="iconfont icon-edit-square"></i><input type="password" name="pass" value="" placeholder="password" required="true">
 				<input type="submit" name="sub" value="ok" id="loginSubBtn"><input type="button" name="regit" value="regist" id="regitChange">
 			</form>
+			<em id='loginOk'></em>
 		</div>
 	</div>
 	<div id="add-store">
-		<ul>
-			<i class="iconfont icon-guanbi" id="addStoreCloseBtn"></i>
-			<li class="add-img">
-				<div>
-					<img src="">
-					<input type="file" name="img" id="imgup">
-					<i class="iconfont icon-smile"></i>
-				</div>
-			</li>
-			<li>
-				<span>小店名：</span>
-				<input type="text" name="storeName" placeholder="">
-			</li>
-			<li>
-				<span>小店描述：</span>
-				<textarea cols="" rows="" placeholder=""></textarea>
-			</li>
-			<li>
-				<button>提交</button>
-				<button>跳转去看看</button>
-			</li>
-		</ul>
+		<form method="post" enctype="multipart/form-data">
+			<ul>
+				<i class="iconfont icon-guanbi" id="addStoreCloseBtn"></i>
+				<li class="add-img">
+					<div>
+						<img src="" id="headerImg">
+						<input type="file" name="storeImg" id="imgup">
+						<i class="iconfont icon-smile"></i>
+					</div>
+				</li>
+				<li>
+					<span>小店名：</span>
+					<input type="text" name="storeName" placeholder="">
+				</li>
+				<li>
+					<span>小店描述：</span>
+					<textarea cols="" rows="" placeholder=""></textarea>
+				</li>
+				<li>
+					<button type="submit">提交</button>
+					<button id="jump">跳转去看看</button>
+				</li>
+			</ul>
+		</form>
 	</div>
 </body>
 <script src="commonJs/module/sea.js"></script>
