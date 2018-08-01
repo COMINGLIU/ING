@@ -22,8 +22,8 @@ const preventSqlWords = /select|update|delete|insert|exec|count|'|"|=|<|>|%/i;
 server.use(storeInfoMulter.any());
 server.get('/',function(req,res){
   console.log('url'+req.url);
-  var reqUrl = req.query;
-  var sql="";
+  let reqUrl = req.query;
+  let sql="";
   console.log(reqUrl);
   switch(reqUrl.act){
     case 'indexBook':
@@ -39,7 +39,7 @@ server.get('/',function(req,res){
       })
       break;
     case 'searchBook':
-      var bookName,bookPublic,bookCollege;
+      let bookName,bookPublic,bookCollege;
       bookName = reqUrl.bookName;
       sql = 'SELECT bookId,bookSrc,bookName,bookPublic,bookPrice,schoolName FROM bookinfo,user where bookinfo.shopperId=user.userId and bookName like "%'+bookName+'%"';
       if(reqUrl.bookPublic) {
@@ -64,7 +64,7 @@ server.get('/',function(req,res){
       })
       break;
     case 'getBookDetail':
-      var bookId = reqUrl.bookId;
+      let bookId = reqUrl.bookId;
       sql = 'SELECT bookId,bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+bookId+'";'
       conn.query(sql,function(err,bookDetail){
         console.log(sql);
@@ -72,9 +72,9 @@ server.get('/',function(req,res){
           res.send(err.code);
         }else {
           console.log(bookDetail);
-          var bookName = bookDetail[0].bookName;
+          let bookName = bookDetail[0].bookName;
           //以下处理anotherbook
-          var anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%+bookName+%"';
+          let anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%+bookName+%"';
           conn.query(anotherBookSql,function(err,anotherBook){
             console.log(anotherBookSql);
             if(err){
@@ -87,31 +87,68 @@ server.get('/',function(req,res){
       })
       break;
     case 'getBookComment':
-      var bookId = reqUrl.bookId;
-      sql = 'SELECT * FROM bookcomment where bookId="'+bookId+'"';
+      let _bookId = reqUrl.bookId;
+      sql = 'SELECT * FROM bookcomment where bookId="'+_bookId+'"';
       conn.query(sql,function(err,data){
         if(err){
-          res.send(err.code);
+          console.log(err.code);
         }else {
           res.send(data);
         }
       })
       break;
+    case 'getUserCenterInfo':
+      let userId = reqUrl.userId;
+      let myShopper,like_books,like_stores;
+      sql = 'SELECT * FROM shopper where userId="'+userId+'";';
+      conn.query(sql,function(err,data1){
+        if(err){
+          console.log(err.code);
+          console.log('data1错了');
+        }else {
+          console.log('data1');
+          console.log(data1);
+          myShopper = data1[0];
+          let sql2 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+data1[0].userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;';
+          conn.query(sql2,function(err,data2){
+            if(err){
+              console.log(err.code);
+              console.log('data2错了');
+            }else {
+              console.log('data2')
+              console.log(data2);
+              like_books = data2;
+              let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+data1[0].userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
+              conn.query(sql3,function(err,data3){
+                if(err){
+                  console.log(err.code);
+                  console.log('data3错了');
+                }else {
+                  console.log("data3");
+                  console.log(data3);
+                  like_stores = data3;
+                  res.send({myShopper,like_books,like_stores});
+                }
+              })
+            }
+          })
+        }
+      })
   }
 })
 server.post(bodyParser.urlencoded({extended: true}));
 server.post('/',function(req,res){
-  var str = '';
-  var sql;
+  let str = '';
+  let sql;
   if(req.body){
     console.log('body');
     const comingData = req.body;
     switch(comingData.act) {
       case 'storeInfo':
         // 将店存进去
-        var file = req.files[0];
+        let file = req.files[0];
         // console.log(pathLib.parse(req.files[0].originalname).ext);
-        var newName = file.path + pathLib.parse(file.originalname).ext;
+        let newName = file.path + pathLib.parse(file.originalname).ext;
         fs.rename(file.path,newName,function(err){
           if(err){
             console.log('上传失败');
@@ -158,7 +195,7 @@ server.post('/',function(req,res){
               }else {
                 if(data.toString()== ""){
                   // 先加入学校
-                  var sql0 = 'INSERT INTO school(schoolName) VALUES("'+college+'")';
+                  let sql0 = 'INSERT INTO school(schoolName) VALUES("'+college+'")';
                   conn.query(sql0,function(err,data){
                     if(err){
                       // 程序失败
@@ -183,7 +220,7 @@ server.post('/',function(req,res){
           }
           break;
         case 'login':
-          var telEmail = POST.telEmail,
+          let telEmail = POST.telEmail,
               password = POST.pass;
           sql = 'SELECT * FROM user where tel="'+telEmail+'" or email="'+telEmail+'";';
           conn.query(sql,function(err,data){
@@ -193,15 +230,39 @@ server.post('/',function(req,res){
             }else {
               if(data.toString()==""){
                 console.log('没有');
-                res.send({status: 'success',msg:'您登录的账号不存在'});
+                res.send({status: 'fail',msg:'您登录的账号不存在'});
               }else {
-                var result = data[0];
+                let result = data[0];
                 if(result.pass!=password){
                   res.send({status: 'fail',msg: '密码错误'});
                 }else {
-                  res.send({status: 'success',msg: '登录成功',user: data[0]});
+                  let userInfo = data[0];
+                  console.log(userInfo);
+                  delete userInfo.pass;
+                  res.send({status: 'success',msg: '登录成功',user: userInfo});
                 }
               }
+            }
+          })
+          break;
+        case 'modifyUserInfo':
+          console.log(POST);
+          sql = 'UPDATE user SET userName="'+POST.nickName+'",schoolName="'+POST.college+'" where userId="'+POST.userId+'";';
+          conn.query(sql,function(err,data1){
+            if(err){
+              console.log(err.code);
+            }else {
+              console.log(data1);
+              let sql2 = 'UPDATE shopper SET shopperName="'+POST.storeName+'",shopperDescribe="'+POST.storeSlogan+'" where userId="'+POST.userId+'";';
+              conn.query(sql2,function(err,data2){
+                if(err){
+                  console.log(err.code);
+                  res.send({status:'fail',msg:'500'});
+                }else {
+                  console.log(data2);
+                  res.send({status: 'success'});
+                }
+              })
             }
           })
           break;

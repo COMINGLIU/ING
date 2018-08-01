@@ -1,22 +1,19 @@
 define(function(require,exports,module){
 	var doc = document;
 	var like_n=0;
-	var preventSqlWords = /select|update|delete|exec|count|'|"|=|<|>|%/i;
+	var preventSqlWords = /select|insert|update|delete|exec|script|count|'|"|=|<|>|%/i;
 	// 保存收藏的
 	window.sessionStorage.setItem('likes','');
 	// 保存用户信息
-	window.sessionStorage.setItem('user');
+	window.sessionStorage.setItem('user','');
 	Object.defineProperty(Header.prototype,'constructor',{
 		enumerable: false,
 		value: Header
 	})
 	function Header() {
-	    // 登录注册的事件委托
-	    // this.regitLogin();
-	    // header部分的事件委托
-	    // this.headerEvent();
-	    // 操作header的阴影
-	    // this.scrollHeader();
+			// 默认执行的logo点击
+			this.logo();
+			this.init();
 	}
 	var obj = doc.querySelector('#canvas p');
 	Header.prototype = {
@@ -45,6 +42,21 @@ define(function(require,exports,module){
 				}else {
 					e.cancelBubble = true;
 				}
+			}
+		},
+		// logo
+		logo: function(){
+			var oLogo = doc.getElementById('logo');
+			oLogo.onclick = function(){
+				window.location.href = 'index.html';
+			}
+		},
+		// 处理用户账号
+		init: function(){
+			if(this.getCookieModule().get('user')) {
+				doc.getElementById('regitBtn').innerHTML = 'SIGN OUT';
+				doc.getElementById('userCenter').innerHTML = JSON.parse(this.getCookieModule().get('user')).userName;
+				doc.getElementById('userCenter').style.fontStyle = 'italic';
 			}
 		},
 	    // header
@@ -86,10 +98,15 @@ define(function(require,exports,module){
 		    			oSearchBox.style.height = "0";
 		    			break;
 	    			case 'addStoreBtn':
-		    			oAddStore.style.height = "100%";
-		    			if(Header.prototype.getStyle(oMenu,"display")=="none"){
-		    				count++;
-		    			}
+							if(doc.getElementById('regitBtn').innerHTML == 'SIGN OUT') {
+								oAddStore.style.height = "100%";
+								if(Header.prototype.getStyle(oMenu,"display")=="none"){
+									count++;
+								}
+							}else if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+								doc.getElementById('regitLog').style.display = "block";
+			    			doc.getElementsByClassName('login')[0].style.display = 'block';
+							}
 		    			break;
 		    		case 'home':
 		    			window.location.href = "index.html";
@@ -98,7 +115,18 @@ define(function(require,exports,module){
 		    			window.location.href = 'stores.html';
 		    			break;
 		    		case 'userCenter':
-		    			// window.location.href = 'user.html';
+							var oRigistBox = doc.getElementById('regitLog'),
+									oLogin = doc.getElementsByClassName('login')[0];
+		    			if(doc.getElementById('regitBtn').innerHTML=='LOGIN') {
+								var con = confirm('登录后才能访问个人中心，登录吗?');
+								if(con) {
+									// 登录
+	                oRigistBox.style.display = 'block';
+	    						oLogin.style.display = 'block';
+								}
+							}else {
+								window.location.href = 'user.html';
+							}
 		    			break;
 	    		}
 	    	});
@@ -123,6 +151,7 @@ define(function(require,exports,module){
 	    		oPass: registForm.querySelector("input[name='pass']"),
 	    	};
 				var registArr = [];
+				var loginArr = [];
 	    	// login表单元素
 	    	var loginForm = doc.getElementById("login-form");
 	    	var loginEle = {
@@ -133,12 +162,12 @@ define(function(require,exports,module){
 				// preventSqlWords
 				for(var key in registEle) {
 					(function(key){
-						registEle[key].onblur = function(){
+						registEle[key].onchange = function(){
 							if(preventSqlWords.test(registEle[key].value)){
 								// 在此处阻止
 								// alert('请不要尝试输入sql特殊字符，没戏');
 								console.log('错了');
-								doc.getElementById(key).innerHTML = '请不要尝试输入sql特殊字符，没戏';
+								doc.getElementById(key).innerHTML = '请不要尝试输入sql特殊字符或脚本，没戏';
 								registEle[key].style.borderColor = 'red';
 								if(registArr.indexOf(key)==-1){
 									registArr.push(key);
@@ -164,6 +193,23 @@ define(function(require,exports,module){
 						}
 					})(key)
 				}
+				// 判断login
+				for(var key2 in loginEle) {
+					(function(key2){
+						loginEle[key2].onchange = function(){
+							if(key2=='oTelEmail'&&(/(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\d{9}$)/).test(loginEle[key2].value)==false) {
+								doc.getElementById(key2).innerHTML = '格式错误';
+								loginEle[key2].style.borderColor = 'red';
+								if(loginArr.indexOf(key2)==-1){
+									loginArr.push(key2);
+								}
+							}else {
+								doc.getElementById(key2).innerHTML = "";
+								loginEle[key2].style.borderColor = '#ccc';
+							}
+						}
+					})(key2)
+				}
 	    	// 阻止表单默认事件
 	    	registForm.onsubmit = function(e){
 	    		e = e||window.e;
@@ -176,15 +222,27 @@ define(function(require,exports,module){
 	    	this.DoEvent.addEvent(oLogingBtn,'click',function(e){
 	    		e = e||window.e;
 	    		var target = e.target||e.srcElement;
-	    		console.log(target);
-	    		Header.prototype.DoEvent.stop(e);
-	    		oRegitLog.style.display = "block";
-	    		oLogin.style.display = 'block';
+	    		if(oLogingBtn.innerHTML == 'LOGIN') {
+						Header.prototype.DoEvent.stop(e);
+						oRegitLog.style.display = "block";
+						oLogin.style.display = 'block';
+					}else if(oLogingBtn.innerHTML == 'SIGN OUT') {
+						var con = confirm ('确认退出吗');
+						if(con) {
+							//退出
+							oLogingBtn.innerHTML = 'LOGIN';
+							doc.getElementById('userCenter').innerHTML = '<i class="iconfont icon-user"></i>';
+							// 将用户信息从cookie中清除
+							Header.prototype.getCookieModule().unset('user');
+							console.log(Header.prototype.getCookieModule().get('user'));
+						}else {
+							// 不退出
+						}
+					}
 	    	})
 	    	this.DoEvent.addEvent(oRegitLog,'click',function(e){
 	    		e = e||window.e;
 	    		var target = e.target||e.srcElement;
-					console.log(target);
 	    		Header.prototype.DoEvent.stop(e);
 	    		switch(target.id){
 	    			case 'regitLog':
@@ -202,7 +260,7 @@ define(function(require,exports,module){
 		    			break;
 		    		case 'registSubBtn':
 		    			// 发送数据
-							if(registArr.length==0) {
+							if((registEle.oUserName.value != ''&&registEle.oTel.value!= ''&&registEle.oEmail.value!=''&&registEle.oAddr.value!=''&&registEle.oPass.value!='')&&registArr.length==0){
 								Header.prototype.getAjaxModule(function(ajax){
 									ajax({
 										url: "/",
@@ -234,33 +292,40 @@ define(function(require,exports,module){
 							}
 			    		break;
 			    	case 'loginSubBtn':
-			    		console.log('login');
+			    		// console.log('login');
 			    		// 发送数据
-			    		Header.prototype.getAjaxModule(function(ajax){
-								ajax({
-				    			url: '/',
-				    			data: {
-										act: 'login',
-				    				telEmail: loginEle.oTelEmail.value,
-				    				pass: loginEle.oPass.value
-				    			},
-				    			method: 'post',
-				    			error: function(status) {
-				    				console.log('error'+status);
-				    			},
-				    			success: function(res){
-				    				res = JSON.parse(res);
-										console.log(res);
-										if(res.status == 'success'){
-											// 登录成功
-											oRegitLog.style.display = 'none';
-										}else if(res.status == 'fail') {
-											// 登录失败
-											doc.getElementById('loginOk').innerHTML = res.msg;
-										}
-				    			}
-				    		})
-							})
+							console.log(loginArr);
+							if(loginEle.oTelEmail.value!=''&&loginEle.oPass.value!=''&&loginArr.length==0) {
+								Header.prototype.getAjaxModule(function(ajax){
+									ajax({
+					    			url: '/',
+					    			data: {
+											act: 'login',
+					    				telEmail: loginEle.oTelEmail.value,
+					    				pass: loginEle.oPass.value
+					    			},
+					    			method: 'post',
+					    			error: function(status) {
+					    				console.log('error'+status);
+					    			},
+					    			success: function(res){
+					    				res = JSON.parse(res);
+											console.log(res);
+											var user = res.user;
+											if(res.status == 'success'){
+												// 登录成功
+												oRegitLog.style.display = 'none';
+												oLogingBtn.innerHTML = 'SIGN OUT';
+												Header.prototype.getCookieModule().set('user',JSON.stringify(user),'2018.9.1');
+												doc.getElementById('userCenter').innerHTML = res.user['userName'] ;
+											}else if(res.status == 'fail') {
+												// 登录失败
+												doc.getElementById('loginOk').innerHTML = res.msg;
+											}
+					    			}
+					    		})
+								})
+							}
 			    	break;
 	    		}
 	    	})
@@ -270,6 +335,10 @@ define(function(require,exports,module){
 					callback&&callback(ajax);
 				})
 	    },
+			getCookieModule: function(){
+				var cookieModule = require('cookie.js');
+				return cookieModule;
+			},
 	    // 滚动操作header
 	    scrollHeader: function(){
 	    	var oHeader = doc.getElementById('header');
@@ -290,3 +359,8 @@ define(function(require,exports,module){
 	var index = new Header();
 	module.exports = index;
 })
+
+/*cookie保存的东西
+	'user': //用户信息
+	'likes':收藏信息
+*/

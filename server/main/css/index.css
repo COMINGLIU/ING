@@ -33,7 +33,7 @@ body {
 	border-radius: 7px;
 	background-color: #000;
 }
-#collects span {
+#collects .info {
 	position: absolute;
 	top: 0;
 	left: -90px;
@@ -45,9 +45,9 @@ body {
 	background-color: #000;
 	color: #fff;
 	opacity: 0;
-	transition-duration: .6s;	
+	transition-duration: .6s;
 }
-#collects:hover span {
+#collects:hover .info {
 	opacity: 1;
 }
 /*右边菜单键*/
@@ -56,7 +56,7 @@ body {
 	#collects {
 		left: 0;
 	}
-	#collects span {
+	#collects .info {
 		top: 0;
 		left: 90px;
 	}
@@ -100,7 +100,7 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
-	flex-basis: 
+	flex-basis:
 	width: 100%;
 	padding-top: 20px;
 	height: auto;
@@ -157,5 +157,5 @@ body {
 @media screen and (min-width: 400px) and (max-width:800px) {
 	#content-center li{
 		width: 50%;
-	}	
+	}
 }

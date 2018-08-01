@@ -1,7 +1,10 @@
 define(function(require,exports,module){
 	var doc = document;
+	var preventSqlWords = /select|insert|update|delete|exec|count|'|"|=|<|>|%/i;
 	function AddStore() {
+		// 打开添加小店
 		this.openAddStore();
+		// 文件上传
 		this.fileUpload();
 	}
 	Object.defineProperty(AddStore.prototype,'constructor',{
@@ -29,15 +32,17 @@ define(function(require,exports,module){
 				oJump: doc.getElementById("jump")
 			};
 			var oheaderImg = doc.getElementById("headerImg");
-			// var userId = JSON.parse(window.sessionStorage.getItem('user')).userId;
+			var user;
+			if(this.getCookieModule().get('user')) {
+				user = JSON.parse(this.getCookieModule().get('user'));
+			}
 			var file,data;
 			formEle.oImg.onchange = function(){
 				console.log();
 				file = this.files[0];
 				// 将图片放在data里
 				data = new FormData();
-				// data.append('userId',userId);
-				data.append('userId','3');
+				data.append('userId',user.userId);
 				data.append('act','storeInfo');
 				data.append('img',file);
 				// 将图片放在内容框里
@@ -54,34 +59,46 @@ define(function(require,exports,module){
 			formEle.oSubBtn.onclick = function(){
 				console.log(formEle.oName.value);
 				console.log(formEle.oDescribe.value);
-				data.append('storeName',formEle.oName.value);
-				data.append('storeDescribe',formEle.oDescribe.value);
-				var xhr = new XMLHttpRequest();
-				xhr.onreadystatechange = function(){
-					if(xhr.readyState==4){
-						if(xhr.status==200||xhr.readyState==304){
-							var data = JSON.parse(xhr.responseText);
-							console.log(data);
-							if(data.status == 'success'){
-								// 成功
-								formEle.oJump.style.display = 'inline-block';
-								formEle.oJump.onclick = function(){
-									// window.location.href = 'them1.html?userId='+userId;
-									window.location.href = 'addBook.html?userId=3';
+				if(formEle.oImg.value==""||formEle.oName.value==""||formEle.oDescribe.value==""){
+					alert('请将信息填写完整');
+				}else {
+					if(preventSqlWords.test(formEle.oName.value)==true||preventSqlWords.test(formEle.oDescribe.value)==true){
+						alert('不要尝试输入sql特殊字符或脚本，没戏');
+					}else {
+						data.append('storeName',formEle.oName.value==undefined?"":formEle.oName.value);
+						data.append('storeDescribe',formEle.oDescribe.value==undefined?"":formEle.oDescribe.value);
+						var xhr = new XMLHttpRequest();
+						xhr.onreadystatechange = function(){
+							if(xhr.readyState==4){
+								if(xhr.status==200||xhr.readyState==304){
+									var data = JSON.parse(xhr.responseText);
+									console.log(data);
+									if(data.status == 'success'){
+										// 成功
+										formEle.oJump.style.display = 'inline-block';
+										formEle.oJump.onclick = function(){
+											// window.location.href = 'them1.html?userId='+userId;
+											window.location.href = 'addBook.html?userId=3';
+										}
+									}else if(data.status == 'fail') {
+										//失败
+										alert('该帐号已经注册过小店');
+									}
+								}else {
+									console.log('error:'+xhr.status);
 								}
-							}else if(data.status == 'fail') {
-								//失败
-								alert('您已出册过该帐号');
 							}
-						}else {
-							console.log('error:'+xhr.status);
 						}
+						xhr.open('post','/',true);
+						xhr.send(data);
 					}
 				}
-				xhr.open('post','/',true);
-				xhr.send(data);
 			}
 		},
+		getCookieModule: function(){
+			 var cookie = require('cookie.js');
+			 return cookie;
+		}
 	};
 	var addStore = new AddStore();
 	module.exports = addStore;

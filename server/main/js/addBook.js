@@ -4,6 +4,7 @@
 		this.controlAddBook();
 		this.aboutHeader();
 		this.editBookInfo();
+		this.logo();
 	}
 	Object.defineProperty(AddBook.prototype,'constructor',{
 		enumerable: false,
@@ -48,7 +49,7 @@
 							aEditSubResetBtn[0].style.width = 'auto';
 							aEditSubResetBtn[1].style.width = 'auto';
 						}
-					};	
+					};
 					aEditSubResetBtn[0].onclick = function(){
 						// 调用ajax发送请求
 					};
@@ -62,7 +63,14 @@
 					};
 				})(i);
 			}
-		}
+		},
+		// logo
+		logo: function(){
+			var oLogo = doc.getElementById('logo');
+			oLogo.onclick = function(){
+				window.location.href = 'index.html';
+			}
+		},
 	};
 	var addBook = new AddBook();
 })(window,document);

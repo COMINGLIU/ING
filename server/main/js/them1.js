@@ -2,6 +2,7 @@
 	var doc = document;
 	function Them1(){
 		this.controlHeaderShadow();
+		this.logo();
 	}
 	Object.defineProperty(Them1.prototype,'constructor',{
 		enumerable: false,
@@ -16,6 +17,15 @@
 				}else {
 					oHeader.style.boxShadow = '0 0 0 transparent';
 				}
+			}
+		},
+		// logo
+		logo: function(){
+			var oLogo = doc.getElementById('logo');
+			// console.log(oLogo);
+			oLogo.onclick = function(){
+				console.log(1);
+				window.location.href = 'index.html';
 			}
 		}
 	};

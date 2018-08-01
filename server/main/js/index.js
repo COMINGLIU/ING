@@ -14,6 +14,8 @@
     this.controLike();
     // 获取add-store处的方法并执行
     this.getAddStoreModule();
+    // 获取cookie模块
+    // this.getCookieModule();
   }
   var obj = doc.querySelector('#canvas p');
   Index.prototype = {
@@ -33,6 +35,14 @@
           }
         })
       })
+
+      // 处理收藏量
+      // Index.prototype.getCookieModule(function(cookieModule){
+      //   if(cookieModule.get('likes')) {
+      //     doc.querySelector('#collects .num').innerHTML = cookieModule.get('likes');
+      //   }
+      // })
+
     },
     // 获取header里边的方法
     getHeaderModule: function(){
@@ -56,6 +66,11 @@
     getAjaxModule: function(callback){
       seajs.use('ajax.js',function(ajax){
         callback&&callback(ajax);
+      })
+    },
+    getCookieModule: function(callback) {
+      seajs.use('cookie.js',function(cookieModule){
+        callback&&callback(cookieModule);
       })
     },
     // 元素事件
@@ -100,29 +115,49 @@
     },
     // 控制收藏box
     controLike: function(){
-      var aLis = doc.getElementById("content-center").getElementsByTagName("li");
-      var aCovers = doc.getElementsByClassName("cover");
-      var oLikeN = doc.getElementById("collects");
+      var aLis = doc.getElementById("content-center").getElementsByTagName("li"),
+          aCovers = doc.getElementsByClassName("cover"),
+          oLikeN = doc.querySelector("#collects .num"),
+          oRigistBtn = doc.getElementById('regitBtn'),
+          oRigistBox = doc.getElementById('regitLog'),
+          oLogin = doc.getElementsByClassName('login')[0];
       for(var i=0,len=aLis.length;i<len;i++) {
         (function(i){
           var oLike = aCovers[i];
           var oLikeI = aCovers[i].getElementsByTagName('i')[0];
           Index.prototype.DoEvent.addEvent(oLike,'click',function(e){
-            e=e||window.e;
-            Index.prototype.DoEvent.stop(e);
-            console.log(Index.prototype.getStyle(oLike,"color"));
-            if(Index.prototype.getStyle(oLikeI,"color")=="rgb(0, 0, 0)") {
-              oLike.style.opacity = '1';
-              oLikeI.style.color = "#900";
-              like_n++;
-              window.sessionStorage.getItem('likes',like_n);
-              oLikeN.innerHTML = like_n;
-            }else {
-              oLikeI.style.color = "#000";
-              like_n--;
-              window.sessionStorage.getItem('likes',like_n);
-              oLikeN.innerHTML = like_n;
+            if(oRigistBtn.innerHTML == 'SIGN OUT') {
+              e=e||window.e;
+              Index.prototype.DoEvent.stop(e);
+              console.log(Index.prototype.getStyle(oLike,"color"));
+              if(Index.prototype.getStyle(oLikeI,"color")=="rgb(0, 0, 0)") {
+                oLike.style.opacity = '1';
+                oLikeI.style.color = "#900";
+                like_n++;
+                oLikeN.innerHTML = like_n;
+                Index.prototype.getCookieModule(function(cookieModule){
+                  cookieModule.set('likes',like_n,'2018,9,1');
+                })
+              }else {
+                oLikeI.style.color = "#000";
+                like_n--;
+                oLikeN.innerHTML = like_n;
+                Index.prototype.getCookieModule(function(cookieModule){
+                  cookieModule.set('likes',like_n,'2018,9,1');
+                })
+              }
+            }else if(oRigistBtn.innerHTML == 'LOGIN'){
+              var con = confirm('登录后收藏才能保存哦，登录吗?');
+              if(con) {
+                // 登录
+                oRigistBox.style.display = 'block';
+    						oLogin.style.display = 'block';
+              }else {
+                // 不做什么
+
+              }
             }
+
           })
         })(i)
       }

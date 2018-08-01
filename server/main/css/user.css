@@ -1,7 +1,4 @@
 @charset 'utf-8';
-body {
-
-}
 #container {
 	width: 100%;
 	height: 100%;
@@ -39,17 +36,18 @@ body {
 }
 #menuUl li{
 	width: 100%;
-	height: 140px;
+	height: 120px;
 	border-bottom: 1px solid #fff;
 	background-color: #000;
 	color: #fff;
-	line-height: 140px;
+	line-height: 120px;
 	text-align: center;
 	transition-duration: .3s;
 }
 #menuUl li:hover {
 	color: #000;
 	background-color: #fff;
+	transform: scale(1.2);
 }
 /**/
 #content {
@@ -116,6 +114,15 @@ body {
 }
 #userNav p:nth-child(2) {
 	top: 100px;
+	left: -57px;
+}
+#userNav p:nth-child(3) {
+	top: 177px;
+	left: -36px;
+}
+#userNav p:nth-child(4)  {
+	top: 230px;
+	left: 22px;
 }
 #userNav p:hover {
 	transform: rotateZ(-30deg) rotateY(0);
@@ -153,7 +160,7 @@ body {
 	border-bottom: 1px solid #ccc;
 	background-color: transparent;
 	vertical-align: middle;
-	cursor: pointer;
+	cursor: text;
 }
 #infoModi .reset {
  	text-align: center;
@@ -281,4 +288,124 @@ body {
 	#welcome h3 {
 		margin-top: 50px;
 	}
+}
+/* 登录注册 */
+#regitLog {
+	position: fixed;
+	display: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.5);
+	font-size: 18px;
+	-webkit-tap-highlight-color: transparent;
+	z-index: 30;
+}
+/* 注册 */
+.regit,
+.login {
+	display: none;
+	position: absolute;
+	box-sizing: border-box;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 400px;
+	height: 400px;
+	padding: 30px;
+	margin: auto;
+	border-radius: 10px;
+	background-color: #fff;
+	text-align: center;
+	-webkit-tap-highlight-color: transparent;
+}
+.regit {
+	/*display: none;*/
+	height: 460px;
+}
+.login {
+	height: 300px;
+}
+@media screen and (max-width: 400px) and (min-width: 315px) {
+	.regit,
+	.login {
+		width: 100%;
+	}
+}
+.regit h4,
+.login h4 {
+	margin-bottom: 20px;
+}
+.login h4 span {
+	font-size: 12px;
+	color: #aaa;
+}
+.login h4 span:first-child {
+	margin-left: 20px;
+}
+#regitLog i {
+	display: inline-block;
+	position: relative;
+	font-size: 30px;
+	vertical-align: middle;
+	margin-bottom: 30px;
+	margin-right: 20px;
+}
+#regitLog i em {
+	position: absolute;
+	font-size: 12px;
+	left: 30px;
+	top: 30px;
+	width: 250px;
+	color: #f00;
+	text-align: left;
+	transform: scale(0.8);
+}
+#registOk,
+#loginOk {
+	font-size: 12px;
+	color: #f00;
+	transform: scale(0.8);
+}
+#regitLog input:not([type="button"]):not([type="submit"]) {
+	display: inline-block;
+	width: 80%;
+	margin-bottom: 30px;
+	border-bottom: 1px solid #ccc;
+	vertical-align: middle;
+	font-size: 14px;
+	letter-spacing: 2px;
+	transition-duration: .3s;
+}
+#regitLog input:not([type="submit"]):not([type="button"]):focus {
+	border-color: #000;
+}
+#cancelBtn {
+	margin-right: 20px;
+}
+input[type="submit"],
+input[type="button"] {
+	width: 80px;
+	height: 30px;
+	border-radius: 5px;
+	background-color: #000;
+	color: #fff;
+	line-height: 30px;
+	transition-duration: .3s;
+	cursor: pointer;
+}
+input[type="submit"]:hover,
+input[type="button"]:hover {
+	background-color: #ccc;
+	color: #000;
+}
+/* 登录 */
+a{
+	color: #aaa;
+
+}
+a:hover {
+	color: #000;
 }

@@ -19,81 +19,88 @@
 			<ul id="menuUl">
 				<li id="resetInfo-li">修改个人信息</li>
 				<li id="collects-li">收藏夹</li>
-				<li id="openStore-li">开启我的小店</li>
+				<li id="openStore-li">打开我的运营小店</li>
+				<li id="openStoreCenter-li">去我的小店添加书籍</li>
 			</ul>
-		</div>	
+		</div>
 		<div id="content">
 			<ul>
 				<li id="infoModi">
 					<h3><i class="iconfont icon-user"></i></h3>
-					<p>
-						<span>昵称</span>
-						<input readonly="true" type="text" name="nickName" value="qpq">
-					</p>
-					<p>
-						<span>电话号码</span>
-						<input readonly="true" type="text" name="tel" value="39232892">
-					</p>
-					<p>
-						<span>邮箱</span>
-						<input readonly="true" type="email" name="email" value="32982983@qq.com">
-					</p>
-					<p>
-						<span>学校</span>
-						<input readonly="true" type="text" name="college" value="湖南大学">
-					</p>
-					<p>
-						<span>小店名</span>
-						<input readonly="true" type="text" name="storeName" value="qpq小店">
-					</p>
-					<div class="reset">
-						<i class="iconfont icon-edit-square"></i>
-						<button class="yes">提交</button>
-						<button type="reset" class="no">取消</button>
-					</div>
+					<form method="post">
+						<p>
+							<span>昵称</span>
+							<input type="text" name="nickName" readonly='true'>
+						</p>
+						<p>
+							<span>电话号码</span>
+							<input type="text" name="tel" readonly='true'>
+						</p>
+						<p>
+							<span>邮箱</span>
+							<input type="email" name="email" readonly='true'>
+						</p>
+						<p>
+							<span>学校</span>
+							<input type="text" name="college" readonly='true'>
+						</p>
+						<p>
+							<span>小店名</span>
+							<input type="text" name="storeName" readonly='true'>
+						</p>
+						<p>
+							<span>小店口号</span>
+							<input type="text" name="storeSlogan" readonly='true'>
+						</p>
+						<div class="reset">
+							<i class="iconfont icon-edit-square"></i>
+							<button class="yes" type="submit">提交</button>
+							<button class="no">取消</button>
+						</div>
+					</form>
 				</li>
 				<li id="collectFold">
 					<i class="title">books</i>
 					<ul class="booksUl">
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
 						<li>
 							<a href="detail.html">
-								<div><img src="imgs/4.jpg"></div>							
+								<div><img src="imgs/4.jpg"></div>
 							</a>
 							<h3>小姜获奖啦</h3>
 						</li>
@@ -102,7 +109,7 @@
 					<ul class="storeUl">
 						<li>
 							<a href="them1.html">
-								<div><img src="imgs/8.jpg"></div>								
+								<div><img src="imgs/8.jpg"></div>
 							</a>
 							<h3>小姜书店</h3>
 						</li>
@@ -148,15 +155,29 @@
 			<div id="userNav">
 				<p class="mod">Modifying personal information</p>
 				<p class="collects">View your collector</p>
+				<p class="myStore">open my store</p>
+				<p class="toMyStoreCenter">to my store center</p>
 			</div>
 			<div id="openStore"></div>
 		</div>
-		<div id="footer"></div>
 		<!-- 其他的 -->
 		<div id="welcome">
-			<h3>liuqiong<i>welcome to the page !</i></h3>
+			<h3><span class="username">liuqiong</span><i>welcome to the page !</i></h3>
+		</div>
+		<!-- 登录注册框 -->
+		<div id="regitLog">
+			<div class="login">
+				<h4>login</h4>
+				<form id="login-form" method='post'>
+					<i class="iconfont icon-user"><em id="oTelEmail"></em></i><input type="text" name="telEmail" value="" placeholder="tel/email" pattern="(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\d{9}$)" required><br>
+					<i class="iconfont icon-edit-square"><em id="oLoginPass"></em></i><input type="password" name="pass" value="" placeholder="password" required="true">
+					<input type="button" name="cancel" value="cancel" id="cancelBtn"><input type="submit" name="sub" value="ok" id="loginSubBtn">
+				</form>
+				<em id='loginOk'></em>
+			</div>
 		</div>
 	</div>
+	<script src='commonJs/module/sea.js'></script>
 	<script src="js/user.js"></script>
 </body>
 </html>
