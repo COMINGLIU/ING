@@ -241,10 +241,12 @@
 						oNav.style.border = "0";
 						break;
 					case 'myStore':
-						window.location.href = 'them1.html';
+						// console.log(user);
+						window.location.href = 'them1.html?suerId="'+user.userId+'"&userName="'+user.userName+'"';
 						break;
 					case 'toMyStoreCenter':
-						window.location.href = 'addBook.html';
+						console.log(user);
+						window.location.href = 'addBook.html?suerId="'+user.userId+'"&userName="'+user.userName+'"';
 						break;
 				}
 			})

@@ -62,10 +62,10 @@
 							    }
 							    oSearchInput.focus();
 							    doc.getElementById("menu").className = "iconfont icon-menu";
-							break;
+									break;
 						    case 'searchCloseBtn':
 						  	    oSearchBox.style.height = "0";
-						    break;
+						    	break;
 						    case 'addStoreBtn':
 					           	oAddStore.style.height = "100%";
 					           	if(Search.prototype.getStyle(oMenu,"display")=="none"){
@@ -82,7 +82,7 @@
 					    }
 					    oSearchInput.focus();
 					    doc.getElementById("menu").className = "iconfont icon-menu";
-					})
+							})
 		        }
 		    })
 		},

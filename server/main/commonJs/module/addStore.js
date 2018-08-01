@@ -38,7 +38,6 @@ define(function(require,exports,module){
 			}
 			var file,data;
 			formEle.oImg.onchange = function(){
-				console.log();
 				file = this.files[0];
 				// 将图片放在data里
 				data = new FormData();

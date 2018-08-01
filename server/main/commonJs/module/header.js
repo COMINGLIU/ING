@@ -13,6 +13,7 @@ define(function(require,exports,module){
 	function Header() {
 			// 默认执行的logo点击
 			this.logo();
+			// 处理用户账户
 			this.init();
 	}
 	var obj = doc.querySelector('#canvas p');
@@ -104,8 +105,11 @@ define(function(require,exports,module){
 									count++;
 								}
 							}else if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
-								doc.getElementById('regitLog').style.display = "block";
-			    			doc.getElementsByClassName('login')[0].style.display = 'block';
+								var con = confirm('需要登录后才能添加属于您自己的书店，登录吗？');
+								if(con) {
+									doc.getElementById('regitLog').style.display = "block";
+									doc.getElementsByClassName('login')[0].style.display = 'block';
+								}
 							}
 		    			break;
 		    		case 'home':
@@ -114,6 +118,7 @@ define(function(require,exports,module){
 		    		case 'stores':
 		    			window.location.href = 'stores.html';
 		    			break;
+						case 'userCenterBtn':
 		    		case 'userCenter':
 							var oRigistBox = doc.getElementById('regitLog'),
 									oLogin = doc.getElementsByClassName('login')[0];
@@ -227,7 +232,7 @@ define(function(require,exports,module){
 						oRegitLog.style.display = "block";
 						oLogin.style.display = 'block';
 					}else if(oLogingBtn.innerHTML == 'SIGN OUT') {
-						var con = confirm ('确认退出吗');
+						var con = confirm ('确认退出登录吗');
 						if(con) {
 							//退出
 							oLogingBtn.innerHTML = 'LOGIN';
