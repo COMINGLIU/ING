@@ -108,8 +108,18 @@ server.get('/',function(req,res){
         }else {
           console.log('data1');
           console.log(data1);
-          myShopper = data1[0];
-          let sql2 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+data1[0].userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;';
+          if(data1.toString()==""){
+            myShopper = {
+              userId: userId,
+              shopperImg: '暂无',
+              shopperName: '还未开启店铺哦',
+              shopperDescribe: '还未开启店铺哦',
+              shopperTime: '0'
+            };
+          }else {
+            myShopper = data1[0];
+          }
+          let sql2 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;';
           conn.query(sql2,function(err,data2){
             if(err){
               console.log(err.code);
@@ -118,7 +128,7 @@ server.get('/',function(req,res){
               console.log('data2')
               console.log(data2);
               like_books = data2;
-              let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+data1[0].userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
+              let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
               conn.query(sql3,function(err,data3){
                 if(err){
                   console.log(err.code);
@@ -162,7 +172,15 @@ server.post('/',function(req,res){
                 res.send({status:'fail',msg:err});
               }else{
                 console.log('上传成功');
-                res.send({status:'success'});
+                let sql2 = "UPDATE user SET user.isSeller='1' where user.userId='"+comingData.userId+"';";
+                conn.query(sql2,function(err,data2){
+                  if(err){
+                    console.log('更新店铺信息失败');
+                  }else {
+                    res.send({status:'success'});
+                    console.log('上传成功');
+                  }
+                })
               }
             })
           }
@@ -196,18 +214,27 @@ server.post('/',function(req,res){
                 if(data.toString()== ""){
                   // 先加入学校
                   let sql0 = 'INSERT INTO school(schoolName) VALUES("'+college+'")';
-                  conn.query(sql0,function(err,data){
+                  conn.query(sql0,function(err,data1){
                     if(err){
                       // 程序失败
                       console.log(err.code);
                     }else {
                       sql = 'INSERT INTO user(userName,tel,email,schoolName,pass) VALUES("'+userName+'","'+tel+'","'+email+'","'+college+'","'+pass+'");'
-                      conn.query(sql,function(err,data){
+                      conn.query(sql,function(err,data2){
                         if(err){
                           res.send({status:'fail',msg: '注册失败'});
                           console.log(err.code);
                         }else {
-                          res.send({status: 'success',msg: '注册成功'});
+                          console.log(data2.insertId);
+                          let sql2 = 'INSERT INTO logintimes(userId) VALUES("'+data2.insertId+'");';
+                          conn.query(sql2,function(err,data3){
+                            if(err) {
+                              console.log('err:'+err.code);
+                            }else {
+                              console.log('注册成功');
+                              res.send({status: 'success',msg: '注册成功'});
+                            }
+                          })
                         }
                       })
                     }
@@ -239,7 +266,23 @@ server.post('/',function(req,res){
                   let userInfo = data[0];
                   console.log(userInfo);
                   delete userInfo.pass;
-                  res.send({status: 'success',msg: '登录成功',user: userInfo});
+                  let sql2 = 'INSERT INTO loginlog(userId) VALUES("'+userInfo.userId+'");';
+                  conn.query(sql2,function(err,data){
+                    if(err){
+                      console.log("err:"+err.code);
+                    }else {
+                      console.log('插入loginlog成功');
+                      let sql3 = 'UPDATE logintimes SET loginTimes=loginTimes+1 where userId="'+userInfo.userId+'";';
+                      conn.query(sql3,function(err,data){
+                        if(err){
+                          console.log("err:"+err.code);
+                        }else {
+                          console.log('插入logintimes成功');
+                          res.send({status: 'success',msg: '登录成功',user: userInfo});
+                        }
+                      })
+                    }
+                  })
                 }
               }
             }
@@ -263,6 +306,41 @@ server.post('/',function(req,res){
                   res.send({status: 'success'});
                 }
               })
+            }
+          })
+          break;
+        case 'sendMsg':
+          let userId = POST.userId,
+              msg = POST.msg;
+          sql = 'INSERT INTO message(userId,msg) VALUES("'+userId+'","'+msg+'");';
+          conn.query(sql,function(err,data){
+            if(err){
+              console.log('err:'+err.code);
+            }else {
+              res.send({status:'success',msg:'感谢您的留言，小编已收到'});
+            }
+          })
+          break;
+        case 'adminLogin':
+          let adminAcount = POST.userAcount,
+              adminPass = POST.userPass;
+          sql = 'SELECT adminAcount,adminPass FROM admin';
+          conn.query(sql,function(err,data){
+            if(err){
+              console.log('err'+err.code);
+            }else {
+              let admin = data[0];
+              console.log(admin);
+              if(adminAcount!=admin.adminAcount) {
+                res.send({status: 'fail',msg:'此管理员账号不存在'});
+              }else if(adminPass!=admin.adminPass) {
+                res.send({status: 'fail',msg:'密码错误'});
+              }else if(adminAcount==admin.adminAcount&&adminPass==admin.adminPass){
+                // let newAcountNum = encodeURI(adminAcount+Math.floor(Math.random()*100000));
+                // console.log(newAcountNum);
+                console.log('登录成功');
+                res.send({status: 'success',msg:'登录成功',user: adminAcount});
+              }
             }
           })
           break;

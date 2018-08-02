@@ -380,7 +380,7 @@
 											modInput[j].value = realUserInfo["college"];
 											break;
 										case 'storeName':
-											modInput[j].value = realUserInfo["nickName"];
+											modInput[j].value = realUserInfo["storeName"];
 											break;
 										case 'storeSlogan':
 											modInput[j].value = realUserInfo["storeSlogan"];

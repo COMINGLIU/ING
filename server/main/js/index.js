@@ -10,6 +10,8 @@
     this.init();
     // 执行header模块里边的函数
     this.getHeaderModule();
+    // 执行footer模块里边的函数
+    this.getFooterModule();
     // 控制收藏处
     this.controLike();
     // 获取add-store处的方法并执行
@@ -35,14 +37,12 @@
           }
         })
       })
-
       // 处理收藏量
       // Index.prototype.getCookieModule(function(cookieModule){
       //   if(cookieModule.get('likes')) {
       //     doc.querySelector('#collects .num').innerHTML = cookieModule.get('likes');
       //   }
       // })
-
     },
     // 获取header里边的方法
     getHeaderModule: function(){
@@ -55,6 +55,11 @@
           // 滚动操作header阴影
           header.scrollHeader();
         })
+    },
+    getFooterModule: function(){
+      seajs.use('footer.js',function(footer){
+        // console.log(footer);
+      })
     },
     // 获取add-store方法并执行
     getAddStoreModule: function(){

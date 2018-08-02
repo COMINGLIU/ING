@@ -41,6 +41,7 @@ define(function(require,exports,module){
 				file = this.files[0];
 				// 将图片放在data里
 				data = new FormData();
+				console.log(user);
 				data.append('userId',user.userId);
 				data.append('act','storeInfo');
 				data.append('img',file);
