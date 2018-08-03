@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="../commonCss/reset.css">
+    <link rel="stylesheet" href="../commonCss/iconfont.css">
+    <link rel="shortcut icon" href="../imgs/logo.ico">
+    <title>公屏语录</title>
+    <style>
+      #content {
+        width: 800px;
+        margin: 20px auto;
+        text-align: center;
+      }
+      #content li {
+        margin-bottom: 20px;
+      }
+      .time {
+        color: #aaa;
+      }
+      /*  */
+      #addMsg {
+        margin-top: 40px;
+      }
+      #addMsg .top {
+        width: 352px;
+        height: 50px;
+        margin: auto;
+        text-align: center;
+        line-height: 50px;
+      }
+      #addMsg .top i {
+        font-size: 30px;
+      }
+      #addMsg .top i:hover{
+        text-shadow: 0 0 40px #000;
+        color: #aaa;
+      }
+      #addMsg .bottom textarea{
+        width: 350px;
+        height: 100px;
+        resize: none;
+        outline: none;
+      }
+      #addMsg .bottom {
+        height: 0;
+        margin: auto;
+        overflow: hidden;
+        transition-duration: .3s;
+      }
+      #addMsg .bottom input {
+        display: block;
+        width: 352px;
+        height: 30px;
+        margin: auto;
+        cursor: pointer;
+        transition-duration: .3s;
+      }
+      #addMsg .bottom input:hover {
+        box-shadow: 0 0 10px #aaa;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="content">
+        <ul>
+          <li>
+            <div class="msg">
+              this is QPQ's bok-store,join us if you want,come on
+            </div>
+            <div class="time">
+              2018-08-02 11:28:11
+            </div>
+          </li>
+          <li>
+            <div class="msg">
+              this is QPQ's bok-store,join us if you want,come on
+            </div>
+            <div class="time">
+              2018-08-02 11:28:11
+            </div>
+          </li>
+          <li>
+            <div class="msg">
+              this is QPQ's bok-store,join us if you want,come on
+            </div>
+            <div class="time">
+              2018-08-02 11:28:11
+            </div>
+          </li>
+        </ul>
+        <div id="addMsg">
+          <div class="top">
+            <i class="iconfont icon-jiajianzujianjiahao"></i>
+          </div>
+          <div class="bottom">
+            <textarea name="addContent" rows="8" cols="80"></textarea>
+            <input type="submit" name="sub" value="ok">
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src='adminJs/screenMsg.js'></script>
+  </body>
+</html>

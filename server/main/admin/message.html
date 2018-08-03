@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="../commonCss/reset.css">
+    <link rel="stylesheet" href="../commonCss/iconfont.css">
+    <link rel="shortcut icon" href="../imgs/logo.ico">
+    <title>留言条</title>
+    <style>
+    body {
+        height: auto;
+    }
+    #content {
+      min-width: 1020px;
+    }
+    .messageInfo {
+      width: 1020px;
+      background-color: #fff;
+      overflow: hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+    .messageInfo>li {
+      margin-bottom: 10px;
+    }
+    .messageInfo>li:nth-child(2) {
+      padding-top: 30px;
+    }
+    .messageInfo>li>ul li{
+      display: inline-block;
+      width: 90px;
+      text-align: center;
+      overflow:hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+    .messageInfo>li>ul li:nth-last-child(3) {
+      width: 140px;
+    }
+    .messageInfo>li>ul li:nth-last-child(2) {
+      width: calc(100% - 520px);
+    }
+    .messageInfo>li>ul li:last-child:hover,
+    .messageInfo>li>ul li:nth-last-child(2):hover {
+      color: #aaa;
+    }
+    .messageInfo>li>ul {
+      width: 1020px;
+    }
+    .messageInfo>li:not(:nth-child(1)):not(:nth-child(2)):hover {
+      background-color: #ddd;
+    }
+    .title {
+      position: fixed;
+    }
+    .title li {
+      background-color: #ccc;
+    }
+    .title li i {
+      font-size: 12px;
+    }
+    /* 评论详情 */
+    #msgDetail {
+      display: none;
+      overflow: auto;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 350px;
+      height: 300px;
+      padding: 20px;
+      padding-top: 40px;
+      margin: auto;
+      background-color: #fff;
+      box-shadow: 0 0 10px #555;
+    }
+    .close {
+      position: absolute;
+      right: 10px;
+      top:10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #000;
+      background-color: #ccc;
+      color: #888;
+      text-align: center;
+      line-height: 20px;
+      cursor: pointer;
+      transition-duration: .3s;
+    }
+    .close:hover {
+      box-shadow: 0 0 20px #000;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="content">
+        <ul class="messageInfo">
+          <li class="title">
+            <ul>
+              <li>留言者ID</li>
+              <li>留言者昵称</li>
+              <li>留言时间</li>
+              <li>留言</li>
+              <li>回复</li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li>29</li>
+              <li>qpq</li>
+              <li>2018-08-02 11:28:11</li>
+              <li>哈哈哈，我来踩点啦，谁是管理员啊，出来</li>
+              <li><i class="iconfont icon-wodefankui"></i></li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li>29</li>
+              <li>qpq</li>
+              <li>2018-08-02 11:28:11</li>
+              <li>哈哈哈，我来踩点啦，谁是管理员啊，出来</li>
+              <li><i class="iconfont icon-wodefankui"></i></li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li>29</li>
+              <li>qpq</li>
+              <li>2018-08-02 11:28:11</li>
+              <li>哈哈哈，我来踩点啦，谁是管理员啊，出来</li>
+              <li><i class="iconfont icon-wodefankui"></i></li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li>29</li>
+              <li>qpq</li>
+              <li>2018-08-02 11:28:11</li>
+              <li>哈哈哈，我来踩点啦，谁是管理员啊，出来</li>
+              <li><i class="iconfont icon-wodefankui"></i></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- 其他 -->
+      <div id="msgDetail">
+        <div class="close">
+          <i class="iconfont icon-guanbi"></i>
+        </div>
+        这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了，啊哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈哈哈
+      </div>
+    </div>
+    <script src='adminJs/message.js'></script>
+  </body>
+</html>

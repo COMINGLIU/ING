@@ -112,12 +112,20 @@ input[type="button"]:hover {
 	color: #f00;
 	transform: scale(0.8);
 }
+/* container */
+#container {
+	height: 100%;
+}
 /* content */
 #content {
+	overflow: hidden;
+	box-sizing: border-box;
   padding-top: 80px;
   width: 100%;
+	height: 100%;
 }
 #content-menu li {
+	overflow: hidden;
   width: 100%;
   height: 30px;
   border-right: 1px solid #000;
@@ -134,11 +142,12 @@ input[type="button"]:hover {
 /* 右边内容 */
 #content-center {
   width:calc(100% - 130px);
-  height: 1000px;
+  height: 100%;
   margin-left: 130px;
 }
 #content-center iframe{
 	width: 100%;
+	height: 100%;
 	border: none;
 }
 @media screen and (min-width: 1340px) {
@@ -171,4 +180,43 @@ input[type="button"]:hover {
 		margin-left: 0;
 		width: 100%;
 	}
+}
+/* 权限须知 */
+#authNode {
+	display: none;
+	box-sizing: border-box;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 300px;
+	height: 160px;
+	padding: 20px;
+	padding-top: 40px;
+	margin: auto;
+	box-shadow: 0 0 20px #000;
+	background-color: #fff;
+	text-indent: 24px;
+	line-height: 24px;
+}
+/* 关闭按钮 */
+.close {
+	position: absolute;
+	right: 10px;
+	top:10px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	box-shadow: 0 0 10px #000;
+	background-color: #ccc;
+	color: #888;
+	text-align: center;
+	text-indent: 0;
+	line-height: 20px;
+	cursor: pointer;
+	transition-duration: .3s;
+}
+.close:hover {
+	box-shadow: 0 0 20px #000;
 }

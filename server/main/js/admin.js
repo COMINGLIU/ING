@@ -3,10 +3,13 @@
   var preventSqlWords = /select|insert|update|delete|exec|script|count|'|"|=|<|>|%/i;
   var telReg = /(^1[3|4|5|8]\d{9}$)/;
   function Admin() {
+    // 判断用户是否在登录状态
     this.init();
     this.login();
     // 打开响应式菜单
     this.openMenu();
+    // 切换菜单
+    this.checkMenu();
   }
   Object.defineProperty(Admin.prototype,'constructor',{
     enumerable: false,
@@ -66,7 +69,7 @@
           }
         })(key)
       }
-      // 点击提交
+      // 点击提交登录
       oLoginBtn.onclick = function(){
         if(formEle.userAcount.value!=''&&formEle.userPass.value!=''&&loginArr.length==0) {
           Admin.prototype.getAjaxModule(function(ajax) {
@@ -99,12 +102,11 @@
         }
       };
     },
+    // 打开响应后的菜单
     openMenu: function(){
       var oMenuBtn = doc.getElementById('menu'),
           oMenu = doc.getElementById('content-menu');
       var count = 0;
-      console.log(oMenuBtn);
-      console.log(oMenu);
       oMenuBtn.onclick = function(){
         count++;
         if(count%2==1) {
@@ -115,6 +117,46 @@
           oMenuBtn.style.color = '#000';
         }
       }
+    },
+    // 切换菜单选项
+    checkMenu: function(){
+      var oMenu = doc.getElementById('content-menu'),
+          oFrame = doc.querySelector('#content-center iframe');
+      var oCloseUserAuth = doc.querySelector('#authNode .close');
+      oCloseUserAuth.onclick = function(){
+        doc.getElementById('authNode').style.display = 'none';
+      };
+      oMenu.onclick = function(e){
+        e = e||window.e;
+        var target = e.target||e.srcElement;
+        switch(target.id) {
+          case 'usersDetails':
+            oFrame.src = 'admin/usersDetails.html';
+            break;
+          case 'storesDetails':
+            oFrame.src = 'admin/storesDetails.html';
+            break;
+          case 'visitDetails':
+            oFrame.src = 'admin/visitDetails.html';
+            break;
+          case 'bookManage':
+            oFrame.src = 'admin/bookManage.html';
+            break;
+          case 'bookComment':
+            oFrame.src = 'admin/bookComment.html';
+            break;
+          case 'message':
+            oFrame.src = 'admin/message.html';
+            break;
+          case 'screen-talk':
+            oFrame.src = 'admin/screenMsg.html';
+            break;
+          case 'authority-node':
+            doc.getElementById('authNode').style.display = 'block';
+            break;
+        }
+      }
+
     },
     getAjaxModule: function(cb){
       seajs.use('ajax.js',function(ajax){
