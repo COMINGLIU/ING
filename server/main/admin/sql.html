@@ -1,0 +1,19 @@
+<!--
+今日访问
+select distinct(loginlog.userId),user.userName,COUNT(loginlog.visitId) from loginlog,user where loginlog.userId=user.userId group by loginlog.userId;
+用户详情
+select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId;
+店铺管理
+select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId;
+书籍管理
+select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime,shopperName,bookDescribe from bookinfo,shopper where bookinfo.shopperId=shopper.userId;
+书籍评论
+select ask.bookId,answer.shopperId,ask.askUserId,answer.answerUserId,ask.askName,answer.answerName,ask.askContent,answer.answerContent,ask.askTime,answer.answerTime from ask,answer where ask.askId=answer.askId;
+留言条
+select message.*,user.userName from message,user where message.userId=user.userId;
+公屏语录
+select * from screenmsg;
+
+收藏的书籍
+select bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = '29' and likeType='书籍');
+ -->

@@ -15,7 +15,7 @@
         min-width: 1240px;
       }
       .userInfo {
-        width: 1210px;
+        width: 990px;
         background-color: #fff;
         overflow: hidden;
         text-overflow: hidden;
@@ -33,12 +33,11 @@
       .userInfo>li:not(:nth-child(1)):not(:nth-child(2)):hover {
         background-color: #ddd;
       }
-      .userInfo>li:not(:nth-child(1))>ul li:nth-child(7):hover,
-      .userInfo>li:not(:nth-child(1))>ul li:nth-child(8):hover{
+      .userInfo>li:not(:nth-child(1)):hover{
         color: #aaa;
       }
       .userInfo>li>ul {
-        width: 1210px;
+        width: 990px;
       }
       .userInfo>li>ul li{
         display: inline-block;
@@ -50,7 +49,8 @@
       }
       .userInfo>li>ul li:nth-child(3),
       .userInfo>li>ul li:nth-child(4),
-      .userInfo>li>ul li:nth-child(10){
+      .userInfo>li>ul li:nth-child(6),
+      .userInfo>li>ul li:nth-child(8){
         width: 150px;
       }
       .title {
@@ -87,7 +87,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        width: 1210px;
+        width: 990px;
         height: 400px;
         margin: auto;
         box-shadow: 0 0 10px #555;
@@ -130,8 +130,10 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 1210px;
+        right: 0;
+        width: 990px;
         height: 400px;
+        margin: auto;
         box-shadow: 0 0 10px #555;
         margin: auto;
         background-color: #fff;
@@ -151,7 +153,17 @@
         cursor: pointer;
       }
       #book-list .userInfo {
-        width: 1010px;
+        width: 860px;
+      }
+      #book-list .head i {
+        font-style: italic;
+        margin-left: 50px;
+        color: rgb(199,199,199);
+        transform: scale(0.5);
+        cursor: pointer;
+      }
+      #book-list .head i:hover {
+        text-decoration: underline;
       }
       .userName{
         overflow: hidden;
@@ -166,11 +178,30 @@
       }
       /* 书店收藏列表 */
       #stores-list .userInfo {
-        width: 1010px;
+        width: 825px;
         cursor: pointer;
       }
       #stores-list .userInfo>li>ul li:not(:last-child) {
         width: 180px;
+      }
+      /* 用户登录状态 */
+      #login-status {
+        display: none;
+        overflow: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        margin: auto;
+        box-shadow: 0 0 10px #333;
+        background-color: #fff;
+      }
+      #login-status ul li{
+        text-align: center;
+        margin-bottom: 14px;
       }
     </style>
   </head>
@@ -186,10 +217,7 @@
               <li>邮箱</li>
               <li>学校</li>
               <li>注册时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>收藏书籍<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>收藏店铺<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
               <li>登录次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>最近登录时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
               <li>积分<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
             </ul>
           </li>
@@ -201,10 +229,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -216,10 +241,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -231,10 +253,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -246,10 +265,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -261,10 +277,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -276,10 +289,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -291,10 +301,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -306,10 +313,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -321,10 +325,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -336,10 +337,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -351,10 +349,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -366,10 +361,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -381,10 +373,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -401,11 +390,11 @@
       </div>
       <div class="top">
         <select name="search-check">
-          <option value="">用户Id</option>
-          <option value="">昵称</option>
-          <option value="">电话</option>
-          <option value="">邮箱</option>
-          <option value="">学校</option>
+          <option value="userId">userId</option>
+          <option value="userName">userName</option>
+          <option value="tel">tel</option>
+          <option value="email">email</option>
+          <option value="schoolName">schoolName</option>
         </select>
         <input type="text" name="search-content" value="">
       </div>
@@ -419,10 +408,7 @@
               <li>邮箱</li>
               <li>学校</li>
               <li>注册时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>收藏书籍<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>收藏店铺<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
               <li>登录次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
-              <li>最近登录时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
               <li>积分<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li>
             </ul>
           </li>
@@ -434,10 +420,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -449,10 +432,7 @@
               <li>2876224574@qq.com</li>
               <li>湖南大学</li>
               <li>2018-08-02</li>
-              <li>10</li>
-              <li>30</li>
               <li>20</li>
-              <li>2018-08-02 11:28:11</li>
               <li>100</li>
             </ul>
           </li>
@@ -465,11 +445,12 @@
         <i class="iconfont icon-guanbi"></i>
       </div>
       <div class="head">
-        该用户收藏的书籍
+        该用户收藏的书籍: <span>20</span>
+        <i>查看收藏的店铺</i>
       </div>
       <ul class="userName">
-        <li>ID:<span>20</span></li>
-        <li>昵称:<span>qpq</span></li>
+        <li class="userId">ID:<span>29</span></li>
+        <li class="userNickName">昵称:<span>qpq</span></li>
       </ul>
       <ul class='userInfo'>
         <li class="title">
@@ -478,9 +459,8 @@
             <li>出版社</li>
             <li>类型</li>
             <li>单价</li>
-            <li>收藏量</li>
+            <li>书籍总量</li>
             <li>上传时间</li>
-            <li>删除</li>
           </ul>
         </li>
         <li>
@@ -491,7 +471,6 @@
             <li>20</li>
             <li>20</li>
             <li>2018-08-02</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
         <li>
@@ -502,7 +481,6 @@
             <li>20</li>
             <li>20</li>
             <li>2018-08-02</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
         <li>
@@ -513,7 +491,6 @@
             <li>20</li>
             <li>20</li>
             <li>2018-08-02</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
         <li>
@@ -524,7 +501,6 @@
             <li>20</li>
             <li>20</li>
             <li>2018-08-02</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
       </ul>
@@ -535,7 +511,7 @@
         <i class="iconfont icon-guanbi"></i>
       </div>
       <div class="head">
-        该用户收藏的店铺
+        该用户收藏的店铺: <span>29</span>
       </div>
       <ul class="userName">
         <li>ID:<span>20</span></li>
@@ -548,8 +524,7 @@
             <li>店铺口号</li>
             <li>书籍总量(本)</li>
             <li>注册时间</li>
-            <li>收藏量</li>
-            <li>删除</li>
+            <li>书籍总量</li>
           </ul>
         </li>
         <li>
@@ -557,9 +532,7 @@
             <li>小将书店</li>
             <li>天将降大任于我也</li>
             <li>20</li>
-            <li>2018-08-02 11:28:11</li>
             <li>10</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
         <li>
@@ -567,9 +540,7 @@
             <li>小将书店</li>
             <li>天将降大任于我也</li>
             <li>20</li>
-            <li>2018-08-02 11:28:11</li>
             <li>10</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
         <li>
@@ -577,13 +548,25 @@
             <li>小将书店</li>
             <li>天将降大任于我也</li>
             <li>20</li>
-            <li>2018-08-02 11:28:11</li>
             <li>10</li>
-            <li><i class="iconfont icon-lajixiang"></i></li>
           </ul>
         </li>
     </ul>
     </div>
+    <div id="login-status">
+      <div class="close">
+        <i class="iconfont icon-guanbi"></i>
+      </div>
+      <div class="head">
+        qpq
+      </div>
+      <ul>
+        <li>2018-08-02 11:28:11</li>
+        <li>2018-08-02 11:28:11</li>
+        <li>2018-08-02 11:28:11</li>
+      </ul>
+    </div>
+    <script src="../commonJs/module/sea.js"></script>
     <script src='adminJs/usersDetails.js'></script>
   </body>
 </html>

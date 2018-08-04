@@ -8,6 +8,8 @@ const queryString = require('querystring');
 const mysql = require('mysql');
 const multer = require('multer');
 const pathLib = require('path');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
 const storeInfoMulter = multer({dest: './main/imgs/storeImg'});
 const server = express();
@@ -17,10 +19,21 @@ const conn  = mysql.createConnection({
   password: 'kkxxdgmyt67LIUQIONG',
   database: 'bookstore'
 });
+let sessionArr = [];
+for(var i=0;i<100000;i++){
+  sessionArr.push('sig_'+Math.random());
+}
+server.use(cookieSession({
+  keys: sessionArr,
+  name: 'session_id',
+  maxAge: 20*3600*1000
+}))
 const preventSqlWords = /select|update|delete|insert|exec|count|'|"|=|<|>|%/i;
 // 接收任何文件
 server.use(storeInfoMulter.any());
 server.get('/',function(req,res){
+  //设置response编码为utf-8
+  // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
   console.log('url'+req.url);
   let reqUrl = req.query;
   let sql="";
@@ -144,10 +157,176 @@ server.get('/',function(req,res){
           })
         }
       })
+      break;
+    // 用户详情接口
+    case 'getUserDetailData':
+      if(req.session['adminAcount']) {
+        if(reqUrl.adminAcount==req.session['adminAcount']){
+          console.log(req.session['adminAcount']);
+          var adminA = req.session['adminAcount'];
+          console.log(adminA.split('_')[1]);
+          if(adminA.split('_')[1]=="super") {
+            // 超级管理员
+            sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId;';
+            conn.query(sql,function(err,data){
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                console.log('成功');
+                console.log(data);
+                res.send({status: 'success',data: data});
+              }
+            })
+          }else {
+            // 普通管理员
+            res.send({status: 'fail',msg: '您没有查看用户详情的权限，详情请查看:权限须知'});
+          }
+        }else {
+          // 账号不对的情况
+          res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
+        }
+      }else {
+        // 没有登录或登录过期的情况
+        res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
+      }
+      break;
+    // 用户收藏的书籍
+    case 'getBookLikes':
+      sql = 'select bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    case 'getStoreLikes':
+      sql = 'select shopperName,shopperDescribe,booksNum,shopperTime from shopper where userId in(select storeId from booklike where userId = "'+reqUrl.userId+'" and likeType="店铺");'
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log('error:'+err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    case 'searchUserInfo':
+      let book_key = reqUrl.searchKey,
+          book_value = reqUrl.searchValue,
+          book_sqlKey;
+      switch(book_key) {
+        case '用户ID':
+          book_sqlKey='shopper.userId';
+          break;
+        case '店名':
+          book_sqlKey = 'shopper.shopperName';
+          break;
+        case '店长昵称':
+          book_sqlKey = 'shopper.shopperDescribe';
+          break;
+        case '电话':
+          book_sqlKey = 'user.tel';
+          break;
+        case '邮箱':
+          book_sqlKey = 'user.email';
+          break;
+      }
+      sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and user.'+book_sqlKey+'="'+book_value+'";'
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log("err:"+err);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    case 'getStoresInfo':
+      if(req.session['adminAcount']) {
+        if(reqUrl.adminAcount==req.session['adminAcount']){
+          console.log(req.session['adminAcount']);
+          var adminA = req.session['adminAcount'];
+          console.log(adminA.split('_')[1]);
+          if(adminA.split('_')[1]=="super") {
+            // 超级管理员
+            sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId;';
+            conn.query(sql,function(err,data){
+              if(err){
+                console.log('err:'+err.sqlMessage);
+              }else {
+                console.log(data);
+                res.send({status: 'success',data: data});
+              }
+            })
+          }else {
+            // 普通管理员
+            res.send({status: 'fail',msg: '您没有查看用户详情的权限，详情请查看:权限须知'});
+          }
+        }else {
+          // 账号不对的情况
+          res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
+        }
+      }else {
+        // 没有登录或登录过期的情况
+        res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
+      }
+      break;
+    case 'serchStoreInfo':
+      let store_key = reqUrl.searchKey,
+          store_value = reqUrl.searchValue,
+          store_sqlKey;
+      console.log(store_key);
+      switch(store_key) {
+        case '用户ID':
+          store_sqlKey='shopper.userId';
+          break;
+        case '店名':
+          store_sqlKey = 'shopper.shopperName';
+          break;
+        case '店长昵称':
+          store_sqlKey = 'shopper.shopperDescribe';
+          break;
+        case '电话':
+          store_sqlKey = 'user.tel';
+          break;
+        case '邮箱':
+          store_sqlKey = 'user.email';
+          break;
+      }
+      console.log(store_sqlKey);
+      sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId and '+store_sqlKey+'="'+store_value+'";';
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status: 'success',data: data});
+        }
+      })
+      break;
+    // 删除某个书店
+    case 'delStore':
+      sql = 'delete from shopper where userId="'+reqUrl.storeId+'";';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',msg: '删除成功'});
+        }
+      })
+      break;
   }
 })
 server.post(bodyParser.urlencoded({extended: true}));
 server.post('/',function(req,res){
+  //设置response编码为utf-8
+  // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
   let str = '';
   let sql;
   if(req.body){
@@ -324,22 +503,41 @@ server.post('/',function(req,res){
         case 'adminLogin':
           let adminAcount = POST.userAcount,
               adminPass = POST.userPass;
-          sql = 'SELECT adminAcount,adminPass FROM admin';
+          sql = 'SELECT * FROM admin where adminAcount="'+adminAcount+'"';
           conn.query(sql,function(err,data){
+            console.log(sql);
             if(err){
-              console.log('err'+err.code);
+              console.log(err.sqlMessage);
             }else {
               let admin = data[0];
               console.log(admin);
               if(adminAcount!=admin.adminAcount) {
+                let sql2 = 'INSERT INTO erroradmin(errorAcount,errorPass) VALUES("'+adminAcount+'","'+adminPass+'");';
+                conn.query(sql2,function(err,data) {
+                  console.log(sql2);
+                  if(err) {
+                    console.log('错误账号插入失败');
+                    console.log(err.code);
+                  }else {
+                    console.log('错误账号插入成功');
+                  }
+                })
                 res.send({status: 'fail',msg:'此管理员账号不存在'});
               }else if(adminPass!=admin.adminPass) {
                 res.send({status: 'fail',msg:'密码错误'});
               }else if(adminAcount==admin.adminAcount&&adminPass==admin.adminPass){
-                // let newAcountNum = encodeURI(adminAcount+Math.floor(Math.random()*100000));
-                // console.log(newAcountNum);
-                console.log('登录成功');
-                res.send({status: 'success',msg:'登录成功',user: adminAcount});
+                if(req.session['adminAcount']==null||adminAcount!=req.session['adminAcount'].substr(0,11)) {
+                  console.log('还没登陆过管理员账号');
+                  let newAcountNum;
+                  if(admin.signal == 'superAdmin') {
+                    newAcountNum = encodeURI(adminAcount+Math.floor(Math.random()*100000)+"_super");
+                  }else {
+                    newAcountNum = encodeURI(adminAcount+Math.floor(Math.random()*100000)+"_normal");
+                  }
+                  req.session['adminAcount'] = newAcountNum;
+                }
+                console.log(req.session['adminAcount']);
+                res.send({status: 'success',msg:'登录成功',user: req.session['adminAcount']});
               }
             }
           })
