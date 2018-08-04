@@ -13,7 +13,6 @@ select ask.bookId,answer.shopperId,ask.askUserId,answer.answerUserId,ask.askName
 select message.*,user.userName from message,user where message.userId=user.userId;
 公屏语录
 select * from screenmsg;
-
 收藏的书籍
 select bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = '29' and likeType='书籍');
  -->

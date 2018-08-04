@@ -214,27 +214,27 @@ server.get('/',function(req,res){
       })
       break;
     case 'searchUserInfo':
-      let book_key = reqUrl.searchKey,
-          book_value = reqUrl.searchValue,
-          book_sqlKey;
-      switch(book_key) {
+      let user_key = reqUrl.searchKey,
+          user_value = reqUrl.searchValue,
+          user_sqlKey;
+      switch(user_key) {
         case '用户ID':
-          book_sqlKey='shopper.userId';
+          user_sqlKey='shopper.userId';
           break;
         case '店名':
-          book_sqlKey = 'shopper.shopperName';
+          user_sqlKey = 'shopper.shopperName';
           break;
         case '店长昵称':
-          book_sqlKey = 'shopper.shopperDescribe';
+          user_sqlKey = 'shopper.shopperDescribe';
           break;
         case '电话':
-          book_sqlKey = 'user.tel';
+          user_sqlKey = 'user.tel';
           break;
         case '邮箱':
-          book_sqlKey = 'user.email';
+          user_sqlKey = 'user.email';
           break;
       }
-      sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and user.'+book_sqlKey+'="'+book_value+'";'
+      sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and user.'+user_sqlKey+'="'+user_value+'";'
       conn.query(sql,function(err,data){
         console.log(sql);
         if(err){
@@ -245,6 +245,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+      // 获取店铺详情
     case 'getStoresInfo':
       if(req.session['adminAcount']) {
         if(reqUrl.adminAcount==req.session['adminAcount']){
@@ -275,6 +276,7 @@ server.get('/',function(req,res){
         res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
       }
       break;
+    // 搜索指定店铺
     case 'serchStoreInfo':
       let store_key = reqUrl.searchKey,
           store_value = reqUrl.searchValue,
@@ -317,7 +319,109 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
-          res.send({status:'success',msg: '删除成功'});
+          // 删除书店所有的书籍
+          //删除收藏
+          // res.send({status:'success',msg: '删除成功'});
+        }
+      })
+      break;
+    // 获取书籍信息
+    case 'getBookInfo':
+      sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime,shopperName,bookDescribe from bookinfo,shopper where bookinfo.shopperId=shopper.userId;';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    case 'searchBookInfo':
+      let book_key = reqUrl.searchKey,
+          book_value = reqUrl.searchValue,
+          book_keySql;
+      switch(book_key) {
+        case '书籍ID':
+          book_keySql = 'bookinfo.bookId';
+          break;
+        case '书名':
+          book_keySql = 'bookinfo.bookName';
+          break;
+        case '出版社':
+          book_keySql = 'bookinfo.bookPublic';
+          break;
+        case '分类':
+          book_keySql = 'bookinfo.bookType';
+          break;
+        case '店名':
+          book_keySql = 'shopper.shopperName';
+          break;
+      }
+      sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime,shopperName,bookDescribe from bookinfo,shopper where bookinfo.shopperId=shopper.userId and '+book_keySql+'="'+book_value+'";';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status: 'success',data: data});
+        }
+      })
+      break;
+    // 删除某本书籍
+    case 'delSomeBook':
+      if(req.session['adminAcount']) {
+        if(reqUrl.adminAcount==req.session['adminAcount']){
+          console.log(req.session['adminAcount']);
+          var adminA = req.session['adminAcount'];
+          console.log(adminA.split('_')[1]);
+          if(adminA.split('_')[1]=="super") {
+            // 超级管理员
+            // sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId;';
+            // 删除bookScore,booklike,bookinfo,ask,answer
+            sql = 'delete from '
+            conn.query(sql,function(err,data){
+              if(err){
+                console.log('err:'+err.sqlMessage);
+              }else {
+                console.log(data);
+                res.send({status: 'success',data: data});
+              }
+            })
+          }else {
+            // 普通管理员
+            res.send({status: 'fail',msg: '您没有查看用户详情的权限，详情请查看:权限须知'});
+          }
+        }else {
+          // 账号不对的情况
+          res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
+        }
+      }else {
+        // 没有登录或登录过期的情况
+        res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
+      }
+      break;
+    // 获取留言条
+    case 'getMessageNote':
+      sql = 'select message.*,user.userName from message,user where message.userId=user.userId;';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data: data});
+        }
+      })
+      break;
+    // 获取公屏语录
+    case 'getScreenMsg':
+      sql = 'select * from screenmsg;'
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data: data});
         }
       })
       break;
@@ -539,6 +643,17 @@ server.post('/',function(req,res){
                 console.log(req.session['adminAcount']);
                 res.send({status: 'success',msg:'登录成功',user: req.session['adminAcount']});
               }
+            }
+          })
+          break;
+        case 'addScreenMsg':
+          sql = 'INSERT INTO screenmsg(msg) VALUES("'+POST.msg+'");';
+          conn.query(sql,function(err,data){
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log('添加成功');
+              res.send({status:'success',msg: '公屏语录添加成功'});
             }
           })
           break;
