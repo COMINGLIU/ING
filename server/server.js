@@ -39,8 +39,9 @@ server.get('/',function(req,res){
   let sql="";
   console.log(reqUrl);
   switch(reqUrl.act){
+    // 获取主页的书籍
     case 'indexBook':
-      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,schoolName FROM bookinfo,user where bookinfo.shopperId=user.userId;';
+      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,schoolName FROM bookinfo,user where bookinfo.shopperId=user.userId;';
       conn.query(sql,function(err,data){
         if(err){
           console.log(err);
@@ -51,6 +52,94 @@ server.get('/',function(req,res){
         }
       })
       break;
+    // 收藏书籍
+    case 'collectBook':
+      let sql0 = 'SELECT bookId FROM booklike where userId="'+reqUrl.userId+'" and bookId="'+reqUrl.bookId+'" and likeType="书籍";';
+      conn.query(sql0,function(err,data){
+        if(err) {
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          if(data.toString() == ''){
+            console.log('还没有收藏过');
+            sql = 'INSERT INTO booklike(userId,likeType,bookId) VALUES("'+reqUrl.userId+'","书籍","'+reqUrl.bookId+'");';
+            conn.query(sql,function(err,data1){
+              console.log(sql);
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                console.log('收藏成功');
+                res.send({status: 'success',msg: '收藏成功'});
+              }
+            })
+          }else {
+            console.log('收藏过了');
+            res.send({status: 'success',msg: '收藏过了'});
+          }
+        }
+      })
+      break;
+    // 取消收藏书籍
+    case 'cancelCollectBook':
+      sql = 'delete from booklike where userId="'+reqUrl.userId+'" and bookId="'+reqUrl.bookId+'" and likeType="书籍";';
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log('取消成功');
+          res.send({status: 'success',msg: '已取消收藏该书籍'});
+        }
+      })
+      break;
+    // 收藏店铺
+    case 'collectStore':
+      let collectStore_sql0 = 'SELECT * from booklike where userId="'+reqUrl.userId+'" and likeType="店铺" and storeId="'+reqUrl.storeId+'";';
+      conn.query(collectStore_sql0,function(err,data0){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          if(data0.toString()=='') {
+            sql = 'INSERT INTO booklike(userId,likeType,storeId) VALUES("'+reqUrl.userId+'","店铺","'+reqUrl.storeId+'");';
+            conn.query(sql,function(err,data){
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                res.send({status: 'success',msg:'店铺收藏成功，请在个人中心查看'});
+              }
+            })
+          }else {
+            res.send({status: 'success',msg: '该店铺已经被收藏过了，请在个人中心查看'});
+          }
+        }
+      })
+      break;
+    // 获取收藏的书籍（客户端）
+    case 'getColllectBooks':
+      sql = 'SELECT booklike.bookId,bookinfo.bookName,bookinfo.bookPrice,user.schoolName FROM booklike,bookinfo,user where booklike.userId="'+reqUrl.userId+'" and booklike.likeType="书籍" and booklike.bookId=bookinfo.bookId and booklike.userId=user.userId';
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data: data});
+        }
+      })
+      break;
+    // 获取用户收藏的店铺（客户端）
+    // case 'getColletStores':
+    //   sql = 'SELECT * FROM booklike where userId="'+reqUrl.userId+'" and likeType="店铺";';
+    //   conn.query(sql,function(err,data){
+    //     if(err){
+    //       console.log(err.sqlMessage);
+    //     }else {
+    //       console.log(data);
+    //       res.send({status:'success',data: data});
+    //     }
+    //   })
+    //   break;
+    // 搜索书籍
     case 'searchBook':
       let bookName,bookPublic,bookCollege;
       bookName = reqUrl.bookName;
@@ -76,9 +165,10 @@ server.get('/',function(req,res){
         }
       })
       break;
+    // 获取书籍详情
     case 'getBookDetail':
       let bookId = reqUrl.bookId;
-      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+bookId+'";'
+      sql = 'SELECT bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+bookId+'";'
       conn.query(sql,function(err,bookDetail){
         console.log(sql);
         if(err){
@@ -91,25 +181,52 @@ server.get('/',function(req,res){
           conn.query(anotherBookSql,function(err,anotherBook){
             console.log(anotherBookSql);
             if(err){
-              res.send(err.code);
+              console.log(err.sqlMessage);
             }else{
-              res.send({bookDetail: bookDetail,anotherBook: anotherBook});
+              console.log('书籍详情获取成功');
+              res.send({status: 'success',bookDetail: bookDetail[0],anotherBook: anotherBook});
             }
           })
         }
       })
       break;
+    // 获取书籍评论
     case 'getBookComment':
-      let _bookId = reqUrl.bookId;
-      sql = 'SELECT * FROM bookcomment where bookId="'+_bookId+'"';
+      // sql = 'SELECT * FROM bookcomment where bookId="'+reqUrl.bookId+'"';
+      // conn.query(sql,function(err,data){
+      //   if(err){
+      //     console.log(err.code);
+      //   }else {
+      //     console.log('书籍评论返回成功');
+      //     res.send({status:'success',data:data});
+      //   }
+      // })
+      break;
+    // 获取所有的店铺
+    case 'getAllStores':
+      sql = 'SELECT * FROM shopper';
       conn.query(sql,function(err,data){
         if(err){
-          console.log(err.code);
+          console.log(err.sqlMessage);
         }else {
-          res.send(data);
+          console.log(data);
+          res.send({status: 'success',data:data});
         }
       })
       break;
+    // 获取某个店铺的所有书籍详情
+    case 'getOneAllStoreBooks':
+      sql = 'SELECT bookSrc,bookName,bookPublic,bookAllNum,bookPrice,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    // 个人中心
     case 'getUserCenterInfo':
       let userId = reqUrl.userId;
       let myShopper,like_books,like_stores;
@@ -190,9 +307,9 @@ server.get('/',function(req,res){
         res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
       }
       break;
-    // 用户收藏的书籍
+    // 用户收藏的书籍（管理员端）
     case 'getBookLikes':
-      sql = 'select bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
+      sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
       conn.query(sql,function(err,data){
         if(err){
           console.log(err.sqlMessage);
@@ -213,6 +330,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+      // 用户收藏的店铺（管理员端）
     case 'searchUserInfo':
       let user_key = reqUrl.searchKey,
           user_value = reqUrl.searchValue,
@@ -245,7 +363,7 @@ server.get('/',function(req,res){
         }
       })
       break;
-      // 获取店铺详情
+    // 获取店铺详情
     case 'getStoresInfo':
       if(req.session['adminAcount']) {
         if(reqUrl.adminAcount==req.session['adminAcount']){
@@ -276,7 +394,7 @@ server.get('/',function(req,res){
         res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
       }
       break;
-    // 搜索指定店铺
+    // 搜索指定店铺基本信息
     case 'serchStoreInfo':
       let store_key = reqUrl.searchKey,
           store_value = reqUrl.searchValue,
@@ -337,6 +455,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+    //搜索书籍信息
     case 'searchBookInfo':
       let book_key = reqUrl.searchKey,
           book_value = reqUrl.searchValue,
@@ -436,6 +555,7 @@ server.post('/',function(req,res){
   if(req.body){
     console.log('body');
     const comingData = req.body;
+    console.log(comingData);
     switch(comingData.act) {
       case 'storeInfo':
         // 将店存进去
@@ -447,8 +567,7 @@ server.post('/',function(req,res){
             console.log('上传失败');
             res.send('上传失败');
           }else {
-            console.log('上传成功');
-            sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+newName+'");';
+            sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg,booksNum) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+newName+'","0");';
             conn.query(sql,function(err,data){
               if(err){
                 console.log('上传失败:'+err);
@@ -550,13 +669,13 @@ server.post('/',function(req,res){
                   console.log(userInfo);
                   delete userInfo.pass;
                   let sql2 = 'INSERT INTO loginlog(userId) VALUES("'+userInfo.userId+'");';
-                  conn.query(sql2,function(err,data){
+                  conn.query(sql2,function(err,data2){
                     if(err){
                       console.log("err:"+err.code);
                     }else {
                       console.log('插入loginlog成功');
                       let sql3 = 'UPDATE logintimes SET loginTimes=loginTimes+1 where userId="'+userInfo.userId+'";';
-                      conn.query(sql3,function(err,data){
+                      conn.query(sql3,function(err,data3){
                         if(err){
                           console.log("err:"+err.code);
                         }else {
@@ -595,7 +714,11 @@ server.post('/',function(req,res){
         case 'sendMsg':
           let userId = POST.userId,
               msg = POST.msg;
-          sql = 'INSERT INTO message(userId,msg) VALUES("'+userId+'","'+msg+'");';
+          if(userId){
+            sql = 'INSERT INTO message(userId,msg) VALUES("'+userId+'","'+msg+'");';
+          }else {
+            sql = 'INSERT INTO message(msg) VALUES("'+msg+'");';
+          }
           conn.query(sql,function(err,data){
             if(err){
               console.log('err:'+err.code);

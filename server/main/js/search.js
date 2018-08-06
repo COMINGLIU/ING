@@ -1,5 +1,6 @@
 (function(window,document){
 	var doc = document;
+	var user;
 	function Search(){
 		this.init();
 		// 获取header模块方法
@@ -53,25 +54,74 @@
 			        			target.className = "iconfont icon-menu";
 			        		}
 			        		break;
+									case 'userCenter':
+									case 'userCenterBtn':
+										if(doc.getElementById('regitBtn').innerHTML=='LOGIN') {
+											var con = confirm('登录后才能访问个人中心，登录吗?');
+											if(con) {
+												// 登录
+												doc.getElementById('regitLog').style.display = 'block';
+												doc.getElementsByClassName('login')[0].style.display = 'block';
+											}
+										}else {
+											window.location.href = 'user.html';
+										}
+										break;
 			        		case 'searchBtnLi':
 			        		case 'searchBtn':
-				        		oSearchBox.style.height = "138px";
-							    if(HEADER.getStyle(oNav,'right')=="0px") 	{
-							  	    oNav.style.transform = 'translateX(100%)';
-							  	    count++;
-							    }
-							    oSearchInput.focus();
-							    doc.getElementById("menu").className = "iconfont icon-menu";
-									break;
-						    case 'searchCloseBtn':
-						  	    oSearchBox.style.height = "0";
-						    	break;
-						    case 'addStoreBtn':
-					           	oAddStore.style.height = "100%";
-					           	if(Search.prototype.getStyle(oMenu,"display")=="none"){
-						            count++;
-					           	}
+					        		oSearchBox.style.height = "138px";
+								    if(HEADER.getStyle(oNav,'right')=="0px") 	{
+								  	    oNav.style.transform = 'translateX(100%)';
+								  	    count++;
+								    }
+								    oSearchInput.focus();
+								    doc.getElementById("menu").className = "iconfont icon-menu";
+										break;
+							    case 'searchCloseBtn':
+							  	    oSearchBox.style.height = "0";
+							    	break;
+							    case 'addStoreBtn':
+										if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+											var con = confirm('需要登录后才能添加属于您自己的书店，登录吗？');
+											if(con) {
+												doc.getElementById('regitLog').style.display = "block";
+												doc.getElementsByClassName('login')[0].style.display = 'block';
+											}
+										}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
+											var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
+											window.location.href = 'them1.html?storeId='+ user.userId;
+										}else {
+											var con = confirm('您还没有注册书店，是否注册?');
+											if(con) {
+												// 打开注册书店
+												oAddStore.style.height = "100%";
+												if(Search.prototype.getStyle(oMenu,"display")=="none"){
+													count++;
+												}
+											}
+										}
 					        break;
+								case 'openStoreBtn':
+									if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+										var con = confirm('需要登录后才能进入您的书店中心，登录吗？');
+										if(con) {
+											doc.getElementById('regitLog').style.display = "block";
+											doc.getElementsByClassName('login')[0].style.display = 'block';
+										}
+									}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
+										var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
+										window.location.href = 'them1.html?storeId='+ user.userId;
+									}else {
+										var con = confirm('您还没有注册书店，是否注册?');
+										if(con) {
+											// 打开注册书店
+											oAddStore.style.height = "100%";
+											if(Search.prototype.getStyle(oMenu,"display")=="none"){
+												count++;
+											}
+										}
+									}
+									break;
 						}
 					})
 					HEADER.DoEvent.addEvent(oKeySearch,'click',function(){
@@ -87,8 +137,26 @@
 		    })
 		},
 		init: function(){
+			var aKeyWordLis = doc.querySelectorAll('#search-keywors li');
+			var keyWord = {
+				bookName: aKeyWordLis[0],
+				bookPublic: aKeyWordLis[1],
+				bookAddr: aKeyWordLis[2]
+			};
+			var oBookUl = doc.getElementsByClassName('books')[0],
+					bookInfo = {
+						aBookLi: oBookUl.getElementsByTagName('li'),
+						aBookHref:　oBookUl.getElementsByTagName('a'),　
+						aBookImg: oBookUl.getElementsByTagName('img'),
+						aBookPrice: oBookUl.querySelectorAll('.price span'),
+						aBookName: oBookUl.getElementsByTagName('h3'),
+						aBookPublic: oBookUl.querySelectorAll('.public'),
+						aBookAddr: oBookUl.querySelectorAll('.addr span')
+					};
+			console.log(bookInfo);
 			var sentData = decodeURI(window.location.search).split('?')[1].split('=')[1];
-			console.log(sentData);
+			keyWord.bookName.innerHTML = sentData;
+			console.log(keyWord.bookName.innerHTML);
 			this.getAjaxModule(function(ajax){
 				ajax({
 					url:'/',
@@ -100,6 +168,17 @@
 					success: function(res){
 						var data = JSON.parse(res);
 						console.log(data);
+						// 渲染数据
+						for(var i=0,len=data.length;i<len;i++) {
+							// bookInfo.oBookImg[i].src = data[i].bookSrc;
+							bookInfo.aBookHref[i].href += data[i].bookId;
+							bookInfo.aBookPrice[i].innerHTML = data[i].bookPrice;
+							bookInfo.aBookName[i].innerHTML = data[i].bookName;
+							bookInfo.aBookPublic[i].innerHTML = data[i].bookPublic;
+							bookInfo.aBookAddr[i].innerHTML = data[i].schoolName;
+							// 点击收藏
+							Search.prototype.collectBook();
+						}
 					}
 				})
 			})
@@ -116,9 +195,13 @@
 					oPublic: doc.getElementsByName("public")[0],
 					oCollege: doc.getElementsByName("college")[0]
 			};
-			console.log(searchEle);
+			var aKeyWordLis = doc.querySelectorAll('#search-keywors li');
+			var keyWord = {
+				bookName: aKeyWordLis[0],
+				bookPublic: aKeyWordLis[1],
+				bookAddr: aKeyWordLis[2]
+			};
 			for(var key in searchEle) {
-				console.log(searchEle[key]);
 				(function(key){
 						searchEle[key].onchange = function(){
 							if(searchEle.oBookName.value!=""||searchEle.oPublic.value!=""||searchEle.oCollege.value!=""){
@@ -142,13 +225,64 @@
 									})
 								})
 							}
+							keyWord.bookName.innerHTML = searchEle.oBookName.value;
+							keyWord.bookPublic.innerHTML = searchEle.oPublic.value;
+							keyWord.bookAddr.innerHTML = searchEle.oCollege.value;
 						}
 				})(key)
+			}
+		},
+		// 收藏书籍
+		collectBook: function(){
+			var aCollectBtn = doc.getElementsByClassName('icon-heart-fill'),
+					bookHref = doc.querySelectorAll('.books a');
+			for(var i=0,len=aCollectBtn.length;i<len;i++) {
+				(function(i){
+					var bookId = bookHref[i].href.split('?')[1].split('=')[1];
+					aCollectBtn[i].onclick = function(){
+						console.log(1);
+						Search.prototype.getCookieModule(function(cookie){
+							if(cookie.get('user')){
+								user = JSON.parse(cookie.get('user'));
+								Search.prototype.getAjaxModule(function(ajax){
+									ajax({
+										url: '/',
+										data: {
+											act: 'collectBook',
+											userId: user.userId,
+											bookId: bookId,
+										},
+										method: 'get',
+										error: function(err){
+											console.log('err:'+err);
+										},
+										success: function(res){
+											res = JSON.parse(res);
+											console.log(res);
+										}
+									})
+								})
+							}else {
+								var con = confirm('登录后才能保存收藏的书籍，登录吗？');
+								if(con){
+									//打开登录
+									doc.getElementById('regitLog').style.display = "block";
+									doc.getElementsByClassName('login')[0].style.display = 'block';
+								}
+							}
+						});
+					}
+				})(i)
 			}
 		},
 		getAjaxModule: function(callback){
 			seajs.use('ajax.js',function(ajax){
 				callback&&callback(ajax);
+			})
+		},
+		getCookieModule: function(cb){
+			seajs.use('cookie.js',function(cookie){
+				cb&&cb(cookie);
 			})
 		},
 		getStyle: function(obj,attr){

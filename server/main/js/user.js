@@ -241,12 +241,26 @@
 						oNav.style.border = "0";
 						break;
 					case 'myStore':
-						// console.log(user);
-						window.location.href = 'them1.html?suerId="'+user.userId+'"&userName="'+user.userName+'"';
+						console.log(user);
+						if(user.isSeller==null) {
+							var con = confirm('您还没有注册书店，是否跳转到主页注册？');
+							if(con) {
+								window.location.href = 'index.html';
+							}
+						}else {
+							window.location.href = 'them1.html?storeId='+user.userId;
+						}
 						break;
 					case 'toMyStoreCenter':
 						console.log(user);
-						window.location.href = 'addBook.html?suerId="'+user.userId+'"&userName="'+user.userName+'"';
+						if(user.isSeller==null) {
+							var con = confirm('您还没有注册书店，是否跳转到首页注册？');
+							if(con) {
+								window.location.href = 'index.html';
+							}
+						}else {
+							window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
+						}
 						break;
 				}
 			})

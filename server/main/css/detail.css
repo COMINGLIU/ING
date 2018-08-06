@@ -1,14 +1,13 @@
 @charset 'utf-8';
 body {
-	background-color: rgb(236,238,240);
+	background-color: rgb(219,222,221);
 }
 #content {
 	width: 100%;
 	padding-top: 80px;
 }
 /*书籍信息*/
-#bookinfo,
-#comments {
+#bookinfo{
 	display: flex;
 	justify-content: space-around;
 	flex-wrap: wrap;
@@ -16,51 +15,13 @@ body {
 	margin-top: 100px;
 	font-size: 0;
 }
-#comments {
-	height: 500px;
-}
-#comments li {
-	width: 40%;
-	height:　400px;
-	background-color: #fff;
-	font-size: 12px;
-}
-.chatRoom {
-	position: relative;
-}
-.chatRoom:before {
-	content: "";
-	position: absolute;
-	top: -100px;
-	left: calc(50% - 10px);
-	width: 20px;
-	height: 100px;
-	background-color: #000;
-	border-radius: 10px;
-}
-/**/
 #bookinfo li{
 	width: 40%;
 	height: 400px;
 	background-color: #fff;
 	font-size: 12px;
 }
-@media screen and (max-width: 800px) {
-	#comments li,
-	#bookinfo li {
-		width: 100%;
-		height: auto;
-	}
-	#comments {
-		margin-top: 0;
-	}
-	#comments li:nth-child(2) {
-		margin-top: 100px;
-	}
-	.comments-record:after {
-		right: 50px;
-	}
-}
+
 #bookinfo .bookimg {
 	position: relative;
 }
@@ -78,7 +39,7 @@ body {
 }
 .bookimg em {
 	position: absolute;
-	top: -100px;	
+	top: -100px;
 	left: calc(50% - 10px);
 	width:20px;
 	height: 100px;
@@ -100,7 +61,6 @@ body {
 .bookins p {
 	border-bottom: 1px solid #000;
 	line-height: 30px;
-	/*max-height: 90px;*/
 }
 .bookins i {
 	display: block;
@@ -114,27 +74,88 @@ body {
 	vertical-align: middle;
 }
 /*评论#comments*/
-.comments-record {
-	position: relative;
-	overflow: hidden;
-	overflow: auto;
+#comments {
 	box-sizing: border-box;
-	line-height: 30px;
-	padding: 50px;
+	position: relative;
+	width: 90%;
+	/* height: 500px; */
+	padding: 30px 50px;
+	margin: 100px auto;
+	background-color: #fff;
 }
-.comments-record:after {
-	content: "+";
+#comments-num {
+	margin-bottom: 10px;
+}
+#comments li {
+	position: relative;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ccc;
+	line-height: 18px;
+}
+#comments em {
+	content: '回复';
 	position: absolute;
-	top: -20px;
-	right: 50px;
-	width: 70px;
-	height: 70px;
-	border-radius: 50%;
+	right: -30px;
+	bottom: 0;
+	color: #888;
+	transform: scale(0.8);
+	transition-duration: .3s;
+}
+#comments em:hover {
+	color: #333;
+}
+#comments li h3 {
+	color: rgb(10,13,51);
+}
+#comments li p {
+	color: #888;
+}
+#comments:before {
+	content: "";
+	position: absolute;
+	top: -100px;
+	left: 75%;
+	width: 20px;
+	height: 100px;
 	background-color: #000;
-	color: #fff;
-	font-size: 40px;
+	border-radius: 10px;
+}
+#add-comment {
+	padding-top: 40px;
+}
+#add-comment {
+	width: 100%;
+	text-align: right;
+}
+#add-comment textarea {
+	width: 100%;
+	height: 50px;
+	outline: none;
+	resize: none;
+	text-align: left;
+	color: #555;
+	letter-spacing: 1px;
+	transition-duration: .3s;
+}
+@media screen and (max-width: 550px) {
+	#add-comment textarea {
+		height: 100px;
+	}
+}
+#add-comment textarea:focus {
+	border-color: #000;
+}
+#add-comment button {
+	width: 80px;
+	height: 30px;
+	margin-top: 10px;
 	text-align: center;
-	line-height: 70px;
+	cursor: pointer;
+	transition-duration: .3s;
+}
+#add-comment button:hover {
+	box-shadow: 0 0 40px #777;
+	border-radius: 10px;
 }
 /*相关书籍*/
 #relaBooks {
@@ -154,12 +175,11 @@ body {
 	width: 90%;
 	margin: auto;
 	height:　300px;
-	/*padding: 0 50px;*/
-	/*border: 1px solid #000;*/
 }
 #relaBooks-box ul {
-	width: 2000px;
+	width: 1150px;
 	height: 240px;
+	font-size: 0;
 }
 #relaBooks ul li {
 	overflow: hidden;
@@ -168,6 +188,7 @@ body {
 	height: 200px;
 	margin-right: 30px;
 	background-color: #fff;
+	font-size: 12px;
 }
 #relaBooks ul li p {
 	font-size: 10px;
@@ -177,12 +198,17 @@ body {
 #relaBooks ul li img {
 	width: 100%;
 }
-/**/
-#footer {
-	width: 100%;
-	height: 200px;
-	margin-top: 20px;
-	background-color: #fff;
+/* 响应 */
+@media screen and (max-width: 800px) {
+	.bookimg div {
+		width: 200px;
+		height: 200px;
+	}
+	#bookinfo li {
+		width: 90%;
+		height: auto;
+	}
+	#comments:before {
+		left: calc(50% - 10px);
+	}
 }
-
-

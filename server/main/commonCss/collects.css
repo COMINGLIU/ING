@@ -1,0 +1,73 @@
+@charset 'utf-8';
+/*收藏夹*/
+#collects {
+	position: fixed;
+	right: 10px;
+	top: 100px;
+	width: 80px;
+	height: 50px;
+	border-radius: 10px;
+	background-color: #000;
+	color: #fff;
+	font-size: 20px;
+	text-align: center;
+	line-height: 50px;
+	z-index: 20;
+}
+#collects:after {
+	content: "";
+	position: absolute;
+	top: -20px;
+	left: 35px;
+	width: 10px;
+	height: 20px;
+	border-radius: 7px;
+	background-color: #000;
+}
+#collects .info {
+	position: absolute;
+	top: 0;
+	left: -90px;
+	width: 80px;
+	height: 30px;
+	border-radius: 20px;
+	font-size: 12px;
+	line-height: 30px;
+	background-color: #000;
+	color: #fff;
+	opacity: 0;
+	transition-duration: .6s;
+}
+#collects:hover .info {
+	opacity: 1;
+}
+/* 收藏夹盒子 */
+#collets-box {
+	overflow: hidden;
+  position: absolute;
+  right: 0;
+  /* width: 200px; */
+	width: 0;
+  box-shadow: 0 0 10px #000;
+  background-color: #fff;
+  color: #000;
+  font-size: 12px;
+  line-height: 20px;
+	transition-duration: .3s;
+}
+#collets-box li a {
+	color: #000;
+}
+#collets-box li {
+  position: relative;
+  border-bottom: 1px solid #000;
+}
+#collets-box li .icon-lajixiang {
+  position: absolute;
+  right: 2px;
+  top: 20px;
+  margin: auto;
+}
+#collets-box li .icon-lajixiang:hover {
+  color: #f00;
+}

@@ -4,8 +4,6 @@ define(function(require,exports,module){
 	var preventSqlWords = /select|insert|update|delete|exec|script|count|'|"|=|<|>|%/i;
 	// 保存收藏的
 	window.sessionStorage.setItem('likes','');
-	// 保存用户信息
-	window.sessionStorage.setItem('user','');
 	Object.defineProperty(Header.prototype,'constructor',{
 		enumerable: false,
 		value: Header
@@ -100,9 +98,18 @@ define(function(require,exports,module){
 		    			break;
 	    			case 'addStoreBtn':
 							if(doc.getElementById('regitBtn').innerHTML == 'SIGN OUT') {
-								oAddStore.style.height = "100%";
-								if(Header.prototype.getStyle(oMenu,"display")=="none"){
-									count++;
+								if(JSON.parse(Header.prototype.getCookieModule().get('user')).isSeller=='1'){
+									var con = confirm('您已经注册过书店,不能重复注册，是否前往您的书店中心?');
+									var user = JSON.parse(Header.prototype.getCookieModule().get('user'));
+									if(con) {
+										// 打开书店
+										window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
+									}
+								}else {
+									oAddStore.style.height = "100%";
+									if(Header.prototype.getStyle(oMenu,"display")=="none"){
+										count++;
+									}
 								}
 							}else if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
 								var con = confirm('需要登录后才能添加属于您自己的书店，登录吗？');
@@ -112,6 +119,27 @@ define(function(require,exports,module){
 								}
 							}
 		    			break;
+						case 'openStoreBtn':
+							if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+								var con = confirm('需要登录后才能进入您的书店中心，登录吗？');
+								if(con) {
+									doc.getElementById('regitLog').style.display = "block";
+									doc.getElementsByClassName('login')[0].style.display = 'block';
+								}
+							}else if(JSON.parse(Header.prototype.getCookieModule().get('user')).isSeller!=null){
+								var user = JSON.parse(Header.prototype.getCookieModule().get('user'));
+								window.location.href = 'them1.html?storeId='+ user.userId;
+							}else {
+								var con = confirm('您还没有注册书店，是否注册?');
+								if(con) {
+									// 打开注册书店
+									oAddStore.style.height = "100%";
+									if(Header.prototype.getStyle(oMenu,"display")=="none"){
+										count++;
+									}
+								}
+							}
+							break;
 		    		case 'home':
 		    			window.location.href = "index.html";
 		    			break;

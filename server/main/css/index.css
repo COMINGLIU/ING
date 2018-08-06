@@ -8,59 +8,7 @@ body {
 	width: 100%;
 	font-family: 'Righteous', cursive;
 }
-/*收藏夹*/
-#collects {
-	position: fixed;
-	right: 10px;
-	top: 100px;
-	width: 80px;
-	height: 50px;
-	border-radius: 10px;
-	background-color: #000;
-	color: #fff;
-	font-size: 20px;
-	text-align: center;
-	line-height: 50px;
-	z-index: 20;
-}
-#collects:after {
-	content: "";
-	position: absolute;
-	top: -20px;
-	left: 35px;
-	width: 10px;
-	height: 20px;
-	border-radius: 7px;
-	background-color: #000;
-}
-#collects .info {
-	position: absolute;
-	top: 0;
-	left: -90px;
-	width: 80px;
-	height: 30px;
-	border-radius: 20px;
-	font-size: 12px;
-	line-height: 30px;
-	background-color: #000;
-	color: #fff;
-	opacity: 0;
-	transition-duration: .6s;
-}
-#collects:hover .info {
-	opacity: 1;
-}
-/*右边菜单键*/
-@media screen and (max-width: 800px){
-	/*收藏夹*/
-	#collects {
-		left: 0;
-	}
-	#collects .info {
-		top: 0;
-		left: 90px;
-	}
-}
+
 /*content*/
 #content {
 	width: 100%;
@@ -72,7 +20,7 @@ body {
 #canvas {
 	width: 100%;
 	height: 450px;
-	background-color: rgb(236,238,240);
+	background-color: rgb(219,222,221);
 	overflow: hidden;
 }
 #canvas p {
@@ -108,8 +56,15 @@ body {
 #content-center li{
 	position: relative;
 	width: 350px;
-	height: 350px;
+	height: 390px;
 	margin-bottom: 20px;
+}
+#content-center li .storeName a{
+	color: #000;
+	margin-left: 10px;
+}
+#content-center li .storeName a:hover {
+	color: #aaa;
 }
 #content-center .img {
 	overflow: hidden;
@@ -135,6 +90,18 @@ body {
 #content-center li:hover .cover {
 	opacity: 1;
 }
+/*点击加载更多*/
+#addMore {
+	width: 100%;
+	height: 60px;
+	line-height: 20px;
+	text-align: center;
+	cursor: pointer;
+}
+/**/
+#addMore:hover {
+	color: #777;
+}
 @media screen and (max-width: 800px) {
 	#content-center .cover{
 		opacity: 1;
@@ -157,5 +124,16 @@ body {
 @media screen and (min-width: 400px) and (max-width:800px) {
 	#content-center li{
 		width: 50%;
+	}
+}
+/*右边菜单键*/
+@media screen and (max-width: 800px){
+	/*收藏夹*/
+	#collects {
+		left: 0;
+	}
+	#collects .info {
+		top: 0;
+		left: 90px;
 	}
 }

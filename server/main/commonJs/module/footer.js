@@ -37,13 +37,13 @@ define(function(require,exporst,module){
                   res = JSON.parse(res);
                   if(res.status == 'success') {
                     alert(res.msg);
+                    textArea.value = '';
                   }else {
                     confirm('小编没有收到您的留言，请稍候重试');
                   }
                 }
               })
             })
-            textArea.value = '';
           }
         }
       }

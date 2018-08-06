@@ -49,7 +49,7 @@
 /*content*/
 #content {
 	box-sizing: border-box;
-	width: 100%;	
+	width: 100%;
 	padding: 100px 50px 0 50px;
 }
 .books {
@@ -105,7 +105,12 @@ i.icon-heart-fill {
 	transition-duration: .3s;
 }
 #content .books li:hover i.icon-heart-fill {
-	transform: translateY(0);	
+	transform: translateY(0);
+}
+@media screen and (max-width: 768px) {
+	#content .books li i.icon-heart-fill {
+		transform: translateY(0);
+	}
 }
 /**/
 #addMore {

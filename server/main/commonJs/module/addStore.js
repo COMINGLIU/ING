@@ -67,6 +67,7 @@ define(function(require,exports,module){
 					}else {
 						data.append('storeName',formEle.oName.value==undefined?"":formEle.oName.value);
 						data.append('storeDescribe',formEle.oDescribe.value==undefined?"":formEle.oDescribe.value);
+						console.log(data);
 						var xhr = new XMLHttpRequest();
 						xhr.onreadystatechange = function(){
 							if(xhr.readyState==4){
@@ -74,15 +75,22 @@ define(function(require,exports,module){
 									var data = JSON.parse(xhr.responseText);
 									console.log(data);
 									if(data.status == 'success'){
+										var con = confirm('注册成功，跳转去看看');
+										if(con) {
+											window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
+										}
 										// 成功
 										formEle.oJump.style.display = 'inline-block';
 										formEle.oJump.onclick = function(){
-											// window.location.href = 'them1.html?userId='+userId;
-											window.location.href = 'addBook.html?userId=3';
+											window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
 										}
+										// 重置用户信息isSeller=1
+										user.isSeller = '1';
+										AddStore.prototype.getCookieModule().set('user',JSON.stringify(user));
+										console.log(AddStore.prototype.getCookieModule().get('user'));
 									}else if(data.status == 'fail') {
 										//失败
-										alert('该帐号已经注册过小店');
+										alert('注册失败');
 									}
 								}else {
 									console.log('error:'+xhr.status);
