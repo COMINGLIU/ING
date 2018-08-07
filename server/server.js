@@ -214,9 +214,9 @@ server.get('/',function(req,res){
         }
       })
       break;
-    // 获取某个店铺的所有书籍详情
+    // 获取某个店铺的所有书籍详情（游客）
     case 'getOneAllStoreBooks':
-      sql = 'SELECT bookSrc,bookName,bookPublic,bookAllNum,bookPrice,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
+      sql = 'SELECT bookId,bookSrc,bookName,bookPublic,bookAllNum,bookPrice,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
       conn.query(sql,function(err,data){
         if(err){
           console.log(err.sqlMessage);
@@ -225,6 +225,31 @@ server.get('/',function(req,res){
           res.send({status:'success',data:data});
         }
       })
+      break;
+    // 获取某个店铺的所有书籍详情（店长）
+    case 'getOneAllStoreBooksForShopper':
+      sql = 'SELECT bookId,bookSrc,bookName,bookAllNum,bookPublic,bookType,bookPrice,bookTime,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+          res.send({status:'fail',msg: '您所请求的资源不存在'});
+        }else {
+          console.log(data);
+          let sql0 = 'SELECT shopperName FROM shopper WHERE userId="'+reqUrl.shopperId+'";';
+          conn.query(sql0,function(err,data0){
+            console.log(sql0);
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log(data[0]);
+              res.send({status:'success',data:data,shopperName:data0[0].shopperName});
+            }
+          })
+        }
+      })
+      break;
+    case 'delShopperBook':
+
       break;
     // 个人中心
     case 'getUserCenterInfo':
@@ -552,10 +577,10 @@ server.post('/',function(req,res){
   // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
   let str = '';
   let sql;
+  console.log(req.body);
   if(req.body){
     console.log('body');
     const comingData = req.body;
-    console.log(comingData);
     switch(comingData.act) {
       case 'storeInfo':
         // 将店存进去
@@ -564,8 +589,8 @@ server.post('/',function(req,res){
         let newName = file.path + pathLib.parse(file.originalname).ext;
         fs.rename(file.path,newName,function(err){
           if(err){
-            console.log('上传失败');
-            res.send('上传失败');
+            console.log('图片上传失败');
+            res.send('图片上传失败');
           }else {
             sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg,booksNum) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+newName+'","0");';
             conn.query(sql,function(err,data){
@@ -587,6 +612,67 @@ server.post('/',function(req,res){
             })
           }
         });
+        break;
+      case 'addBook':
+        let add_Book_file = req.files[0];
+        console.log(add_Book_file);
+        let addBook_sqlName = add_Book_file.filename + pathLib.parse(add_Book_file.originalname).ext;
+        let addBook_newName = add_Book_file.path + pathLib.parse(add_Book_file.originalname).ext;
+        fs.rename(add_Book_file.path,addBook_newName,function(err){
+          if(err){
+            console.log('图片上传失败');
+          }else {
+            console.log('图片上传成功');
+            // 先传入出版社和类型
+            console.log('看有没有类型');
+            let sql0 = 'SELECT bookType from booktype where bookType="'+comingData.bookClass+'"';
+            conn.query(sql0,function(err,data0){
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                if(data0.toString()==""){
+                  console.log('没有对应的书籍类型');
+                  let sql1 = 'INSERT INTO bookType(bookType) VALUES("'+comingData.bookClass+'");';
+                  conn.query(sql1,function(err,data1){
+                    if(err){
+                      console.log(err.sqlMessage);
+                    }else {
+                      console.log('已经插入对应的书籍类型');
+                    }
+                  })
+                }
+                let sql2 = 'SELECT publish from bookpublic where publish="'+comingData.bookPublic+'";';
+                console.log('看有没有出版社');
+                conn.query(sql2,function(err,data2){
+                  if(err){
+                    console.log(err.sqlMessage);
+                  }else {
+                    if(data2.toString()==''){
+                      console.log('没有对应的出版社');
+                      let sql3 = 'INSERT INTO bookpublic(publish) VALUES("'+comingData.bookPublic+'");';
+                      conn.query(sql3,function(err,data3){
+                        if(err){
+                          console.log(err.sqlMessage);
+                        }else{
+                          console.log('已经插入对应的出版社');
+                        }
+                      })
+                    }
+                    let sql4 = 'INSERT INTO bookinfo(bookName,bookSrc,bookType,bookAllNum,bookPublic,bookPrice,bookDescribe,shopperId) VALUES("'+comingData.bookName+'","'+addBook_sqlName+'","'+comingData.bookClass+'","'+comingData.bookAllNum+'","'+comingData.bookPublic+'","'+comingData.bookPrice+'","'+comingData.bookDes+'","'+comingData.shopperId+'");';
+                    conn.query(sql4,function(err,data4){
+                      if(err){
+                        console.log(err.sqlMessage);
+                      }else {
+                        console.log('书籍插入成功');
+                        res.send({status:'success',msg:'书籍插入成功'});
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
         break;
     }
   }else {

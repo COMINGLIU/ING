@@ -18,7 +18,8 @@
 		</div>
 		<div id="content">
 			<div id="add">
-				<form method="post" enctype="multipart/form-data">
+				<div id="delBtn">-</div>
+				<form method="post" enctype="multipart/form-data" name="addBook">
 					<ul>
 						<li>
 							<div id="add-img">
@@ -47,8 +48,12 @@
 							<input type="text" name="add-bookPrice" value="" required>
 						</li>
 						<li>
+							<span>书籍描述</span>
+							<textarea name="add-bookDes" rows="8" cols="80" placeholder=""></textarea>
+						</li>
+						<li>
 							<button type='submit' name="submit">确认</button>
-							<button name="cancel">取消</button>
+							<button type='reset' name="cancel">取消</button>
 						</li>
 					</ul>
 				</form>
@@ -86,43 +91,8 @@
 								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
 							</li>
 							<li>
-								<i class="iconfont icon-edit-square"></i>
-								<button type="sub">确认</button>
-								<button type="reset">取消</button>
-							</li>
-						</ul>
-					</form>
-				</li>
-				<li class="bookInfo">
-					<i class="iconfont icon-guanbi del"></i>
-					<form>
-						<div class="img">
-							<img src="imgs/6.jpg">
-						</div>
-						<ul>
-							<li>
-								<span>书名：</span>
-								<input type="text" name="bookName" readonly="true" value="小姜获奖啦">
-							</li>
-							<li>
-								<span>数量：</span>
-								<input type="text" name="bookNum" readonly="true" value="20">
-							</li>
-							<li>
-								<span>出版社：</span>
-								<input type="text" name="bookPublish" readonly="true" value="清风出版社">
-							</li>
-							<li>
-								<span>分类：</span>
-								<input type="text" name="bookClass" readonly="true" value="小说">
-							</li>
-							<li>
-								<span>单价：</span>
-								<input type="text" name="bookPrice" readonly="true" value="20">
-							</li>
-							<li>
-								<span>时间：</span>
-								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
+								<span>书籍描述:</span>
+								<textarea name="book-des" rows="8" cols="80" readonly="true">这是本关于计算机底层的书,这是本关于计算机底层的书,这是本关于计算机底层的书,这是本关于计算机底层的书,这是本关于计算机底层的书,这是本关于计算机底层的书</textarea>
 							</li>
 							<li>
 								<i class="iconfont icon-edit-square"></i>
@@ -164,43 +134,8 @@
 								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
 							</li>
 							<li>
-								<i class="iconfont icon-edit-square"></i>
-								<button type="sub">确认</button>
-								<button type="reset">取消</button>
-							</li>
-						</ul>
-					</form>
-				</li>
-				<li class="bookInfo">
-					<i class="iconfont icon-guanbi del"></i>
-					<form>
-						<div class="img">
-							<img src="imgs/6.jpg">
-						</div>
-						<ul>
-							<li>
-								<span>书名：</span>
-								<input type="text" name="bookName" readonly="true" value="小姜获奖啦">
-							</li>
-							<li>
-								<span>数量：</span>
-								<input type="text" name="bookNum" readonly="true" value="20">
-							</li>
-							<li>
-								<span>出版社：</span>
-								<input type="text" name="bookPublish" readonly="true" value="清风出版社">
-							</li>
-							<li>
-								<span>分类：</span>
-								<input type="text" name="bookClass" readonly="true" value="小说">
-							</li>
-							<li>
-								<span>单价：</span>
-								<input type="text" name="bookPrice" readonly="true" value="20">
-							</li>
-							<li>
-								<span>时间：</span>
-								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
+								<span>书籍描述:</span>
+								<textarea name="book-des" rows="8" cols="80" readonly="true">这是本关于计算机底层的书</textarea>
 							</li>
 							<li>
 								<i class="iconfont icon-edit-square"></i>
@@ -240,6 +175,96 @@
 							<li>
 								<span>时间：</span>
 								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
+							</li>
+							<li>
+								<span>书籍描述:</span>
+								<textarea name="book-des" rows="8" cols="80" readonly="true">这是本关于计算机底层的书</textarea>
+							</li>
+							<li>
+								<i class="iconfont icon-edit-square"></i>
+								<button type="sub">确认</button>
+								<button type="reset">取消</button>
+							</li>
+						</ul>
+					</form>
+				</li>
+				<li class="bookInfo">
+					<i class="iconfont icon-guanbi del"></i>
+					<form>
+						<div class="img">
+							<img src="imgs/6.jpg">
+						</div>
+						<ul>
+							<li>
+								<span>书名：</span>
+								<input type="text" name="bookName" readonly="true" value="小姜获奖啦">
+							</li>
+							<li>
+								<span>数量：</span>
+								<input type="text" name="bookNum" readonly="true" value="20">
+							</li>
+							<li>
+								<span>出版社：</span>
+								<input type="text" name="bookPublish" readonly="true" value="清风出版社">
+							</li>
+							<li>
+								<span>分类：</span>
+								<input type="text" name="bookClass" readonly="true" value="小说">
+							</li>
+							<li>
+								<span>单价：</span>
+								<input type="text" name="bookPrice" readonly="true" value="20">
+							</li>
+							<li>
+								<span>时间：</span>
+								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
+							</li>
+							<li>
+								<span>书籍描述:</span>
+								<textarea name="book-des" rows="8" cols="80" readonly="true">这是本关于计算机底层的书</textarea>
+							</li>
+							<li>
+								<i class="iconfont icon-edit-square"></i>
+								<button type="sub">确认</button>
+								<button type="reset">取消</button>
+							</li>
+						</ul>
+					</form>
+				</li>
+				<li class="bookInfo">
+					<i class="iconfont icon-guanbi del"></i>
+					<form>
+						<div class="img">
+							<img src="imgs/6.jpg">
+						</div>
+						<ul>
+							<li>
+								<span>书名：</span>
+								<input type="text" name="bookName" readonly="true" value="小姜获奖啦">
+							</li>
+							<li>
+								<span>数量：</span>
+								<input type="text" name="bookNum" readonly="true" value="20">
+							</li>
+							<li>
+								<span>出版社：</span>
+								<input type="text" name="bookPublish" readonly="true" value="清风出版社">
+							</li>
+							<li>
+								<span>分类：</span>
+								<input type="text" name="bookClass" readonly="true" value="小说">
+							</li>
+							<li>
+								<span>单价：</span>
+								<input type="text" name="bookPrice" readonly="true" value="20">
+							</li>
+							<li>
+								<span>时间：</span>
+								<input type="text" name="bookTime" readonly="true" value="2018.07.25">
+							</li>
+							<li>
+								<span>书籍描述:</span>
+								<textarea name="book-des" rows="8" cols="80" readonly="true">这是本关于计算机底层的书</textarea>
 							</li>
 							<li>
 								<i class="iconfont icon-edit-square"></i>
@@ -252,6 +277,7 @@
 			</ul>
 		</div>
 	</div>
+	<script src='commonJs/module/sea.js'></script>
 	<script src="js/addBook.js"></script>
 </body>
 </html>

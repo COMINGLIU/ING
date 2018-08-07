@@ -136,4 +136,7 @@ body {
 		top: 0;
 		left: 90px;
 	}
+	#collets-box {
+		left: 0;
+	}
 }

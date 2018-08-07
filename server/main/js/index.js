@@ -1,11 +1,7 @@
 (function(document,window){
   var doc = document;
   var like_n=0;
-  var likeBookList =[];
   var user;
-  // prototype.getCookieModule().get('user'));
-
-  // window.sessionStorage.setItem('likeBooks','');存放收藏的书籍id
   Object.defineProperty(Index.prototype,'constructor',{
     enumerable: false,
     value: Index
@@ -16,12 +12,8 @@
     this.getHeaderModule();
     // 执行footer模块里边的函数
     this.getFooterModule();
-    // 控制收藏处
-    // this.controLike();
     // 获取add-store处的方法并执行
     this.getAddStoreModule();
-    // 获取cookie模块
-    // this.getCookieModule();
     // 控制收藏夹
     this.controlCollectBox();
   }
@@ -38,13 +30,6 @@
         aBookAddr: oBookUl.querySelectorAll('.addr span'),
         aBookPrice: oBookUl.querySelectorAll('.price span')
       };
-      if(window.sessionStorage.getItem('likeBooks')) {
-        console.log('有缓存');
-        likeBookList  = JSON.parse(window.sessionStorage.getItem('likeBooks'));
-        console.log('likeBookList:'+likeBookList);
-        console.log(window.sessionStorage.getItem('likeBooks'));
-        doc.querySelector("#collects .num").innerHTML = JSON.parse(window.sessionStorage.getItem('likeBooks')).length;
-      }
       // 请求首页数据并渲染
       this.getAjaxModule(function(ajax){
         ajax({
@@ -190,9 +175,6 @@
                   })
                 }
                 oLikeN.innerHTML = likeBookList.length;
-                window.sessionStorage.setItem('likeBooks',JSON.stringify(likeBookList));
-                console.log(likeBookList);
-                console.log(window.sessionStorage.getItem('likeBooks'));
               }else {
                 // 取消收藏
                 oLikeI.style.color = "#000";
@@ -216,9 +198,6 @@
                     }
                   })
                 })
-                window.sessionStorage.setItem('likeBooks',JSON.stringify(likeBookList));
-                console.log(likeBookList);
-                console.log(window.sessionStorage.getItem('likeBooks'));
               }
             }else if(oRigistBtn.innerHTML == 'LOGIN'){
               var con = confirm('登录后收藏才能保存哦，登录吗?');

@@ -43,11 +43,11 @@
 }
 /* 收藏夹盒子 */
 #collets-box {
-	overflow: hidden;
+	overflow: auto;
   position: absolute;
   right: 0;
-  /* width: 200px; */
 	width: 0;
+	max-height: 500px;
   box-shadow: 0 0 10px #000;
   background-color: #fff;
   color: #000;

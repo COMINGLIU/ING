@@ -20,16 +20,25 @@
 	border-bottom: 3px solid #000;
 	font-size: 18px;
 }
+#delBtn,
 #addBtn {
 	position: absolute;
 	top: -2px;
 	right: 20px;
 	font-size: 50px;
+	text-align: center;
 	transition-duration: .3s;
 }
 #addBtn:hover {
 	text-shadow: 0 0 50px #000;
 	color: #aaa;
+}
+#delBtn {
+	color: #fff;
+}
+#delBtn:hover {
+	text-shadow: 0 0 50px #fff;
+	color: #ccc;
 }
 /*content*/
 #content {
@@ -47,7 +56,7 @@ ul#uped {
 	overflow: hidden;
 	position: relative;
 	width: 300px;
-	height: 550px;
+	height: 600px;
 	margin-right: 20px;
 	margin-top: 50px;
 	margin-left: 20px;
@@ -77,6 +86,16 @@ ul#uped {
 	width: calc(100% - 70px);
 	background-color: transparent;
 	vertical-align: middle;
+}
+#uped li.bookInfo textarea {
+	display: inline-block;
+	width: calc(100% - 75px);
+	height: 50px;
+	vertical-align: top;
+	resize: none;
+	outline: none;
+	background-color: rgb(236,238,240);
+	border-color: #ddd;
 }
 #uped li.bookInfo button{
 	overflow: hidden;
@@ -108,8 +127,10 @@ ul#uped {
 	position: fixed;
 	box-sizing: border-box;
 	overflow: hidden;
+	top: 0;
 	width: 100%;
 	height: 0;
+	/* height: 100%; */
 	background-color: rgba(0,0,0,.5);
 	transition-duration: .3s;
 	z-index: 10;
@@ -142,7 +163,7 @@ ul#uped {
 	text-align: left;
 }
 #add li {
-	margin-top: 20px;
+	margin-top: 15px;
 	text-align: center;
 }
 @media screen and (max-width: 340px) {
@@ -150,13 +171,21 @@ ul#uped {
 		margin-top: 10px;
 	}
 }
-#add input {
+#add input,
+#add textarea {
 	width: 250px;
 	border-bottom: 1px solid #fff;
 	background-color: transparent;
 	line-height: 30px;
 	color: #fff;
 	cursor: default;
+}
+#add textarea {
+	height: 50px;
+	resize: none;
+	outline: none;
+	line-height: 16px;
+	vertical-align: middle;
 }
 #add button {
 	width: 60px;

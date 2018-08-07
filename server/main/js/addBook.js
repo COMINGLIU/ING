@@ -1,6 +1,10 @@
 (function(window,document){
 	var doc = document;
+	var user;
+	var SHOPPERID = window.location.search.split('?')[1].split('&')[0].split('=')[1];
 	function AddBook(){
+		// 拉数据
+		this.init();
 		// 添加书籍
 		this.addBook();
 		// 打开添加书籍
@@ -17,6 +21,114 @@
 		value: AddBook
 	})
 	AddBook.prototype = {
+		// 拉数据
+		init: function(){
+			var oSearch = window.location.search.split('?')[1],
+					oUserId = oSearch.split('&')[0].split('=')[1],
+					oUserName = oSearch.split('&')[1].split('=')[1];
+			var bookUl = doc.getElementById('uped'),
+					bookList = bookUl.getElementsByClassName('bookInfo');
+			var booksInfo = {
+				img: bookUl.getElementsByTagName('img'),
+				name: doc.getElementsByName('bookName'),
+				num: doc.getElementsByName('bookNum'),
+				public: doc.getElementsByName('bookPublish'),
+				class: doc.getElementsByName('bookClass'),
+				price: doc.getElementsByName('bookPrice'),
+				time: doc.getElementsByName('bookTime'),
+				describe: doc.getElementsByName('book-des'),
+			};
+			// console.log(booksInfo);
+			this.getAjaxModule(function(ajax){
+				ajax({
+					url: '/',
+					data: {
+						act: 'getOneAllStoreBooksForShopper',
+						shopperId: oUserId
+					},
+					method: 'get',
+					error: function(err){
+						console.log('err:'+err);
+					},
+					success: function(res){
+						res = JSON.parse(res);
+						console.log(res);
+						if(res.status =='success'){
+							var data = res.data;
+							doc.getElementById('userName').innerHTML = res.shopperName+' ('+oUserName+')';
+							// 渲染节点
+							if(data.length<bookList.length){
+								var bookListTmp = doc.querySelectorAll('#uped .bookInfo');
+								if(data.length==0) {
+									for(var i=1,len=bookListTmp.length;i<len;i++) {
+										bookUl.removeChild(bookListTmp[i]);
+									}
+								}else {
+									for(var i=data.length,len=bookListTmp.length;i<len;i++) {
+										bookUl.removeChild(bookListTmp[i]);
+									}
+								}
+							}else if(data.length>bookList.length) {
+								var frag = doc.createDocumentFragment();
+								for(var i=bookList.length,len=data.length;i<len;i++) {
+									var item = bookList[0].cloneNode(true);
+									frag.appendChild(item);
+								}
+								bookUl.appendChild(frag);
+							}
+							// 渲染数据
+							for(var i=0,len=bookList.length;i<len;i++) {
+								booksInfo.img[i].src = 'imgs/storeImg/'+data[i].bookSrc;
+								booksInfo.name[i].value = data[i].bookName;
+								booksInfo.num[i].value = data[i].bookAllNum;
+								booksInfo.public[i].value = data[i].bookPublic;
+								booksInfo.class[i].value = data[i].bookType;
+								booksInfo.price[i].value = data[i].bookPrice;
+								booksInfo.time[i].value = data[i].bookTime;
+								booksInfo.describe[i].value = data[i].bookDescribe;
+							}
+							// 给每个li绑定删除书籍的操作
+							AddBook.prototype.delBook();
+							// 给每个li绑定修改书籍信息的操作
+
+						}else {
+							alert('您请求的信息不存在');
+						}
+					}
+				})
+			})
+		},
+		// 删除书籍
+		delBook: function(){
+			var bookDelBtn = doc.getElementById('uped').getElementsByClassName('del');
+			for(var j=0,len2=bookDelBtn.length;j<len2;j++) {
+				(function(j){
+					bookDelBtn[j].onclick = function(){
+						var con = confirm('确认下架该书籍吗?删除之后它将从您的书店移除');
+						if(con) {
+							// 删除书籍
+							AddBook.prototype.getAjaxModule(function(ajax){
+								ajax({
+									url: '/',
+									data: {
+										act: 'delShopperBook',
+
+									},
+									method: 'get',
+									error: function(err){
+										console.log('err:'+err);
+									},
+									success: function(res){
+										res = JSON.parse(res);
+										console.log(res);
+									}
+								})
+							})
+						}
+					}
+				})(j)
+			}
+		},
 		// 添加书籍
 		addBook: function(){
 			var oForm = doc.querySelector("#add form");
@@ -26,8 +138,10 @@
 				bookAllNum: doc.getElementsByName("add-bookNum")[0],
 				bookPublic: doc.getElementsByName("add-bookPublish")[0],
 				bookClass: doc.getElementsByName("add-bookClass")[0],
-				bookPrice: doc.getElementsByName("add-bookPrice")[0]
+				bookPrice: doc.getElementsByName("add-bookPrice")[0],
+				bookDes: oForm.getElementsByTagName('textarea')[0]
 			};
+			console.log(formEle);
 			var book_img = doc.querySelector("#add-img img");
 			var subBtn = doc.getElementsByName("submit")[0],
 					cancelBtn = doc.getElementsByName("cancel")[0];
@@ -38,7 +152,7 @@
 				data = new FormData();
 				data.append('act','addBook');
 				// 填写shopperId
-				data.append('shopperId','shopperId');
+				data.append('shopperId',SHOPPERID);
 				// 填写userName
 				data.append('userName','QPQ');
 				data.append('bookImg',file);
@@ -47,8 +161,8 @@
 				obj.readAsDataURL(file);
 				obj.onload = function(){
 					book_img.src = this.result;
-				}
-			}
+				};
+			};
 			oForm.onsubmit = function(e){
 				e = e||window.e;
 				e.preventDefault?e.preventDefault():e.returnValue = false;
@@ -56,15 +170,23 @@
 			subBtn.onclick = function(){
 				data.append('bookName',formEle.bookName.value);
 				data.append('bookAllNum',formEle.bookAllNum.value);
-				data.append('bookPubic',formEle.bookPubic.value);
+				data.append('bookPublic',formEle.bookPublic.value);
 				data.append('bookClass',formEle.bookClass.value);
 				data.append('bookPrice',formEle.bookPrice.value);
+				data.append('bookDes',formEle.bookDes.value);
 				var xhr = AddBook.prototype.createXHR();
 				xhr.onreadystatechange = function() {
 					if(xhr.readyState==4) {
-						if((xhr.satus>=200&&xhr.status<300)||xhr.status==304) {
-							var data = xhr.responseText;
-							console.log(data);
+						if((xhr.status>=200&&xhr.status<300)||xhr.status==304) {
+							var res = JSON.parse(xhr.responseText);
+							console.log(res);
+							if(res.status=='success'){
+								alert(res.msg);
+								oForm.reset();
+								book_img.src = '';
+							}else {
+								alert(res.msg);
+							}
 						}else {
 							alert('error:'+xhr.status);
 						}
@@ -76,17 +198,20 @@
 		},
 		// 打开添加书籍
 		openAddBook: function(){
-			var oAddBtn = doc.getElementById("addBtn");
-			var oAddBox = doc.getElementById("add");
-			var count = 0;
+			var oAddBtn = doc.getElementById("addBtn"),
+					oDelBtn = doc.getElementById('delBtn'),
+					oAddBox = doc.getElementById("add"),
+					count = 0;
 			oAddBtn.onclick = function(){
-				count++;
-				if(count%2==1){
-					oAddBox.style.height = "700px";
-				}else {
-					oAddBox.style.height = "0";
-				}
-			}
+				oAddBox.style.height = "700px";
+				oAddBtn.innerHTML = '-';
+				oDelBtn.innerHTML = '-';
+			};
+			oDelBtn.onclick = function(){
+				oAddBox.style.height = "0";
+				oAddBtn.innerHTML = '+';
+				oDelBtn.innerHTML = '+';
+			};
 		},
 		aboutHeader: function(){
 			var oHeader = doc.getElementById("header");
@@ -102,12 +227,14 @@
 		// 更改书籍信息
 		editBookInfo: function(){
 			var aEditBtns = doc.getElementsByClassName("icon-edit-square"),
-				aBookInfoLis = doc.getElementsByClassName("bookInfo");
+					aBookInfoLis = doc.getElementsByClassName("bookInfo");
 			for(var i=0,len=aEditBtns.length;i<len;i++) {
 				(function(i){
 					var aBookInput = aBookInfoLis[i].getElementsByTagName("input"),
-						aEditSubResetBtn = aBookInfoLis[i].getElementsByTagName("button");
+							oBookTextarea = aBookInfoLis[i].getElementsByTagName("textarea")[0],
+							aEditSubResetBtn = aBookInfoLis[i].getElementsByTagName("button");
 					aEditBtns[i].onclick = function(){
+						oBookTextarea.readOnly = false;
 						for(var j=0,len2 = aBookInput.length;j<len2;j++){
 							aBookInput[j].readOnly = false;
 							aBookInput[j].style.borderBottom = '1px solid #ccc';
@@ -117,8 +244,25 @@
 					};
 					aEditSubResetBtn[0].onclick = function(){
 						// 调用ajax发送请求
+						AddBook.prototype.getAjaxModule(function(ajax){
+							ajax({
+								url: '/',
+								data: {
+
+								},
+								method: 'post',
+								error: function(err){
+									console.log('err'+err);
+								},
+								success: function(res) {
+									res = JSON.parse(res);
+									console.log(res);
+								}
+							})
+						})
 					};
 					aEditSubResetBtn[1].onclick = function(){
+						oBookTextarea.readOnly = true;
 						for(var j=0,len2 = aBookInput.length;j<len2;j++){
 							aBookInput[j].readOnly = true;
 							aBookInput[j].style.borderBottom = '0';
@@ -159,6 +303,16 @@
 				}else {
 						throw new Error("No XHR object available");
 				}
+		},
+		getAjaxModule: function(cb){
+			seajs.use('ajax.js',function(ajax){
+			cb&&cb(ajax);
+			})
+		},
+		getCookieModule: function(cb){
+			seajs.use('cookie.js',function(cookie){
+				cb&&cb(cookie);
+			})
 		}
 	};
 	var addBook = new AddBook();

@@ -1,6 +1,7 @@
 define(function(require,exports,module){
   function collectBook(){
     var oCollectBtn = document.getElementById('collects'),
+        oCollectNum = oCollectBtn.getElementsByClassName('num')[0];
         oCollectBox = document.getElementById('collets-box'),
         aCollectLi = oCollectBox.getElementsByTagName('li'),
         aCollectHref = oCollectBox.getElementsByTagName('a'),
@@ -33,6 +34,7 @@ define(function(require,exports,module){
               if(res.status=='success'){
                 data = res.data;
                 console.log(data);
+                oCollectNum.innerHTML = data.length;
                 // 渲染节点
                 if(data.length<aCollectLi.length){
                   if(data.length==0) {
@@ -54,7 +56,8 @@ define(function(require,exports,module){
                 }
                 // 渲染数据
                 for(var j=0,len2 = aCollectLi.length;j<len2;j++) {
-                  aCollectHref[j].href += data[j].bookId;
+                  // aCollectHref[j].href += data[j].bookId;
+                  aCollectHref[j].href = 'detail.html?bookId=' + data[j].bookId;
                   aCollectName[j].innerHTML = data[j].bookName;
                   aCollectAddr[j].innerHTML = data[j].schoolName;
                   aCollectPrice[j].innerHTML = data[j].bookPrice;
@@ -63,7 +66,9 @@ define(function(require,exports,module){
                 for(var k=0,len3=aCollectDelBtn.length;k<len3;k++) {
                   (function(k){
                     var bookId = aCollectHref[k].href.split('?')[1].split('=')[1];
-                    aCollectDelBtn[k].onclick = function(){
+                    aCollectDelBtn[k].onclick = function(e){
+                      e = e||window.e;
+                      e.stopPropagation?e.stopPropagation():e.cancelBubble=true;
                       var con = confirm('确认取消收藏该书籍吗?');
                       if(con){
                         ajax({

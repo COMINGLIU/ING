@@ -110,6 +110,7 @@
 								personalInfo.shopperName.value = res.myShopper['shopperName'];
 								personalInfo.shopperSlogan.value = res.myShopper['shopperDescribe'];
 								User.prototype.modEvent();
+								User.prototype.renderLikes(res);
 							}
 						})
 					})
@@ -368,6 +369,13 @@
 											res = JSON.parse(res);
 											if(res.status =='success') {
 												alert('更新成功');
+												for(var i=0,len=modInput.length;i<len;i++) {
+													if(modInput[i].name!='tel'&&modInput[i].name!='email'){
+														modInput[i].readOnly = true;
+													}
+												}
+												modComfirm.style.display = "none";
+												modCancel.style.display = 'none';
 											}else{
 												alert('更新失败'+res.msg);
 											}
@@ -408,6 +416,75 @@
 						break;
 				}
 			})
+		},
+		// 右侧信息
+		renderLikes: function(config){
+			var oBookUl = doc.getElementsByClassName('booksUl')[0],
+					aBookList = oBookUl.getElementsByTagName('li');
+			var bookInfo = {
+				img: oBookUl.getElementsByTagName('img'),
+				href: oBookUl.getElementsByTagName('a'),
+				name: oBookUl.getElementsByTagName('h3')
+			};
+			var oStoreUl = doc.getElementsByClassName('storeUl')[0],
+					aStoreList = oStoreUl.getElementsByTagName('li');
+			var storeInfo = {
+				img: oStoreUl.getElementsByTagName('img'),
+				href: oStoreUl.getElementsByTagName('a'),
+				name: oStoreUl.getElementsByTagName('h3')
+			};
+			// 渲染书籍节点
+			if(config.like_books.length<aBookList.length){
+				aBookListTmp = doc.querySelectorAll('.booksUl li');
+				if(config.like_books.length==0) {
+					for(var i=1,len=aBookListTmp.length;i<len;i++) {
+						oBookUl.removeChild(aBookListTmp[i]);
+					}
+				}else {
+					for(var i=config.like_books.length,len=aBookListTmp.length;i<len;i++) {
+						oBookUl.removeChild(aBookListTmp[i]);
+					}
+				}
+			}else if(config.like_books.length>aBookList.length){
+				var frag = doc.createDocumentFragment();
+				for(var i=aBookList.length,len=config.like_books.length;i<len;i++) {
+					var item = aBookList[0].cloneNode(true);
+					frag.appendChild(item);
+				}
+				oBookUl.appendChild(frag);
+			}
+			// 渲染书籍
+			for(var k=0,len=aBookList.length;k<len;k++){
+				// bookInfo.img[k].src = config.like_books[k].bookSrc;
+				bookInfo.href[k].href += config.like_books[k].bookId;
+				bookInfo.name[k].innerHTML = config.like_books[k].bookName;
+			}
+			// 渲染书店节点
+			if(config.like_stores.length<aStoreList.length){
+				aStoreListTmp = doc.querySelectorAll('.storeUl li');
+				if(config.like_stores.length==0) {
+					for(var i=1,len=aStoreListTmp.length;i<len;i++) {
+						oStoreUl.removeChild(aStoreListTmp[i]);
+					}
+				}else {
+					for(var i=config.like_stores.length,len=aStoreListTmp.length;i<len;i++) {
+						oStoreUl.removeChild(aStoreListTmp[i]);
+					}
+				}
+			}else if(config.like_stores.length>aStoreList.length){
+				var frag = doc.createDocumentFragment();
+				for(var i=aStoreList.length,len=config.like_stores.length;i<len;i++) {
+					var item = aStoreList[0].cloneNode(true);
+					frag.appendChild(item);
+				}
+				oStoreUl.appendChild(frag);
+			}
+			// 渲染书店信息
+			for(var k=0,len=aStoreList.length;k<len;k++) {
+				// storeInfo.img[k].src = config.like_stores[k].shopperImg;
+				storeInfo.href[k] += config.like_stores[k].bookId;
+				storeInfo.name[k].innerHTML =  config.like_stores[k].shopperName;
+			}
 		},
 		logo: function(){
 			var oLogo = doc.getElementById('logo');
