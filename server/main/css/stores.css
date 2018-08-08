@@ -55,7 +55,7 @@
 	box-shadow: 0 0 10px #aaa;
 }
 #store-list>li .store-slogan {
-	text-align: left;
+	text-align: center;
 }
 #store-list>li .store-img {
 	overflow: hidden;

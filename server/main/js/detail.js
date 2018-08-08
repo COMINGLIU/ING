@@ -17,7 +17,7 @@
 	Detail.prototype = {
 		init: function(){
 			var bookInfo = {
-				img: doc.querySelector('.bookins .bookimg img'),
+				img: doc.querySelector('#bookinfo .bookimg img'),
 				name: doc.querySelector('.bookins h3'),
 				price: doc.querySelector('.bookins .price span'),
 				bookNum: doc.querySelector('.bookins .book-num span'),
@@ -25,6 +25,7 @@
 				bookTel: doc.querySelector('.bookins .book-tel span'),
 				bookDescribe: doc.querySelector('.bookins .book-describe span')
 			};
+			console.log(bookInfo.img);
 			// 收藏按钮
 			var collectBtn= doc.getElementById('collect');
 			var count = 0;
@@ -32,11 +33,7 @@
 			var relaBookUl = doc.querySelector('#relaBooks-box ul'),
 					relaBookLi = relaBookUl.querySelectorAll('li');
 			var sentData = window.location.search.split('?')[1].split('=')[1];
-			this.getCookieModule(function(cookie){
-				if(cookie.get('user')){
-					user = JSON.parse(cookie.get('user'));
-				}
-			})
+
 			//获取书籍基本信息
 			this.getAjaxModule(function(ajax){
 				ajax({
@@ -52,7 +49,7 @@
 						console.log(res);
 						if(res.status=='success'){
 							// 渲染书籍信息
-							// bookInfo.img.src = data.bookDetail.bookSrc;
+							bookInfo.img.src = 'imgs/storeImg/'+res.bookDetail.bookSrc;
 							bookInfo.name.innerHTML = res.bookDetail.bookName;
 							bookInfo.price.innerHTML = res.bookDetail.bookPrice;
 							bookInfo.bookNum.innerHTML = res.bookDetail.bookAllNum;
@@ -75,41 +72,46 @@
 							}
 							// 点击收藏
 							collectBtn.onclick = function() {
-								count++;
-								// 登录了
-								if(user) {
-									if(count%2==1){
-										collectBtn.style.color = '#900';
-										Detail.prototype.getAjaxModule(function(ajax){
-											ajax({
-												url: '/',
-												data: {
-													act: 'collectBook',
-													userId: user.userId,
-													bookId: sentData,
-												},
-												method: 'get',
-												error: function(err){
-													console.log('err:'+err);
-												},
-												success: function(res){
-													res = JSON.parse(res);
-													console.log(res);
-												}
+								Detail.prototype.getCookieModule(function(cookie){
+									if(cookie.get('user')){
+										user = JSON.parse(cookie.get('user'));
+										count++;
+										if(count%2==1){
+											collectBtn.style.color = '#900';
+											Detail.prototype.getAjaxModule(function(ajax){
+												ajax({
+													url: '/',
+													data: {
+														act: 'collectBook',
+														userId: user.userId,
+														bookId: sentData,
+													},
+													method: 'get',
+													error: function(err){
+														console.log('err:'+err);
+													},
+													success: function(res){
+														res = JSON.parse(res);
+														console.log(res);
+														if(res.status=='success'){
+															Detail.prototype.getLikeInfo();
+														}
+													}
+												})
 											})
-										})
+										}else {
+											collectBtn.style.color = '#000';
+										}
 									}else {
-										collectBtn.style.color = '#000';
+										// 没有登录
+										var con = confirm('登录后收藏才能保存，登录吗?');
+										if(con) {
+											// 打开登录框
+											doc.getElementById("regitLog").style.display = 'block';
+											doc.getElementsByClassName('login')[0].style.display = 'block';
+										}
 									}
-								}else {
-									// 没有登录
-									var con = confirm('登录后收藏才能保存，登录吗?');
-									if(con) {
-										// 打开登录框
-										doc.getElementById("regitLog").style.display = 'block';
-										doc.getElementsByClassName('login')[0].style.display = 'block';
-									}
-								}
+								})
 							};
 						}
 					}
@@ -132,6 +134,14 @@
 			// 	})
 			// })
 			// 获取其他书籍信息
+		},
+		// likeInfo
+		getLikeInfo: function(){
+			var likeInfo = doc.getElementById('likeInfo');
+			likeInfo.style.opacity = '1';
+			var timer = setTimeout(function(){
+				likeInfo.style.opacity = '0';
+			},1000)
 		},
 		getHeaderModule: function(){
 			seajs.use('header.js',function(header){

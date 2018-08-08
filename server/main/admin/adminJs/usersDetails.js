@@ -3,6 +3,7 @@
   var UsersDetails = {
     // 请求数据
     init: function(){
+      var userInfoUl = doc.querySelector('#content .userInfo');
       this.getAjaxModule(function(ajax){
         ajax({
           url: '/',
@@ -17,9 +18,49 @@
           success: function(res){
             res = JSON.parse(res);
             console.log(res);
+            if(res.status=='success'){
+              // 渲染数据
+              var data = res.data;
+              if(data.length==0) {
+                alert('没有对应的数据');
+              }else {
+                UsersDetails.readerUserData(data,userInfoUl);
+                UsersDetails.openBookList();
+              }
+            }else{
+              alert(res.msg);
+            }
           }
         })
       })
+    },
+    //渲染数据
+    readerUserData: function(data,userInfoUl){
+      var frag = doc.createDocumentFragment();
+      for(var i=0,len=data.length;i<len;i++) {
+        var item = doc.createElement('li');
+        item.innerHTML = "<ul><li>"+data[i].userId+"</li><li>"+data[i].userName+"</li><li>"+data[i].tel+"</li><li>"+data[i].email+"</li><li>"+data[i].schoolName+"</li><li>"+data[i].registTime+"</li><li>"+data[i].loginTimes+"</li><li>"+data[i].userScore+"</li></ul>";
+        frag.appendChild(item);
+      }
+      userInfoUl.appendChild(frag);
+    },
+    readerBookLikeData: function(data,oUl){
+      var frag = doc.createDocumentFragment();
+      for(var i=0,len=data.length;i<len;i++) {
+        var item = doc.createElement('li');
+        item.innerHTML = '<ul><li>'+data[i].bookName+'</li><li>'+data[i].bookPublic+'</li><li>'+data[i].bookPublic+'</li><li>'+data[i].bookPrice+'</li><li>'+data[i].bookAllNum+'</li><li>'+data[i].bookTime+'</li></ul>';
+        frag.appendChild(item);
+      }
+      oUl.appendChild(frag);
+    },
+    readerStoreLikeData: function(data,oUl){
+      var frag = doc.createDocumentFragment();
+      for(var i=0,len=data.length;i<len;i++) {
+        var item = doc.createElement('li');
+        item.innerHTML = '<ul><li>'+data[i].shopperName+'</li><li>'+data[i].shopperDescribe+'</li><li>'+data[i].booksNum+'</li><li>'+data[i].shopperTime+'</li></ul>';
+        frag.appendChild(item);
+      }
+      oUl.appendChild(frag);
     },
     // 打开搜索
     openSearch: function(){
@@ -28,6 +69,7 @@
           oCloseSearch = oSearchBox.getElementsByClassName('close')[0],
           oSelect = doc.getElementsByName('search-check')[0],
           oSearchContent = doc.getElementsByName('search-content')[0];
+      var oSearchUserUl = doc.querySelector('#search-box .userInfo');
       oSearchBtn.onclick = function(){
         oSearchBox.style.display = 'block';
       };
@@ -35,6 +77,12 @@
         oSearchBox.style.display = 'none';
       };
       oSearchContent.onchange = function(){
+        var aSearchUserLi = doc.querySelectorAll('#search-box .userInfo>li');
+        if(aSearchUserLi.length>0){
+          for(var i=1,len=aSearchUserLi.length;i<len;i++){
+            oSearchUserUl.removeChild(aSearchUserLi[i]);
+          }
+        }
         UsersDetails.getAjaxModule(function(ajax){
           ajax({
             url: '/',
@@ -49,6 +97,18 @@
             },
             success: function(res){
               res = JSON.parse(res);
+              if(res.status=='success'){
+                var data= res.data;
+                if(data.length==0){
+                  alert('没有对应的数据');
+                }else{
+                  // 渲染数据
+                  UsersDetails.readerUserData(data,userInfoUl);
+                  UsersDetails.openBookList();
+                }
+              }else {
+                alert('err:'+res.msg);
+              }
               console.log(res);
             }
           })
@@ -61,6 +121,7 @@
           aLiUserId = doc.querySelectorAll('.userInfo>li:not(:nth-child(1))>ul li:nth-child(1)'),
           oBookListBox = doc.getElementById('book-list'),
           oCloseBookList = doc.querySelector("#book-list .close");
+      var oBookLikeUl = doc.querySelector('#book-list .userInfo');
       for(var i=0,len=aLiBtns.length;i<len;i++) {
         (function(i){
           aLiBtns[i].onclick = function(){
@@ -80,6 +141,17 @@
                 success: function(res){
                   res = JSON.parse(res);
                   console.log(res);
+                  if(res.status=='success'){
+                    var data = res.data;
+                    if(data.length==0) {
+                      alert('没有对应的数据');
+                    }else {
+                      // 渲染数据
+                      UsersDetails.readerBookLikeData(data,oBookLikeUl);
+                    }
+                  }else {
+                    alert('err:'+err);
+                  }
                 }
               })
             })
@@ -96,6 +168,7 @@
           oUserId = doc.querySelector('#book-list .userName .userId span'),
           oStoreListBox = doc.getElementById('stores-list'),
           oCloseStoreList = doc.querySelector('#stores-list .close');
+      var oStoreLikeUl = doc.querySelector('#stores-list .userInfo');
       oStoreOpen.onclick = function(){
         oStoreListBox.style.display = 'block';
         UsersDetails.getAjaxModule(function(ajax){
@@ -113,6 +186,17 @@
             success: function(res){
               res = JSON.parse(res);
               console.log(res);
+              if(res.status=='success'){
+                var data = res.data;
+                if(data.length==0) {
+                  alert('没有对应的数据');
+                }else {
+                  // 渲染数据
+                  UsersDetails.readerStoreLikeData(data,oStoreLikeUl);
+                }
+              }else {
+                alert('err:'+res.msg);
+              }
             }
           })
         })
@@ -147,7 +231,7 @@
   };
   UsersDetails.init();
   UsersDetails.openSearch();
-  UsersDetails.openBookList();
+  // UsersDetails.openBookList();
   UsersDetails.openStoreList();
   UsersDetails.openLoginStatus();
 })(window,document);

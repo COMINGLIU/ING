@@ -10,6 +10,7 @@ const multer = require('multer');
 const pathLib = require('path');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
+const moment = require('moment');
 
 const storeInfoMulter = multer({dest: './main/imgs/storeImg'});
 const server = express();
@@ -19,6 +20,7 @@ const conn  = mysql.createConnection({
   password: 'kkxxdgmyt67LIUQIONG',
   database: 'bookstore'
 });
+let TIME=require('./module/getTime.js');
 let sessionArr = [];
 for(var i=0;i<100000;i++){
   sessionArr.push('sig_'+Math.random());
@@ -41,11 +43,10 @@ server.get('/',function(req,res){
   switch(reqUrl.act){
     // 获取主页的书籍
     case 'indexBook':
-      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,schoolName FROM bookinfo,user where bookinfo.shopperId=user.userId;';
+      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,shopperName,schoolName FROM bookinfo,user,shopper where bookinfo.shopperId=user.userId and bookinfo.shopperId=shopper.userId;';
       conn.query(sql,function(err,data){
         if(err){
-          console.log(err);
-          res.send(err);
+          console.log(err.sqlMessage);
         }else {
           console.log(data);
           res.send(data);
@@ -157,11 +158,11 @@ server.get('/',function(req,res){
       conn.query(sql,function(err,data){
         console.log(sql);
         if(err){
-          console.log(err.code);
-          res.send(err.code);
+          console.log(err.sqlMessage);
+          res.send({status:'fail',msg:'搜索失败'});
         }else {
           console.log(data);
-          res.send(data);
+          res.send({status:'success',data:data});
         }
       })
       break;
@@ -222,7 +223,19 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
-          res.send({status:'success',data:data});
+          if(data.toString()==''){
+            res.send({status:'fail',msg:'该小店还没有书籍'});
+          }else {
+            let sql0 = 'SELECT shopperName,schoolName from shopper,user where shopper.userId="'+reqUrl.shopperId+'" and shopper.userId=user.userId;';
+            conn.query(sql0,function(err,data2){
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                console.log(data2[0]);
+                res.send({status:'success',data:data,shopperInfo:data2[0]});
+              }
+            })
+          }
         }
       })
       break;
@@ -300,6 +313,23 @@ server.get('/',function(req,res){
         }
       })
       break;
+    case 'getVisitDetails':
+      let getVisitDetails_time = '';
+      if(reqUrl.dayTime){
+        getVisitDetails_time = reqUrl.dayTime;
+      }else {
+        getVisitDetails_time = TIME();
+      }
+      sql = 'select DISTINCT(loginlog.userId),user.userName,COUNT(loginlog.userId) from loginlog,user where loginTime>"'+getVisitDetails_time+'" and loginlog.userId=user.userId;';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
     // 用户详情接口
     case 'getUserDetailData':
       if(req.session['adminAcount']) {
@@ -316,6 +346,11 @@ server.get('/',function(req,res){
               }else {
                 console.log('成功');
                 console.log(data);
+                if(data.length>0){
+                  for(var i=0,len=data.length;i<len;i++) {
+                    data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
+                  }
+                }
                 res.send({status: 'success',data: data});
               }
             })
@@ -332,49 +367,26 @@ server.get('/',function(req,res){
         res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
       }
       break;
-    // 用户收藏的书籍（管理员端）
-    case 'getBookLikes':
-      sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          res.send({status:'success',data:data});
-        }
-      })
-      break;
-    case 'getStoreLikes':
-      sql = 'select shopperName,shopperDescribe,booksNum,shopperTime from shopper where userId in(select storeId from booklike where userId = "'+reqUrl.userId+'" and likeType="店铺");'
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log('error:'+err.sqlMessage);
-        }else {
-          console.log(data);
-          res.send({status:'success',data:data});
-        }
-      })
-      break;
-      // 用户收藏的店铺（管理员端）
+    // 搜索用户信息
     case 'searchUserInfo':
       let user_key = reqUrl.searchKey,
           user_value = reqUrl.searchValue,
           user_sqlKey;
       switch(user_key) {
         case '用户ID':
-          user_sqlKey='shopper.userId';
+          user_sqlKey='user.userId';
           break;
-        case '店名':
-          user_sqlKey = 'shopper.shopperName';
-          break;
-        case '店长昵称':
-          user_sqlKey = 'shopper.shopperDescribe';
+        case '昵称':
+          user_sqlKey = 'user.userName';
           break;
         case '电话':
           user_sqlKey = 'user.tel';
           break;
         case '邮箱':
           user_sqlKey = 'user.email';
+          break;
+        case '学校':
+          user_sqlKey = 'user.schoolName';
           break;
       }
       sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and user.'+user_sqlKey+'="'+user_value+'";'
@@ -384,10 +396,50 @@ server.get('/',function(req,res){
           console.log("err:"+err);
         }else {
           console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].registTime = moment(data[i].registTime).forMat('YYYY-MM-DD HH:mm:ss');
+            }
+          }
           res.send({status:'success',data:data});
         }
       })
       break;
+    // 用户收藏的书籍（管理员端）
+    case 'getBookLikes':
+      sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          }
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    // 用户收藏的店铺（管理员端）
+    case 'getStoreLikes':
+      sql = 'select shopperName,shopperDescribe,booksNum,shopperTime from shopper where userId in(select storeId from booklike where userId = "'+reqUrl.userId+'" and likeType="店铺");'
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log('error:'+err.sqlMessage);
+        }else {
+          console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+
     // 获取店铺详情
     case 'getStoresInfo':
       if(req.session['adminAcount']) {
@@ -403,6 +455,11 @@ server.get('/',function(req,res){
                 console.log('err:'+err.sqlMessage);
               }else {
                 console.log(data);
+                if(data.length>0){
+                  for(var i=0,len=data.length;i<len;i++){
+                    data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
+                  }
+                }
                 res.send({status: 'success',data: data});
               }
             })
@@ -433,7 +490,7 @@ server.get('/',function(req,res){
           store_sqlKey = 'shopper.shopperName';
           break;
         case '店长昵称':
-          store_sqlKey = 'shopper.shopperDescribe';
+          store_sqlKey = 'user.userName';
           break;
         case '电话':
           store_sqlKey = 'user.tel';
@@ -450,6 +507,11 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0){
+            for(var i=0,len=data.length;i<len;i++){
+              data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          }
           res.send({status: 'success',data: data});
         }
       })
@@ -476,6 +538,11 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
           res.send({status:'success',data:data});
         }
       })
@@ -508,6 +575,11 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
           res.send({status: 'success',data: data});
         }
       })
@@ -586,13 +658,14 @@ server.post('/',function(req,res){
         // 将店存进去
         let file = req.files[0];
         // console.log(pathLib.parse(req.files[0].originalname).ext);
+        let store_sql_name = file.filename + pathLib.parse(file.originalname).ext;
         let newName = file.path + pathLib.parse(file.originalname).ext;
         fs.rename(file.path,newName,function(err){
           if(err){
             console.log('图片上传失败');
             res.send('图片上传失败');
           }else {
-            sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg,booksNum) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+newName+'","0");';
+            sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg,booksNum) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+store_sql_name+'","0");';
             conn.query(sql,function(err,data){
               if(err){
                 console.log('上传失败:'+err);
@@ -673,6 +746,55 @@ server.post('/',function(req,res){
             })
           }
         })
+        break;
+      case 'editBookInfo':
+        console.log(req.files[0]);
+        console.log(comingData);
+        let editBookInfo_str="";
+        let editBookInfo_file;
+        let editBookInfo_sqlimgName = '';
+        let editBookInfo_imgNewName = '';
+        for(let key in comingData) {
+          if(key!='act'){
+            editBookInfo_str +=key+'="'+comingData[key]+'",';
+          }
+        }
+        if(req.files[0]){
+          editBookInfo_file = req.files[0];
+          editBookInfo_sqlimgName = editBookInfo_file.filename+pathLib.parse(editBookInfo_file.originalname).ext;
+          editBookInfo_imgNewName = editBookInfo_file.path+pathLib.parse(editBookInfo_file.originalname).ext;
+          fs.rename(editBookInfo_file.path,editBookInfo_imgNewName,function(err){
+            if(err){
+              console.log('图片修改失败');
+            }else {
+              console.log('图片修改成功');
+              editBookInfo_str+='bookSrc="'+editBookInfo_sqlimgName+'"';
+              console.log(editBookInfo_str);
+              sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
+              console.log(sql);
+              conn.query(sql,function(err,data){
+                if(err){
+                  console.log(err.sqlMessage);
+                }else {
+                  console.log('修改成功啦');
+                  res.send({status:'success',msg:'修改成功'});
+                }
+              })
+            }
+          })
+        }else {
+          editBookInfo_str = editBookInfo_str.substr(0,editBookInfo_str.length-1);
+          sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
+          console.log('无file：'+sql);
+          conn.query(sql,function(err,data){
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log('修改成功啦');
+              res.send({status:'success',msg:'修改成功'});
+            }
+          })
+        }
         break;
     }
   }else {

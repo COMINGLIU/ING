@@ -61,7 +61,7 @@
 							// 渲染数据
 							for(var i=0,len=data.length;i<len;i++) {
 								storeInfo.atoreHref[i].href += data[i].userId;
-								// storeInfo.storeImg[i].src = data[i].shopperImg;
+								storeInfo.storeImg[i].src = 'imgs/storeImg/' + data[i].shopperImg;
 								storeInfo.storeName[i].innerHTML = data[i].shopperName;
 								storeInfo.storeDes[i].innerHTML = data[i].shopperDescribe;
 								storeInfo.storeTime[i].innerHTML = data[i].shopperTime;

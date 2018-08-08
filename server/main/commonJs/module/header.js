@@ -1,6 +1,7 @@
 define(function(require,exports,module){
 	var doc = document;
 	var like_n=0;
+	var user;
 	var preventSqlWords = /select|insert|update|delete|exec|script|count|'|"|=|<|>|%/i;
 	// 保存收藏的
 	window.sessionStorage.setItem('likes','');
@@ -100,7 +101,7 @@ define(function(require,exports,module){
 							if(doc.getElementById('regitBtn').innerHTML == 'SIGN OUT') {
 								if(JSON.parse(Header.prototype.getCookieModule().get('user')).isSeller=='1'){
 									var con = confirm('您已经注册过书店,不能重复注册，是否前往您的书店中心?');
-									var user = JSON.parse(Header.prototype.getCookieModule().get('user'));
+									user = JSON.parse(Header.prototype.getCookieModule().get('user'));
 									if(con) {
 										// 打开书店
 										window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
@@ -127,7 +128,7 @@ define(function(require,exports,module){
 									doc.getElementsByClassName('login')[0].style.display = 'block';
 								}
 							}else if(JSON.parse(Header.prototype.getCookieModule().get('user')).isSeller!=null){
-								var user = JSON.parse(Header.prototype.getCookieModule().get('user'));
+								user = JSON.parse(Header.prototype.getCookieModule().get('user'));
 								window.location.href = 'them1.html?storeId='+ user.userId;
 							}else {
 								var con = confirm('您还没有注册书店，是否注册?');
@@ -164,7 +165,7 @@ define(function(require,exports,module){
 	    		}
 	    	});
 	    	this.DoEvent.addEvent(oSearchInput,'change',function(){
-	    		window.location.href = 'search.html?bookName='+oSearchInput.value;
+	    		window.location.href = 'search.html?bookName='+oSearchInput.value+'&bookPublic=&bookCollege=';
 	    	})
 	    },
 	    // 注册登录
@@ -189,7 +190,7 @@ define(function(require,exports,module){
 	    	var loginForm = doc.getElementById("login-form");
 	    	var loginEle = {
 	    		oTelEmail: loginForm.querySelector("input[name='telEmail']"),
-	    		oPass: loginForm.querySelector("input[name='pass']"),
+	    		oLoginPass: loginForm.querySelector("input[name='pass']"),
 	    	};
 				// 表单输入完进行判断
 				// preventSqlWords
@@ -237,6 +238,7 @@ define(function(require,exports,module){
 									loginArr.push(key2);
 								}
 							}else {
+								console.log(doc.getElementById(key2));
 								doc.getElementById(key2).innerHTML = "";
 								loginEle[key2].style.borderColor = '#ccc';
 							}
@@ -328,14 +330,14 @@ define(function(require,exports,module){
 			    		// console.log('login');
 			    		// 发送数据
 							console.log(loginArr);
-							if(loginEle.oTelEmail.value!=''&&loginEle.oPass.value!=''&&loginArr.length==0) {
+							if(loginEle.oTelEmail.value!=''&&loginEle.oLoginPass.value!=''&&loginArr.length==0) {
 								Header.prototype.getAjaxModule(function(ajax){
 									ajax({
 					    			url: '/',
 					    			data: {
 											act: 'login',
 					    				telEmail: loginEle.oTelEmail.value,
-					    				pass: loginEle.oPass.value
+					    				pass: loginEle.oLoginPass.value
 					    			},
 					    			method: 'post',
 					    			error: function(status) {
@@ -350,6 +352,8 @@ define(function(require,exports,module){
 												oRegitLog.style.display = 'none';
 												oLogingBtn.innerHTML = 'SIGN OUT';
 												Header.prototype.getCookieModule().set('user',JSON.stringify(user),'2018.9.1');
+												user = JSON.parse(Header.prototype.getCookieModule().get('user'));
+												console.log(user);
 												doc.getElementById('userCenter').innerHTML = res.user['userName'] ;
 											}else if(res.status == 'fail') {
 												// 登录失败

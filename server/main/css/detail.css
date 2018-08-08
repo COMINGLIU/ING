@@ -6,6 +6,24 @@ body {
 	width: 100%;
 	padding-top: 80px;
 }
+#likeInfo {
+	position: fixed;
+	z-index: 10;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 80px;
+	height: 30px;
+	margin: auto;
+	border-radius: 10px;
+	background-color: #000;
+	color: #fff;
+	line-height: 30px;
+	text-align: center;
+	opacity: 0;
+	transition-duration: .3s;
+}
 /*书籍信息*/
 #bookinfo{
 	display: flex;

@@ -28,6 +28,7 @@
 		},
 		init: function(){
 			var sendData = window.location.search.split('?')[1].split('=')[1];
+			var oHeadName = doc.querySelector('#header h1');
 			var oBookUl = doc.getElementsByClassName('bookUl')[0],
 					aBookLi = oBookUl.getElementsByTagName('li'),
 					aBookhref = oBookUl.getElementsByTagName('a'),
@@ -53,6 +54,8 @@
 						console.log(res);
 						if(res.status=='success'){
 							data = res.data;
+							// 填入店名
+							oHeadName.innerHTML = res.shopperInfo.shopperName+' ('+res.shopperInfo.schoolName+')';
 							// 渲染节点
 							if(data.length<aBookLi.length){
 								oTmpookLi = doc.querySelectorAll('.bookUl li');
@@ -76,7 +79,7 @@
 							}
 							// 渲染数据
 							for(var k=0,len3=aBookLi.length;k<len3;k++) {
-								// aBookImg[k].src = data[k].bookSrc;
+								aBookImg[k].src = 'imgs/storeImg/' + data[k].bookSrc;
 								aBookhref[k].href += data[k].bookId;
 								aBookName[k].innerHTML = data[k].bookName;
 								aBookDes[k].innerHTML = data[k].bookDescribe;
@@ -87,7 +90,7 @@
 							// 点击收藏书籍
 							Them1.prototype.ClickcollectBook();
 						}else {
-							alert('获取数据失败，请稍候重试');
+							alert(res.msg);
 						}
 					}
 				})

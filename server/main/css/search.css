@@ -1,8 +1,6 @@
 @charset 'utf-8';
 /*searchBox*/
-#container {
 
-}
 #header {
 	border-bottom: 1px solid #000;
 }
@@ -33,17 +31,17 @@
 	box-sizing: border-box;
 	width: 100%;
 }
-#search-keywors li{
+#search-keywors>li{
 	display: inline-block;
 	margin-right: 20px;
 	margin-bottom: 20px;
 	line-height: 40px;
 	cursor: pointer;
 }
-#search-keywors li:last-child{
+#search-keywors>li:last-child{
 	transition-duration: .3s;
 }
-#search-keywors li:last-child:hover{
+#search-keywors>li:last-child:hover{
 	transform: scale(3) rotate(270deg);
 }
 /*content*/
@@ -51,6 +49,24 @@
 	box-sizing: border-box;
 	width: 100%;
 	padding: 100px 50px 0 50px;
+}
+#likeInfo {
+	position: fixed;
+	z-index: 10;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 80px;
+	height: 30px;
+	margin: auto;
+	border-radius: 10px;
+	background-color: #000;
+	color: #fff;
+	line-height: 30px;
+	text-align: center;
+	opacity: 0;
+	transition-duration: .3s;
 }
 .books {
 	display: flex;
@@ -123,6 +139,73 @@ i.icon-heart-fill {
 /**/
 #addMore:hover {
 	color: #777;
+}
+
+/*收藏夹*/
+#collects {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 4px;
+	width: 40px;
+	height: 40px;
+	margin: auto;
+	border-radius: 50%;
+	box-shadow: 0 0 20px #ccc;
+	background-color: #fff;
+	color: #000;
+	font-size: 20px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+}
+#collects .info {
+	position: absolute;
+	top: -30px;
+	left: -25px;
+	width: 50px;
+	height: 30px;
+	border-radius: 20px;
+	font-size: 12px;
+	line-height: 30px;
+	background-color: #000;
+	color: #fff;
+	opacity: 0;
+	transition-duration: .6s;
+}
+#collects:hover .info {
+	opacity: 1;
+}
+/* 收藏夹盒子 */
+#collets-box {
+	overflow: auto;
+  position: absolute;
+  right: 40px;
+	top: -150px;
+	width: 0;
+	max-height: 420px;
+  box-shadow: 0 0 10px #000;
+  background-color: #fff;
+  color: #000;
+  font-size: 12px;
+  line-height: 20px;
+	transition-duration: .3s;
+}
+#collets-box li a {
+	color: #000;
+}
+#collets-box li {
+  position: relative;
+  border-bottom: 1px solid #000;
+}
+#collets-box li .icon-lajixiang {
+  position: absolute;
+  right: 2px;
+  top: 20px;
+  margin: auto;
+}
+#collets-box li .icon-lajixiang:hover {
+  color: #f00;
 }
 /**/
 #footer {

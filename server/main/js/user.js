@@ -455,7 +455,7 @@
 			}
 			// 渲染书籍
 			for(var k=0,len=aBookList.length;k<len;k++){
-				// bookInfo.img[k].src = config.like_books[k].bookSrc;
+				bookInfo.img[k].src = 'imgs/storeImg/' + config.like_books[k].bookSrc;
 				bookInfo.href[k].href += config.like_books[k].bookId;
 				bookInfo.name[k].innerHTML = config.like_books[k].bookName;
 			}
@@ -481,9 +481,9 @@
 			}
 			// 渲染书店信息
 			for(var k=0,len=aStoreList.length;k<len;k++) {
-				// storeInfo.img[k].src = config.like_stores[k].shopperImg;
-				storeInfo.href[k] += config.like_stores[k].bookId;
-				storeInfo.name[k].innerHTML =  config.like_stores[k].shopperName;
+				storeInfo.img[k].src = 'imgs/storeImg/' + config.like_stores[k].shopperImg;
+				storeInfo.href[k].href += config.like_stores[k].storeId;
+				storeInfo.name[k].innerHTML = config.like_stores[k].shopperName;
 			}
 		},
 		logo: function(){

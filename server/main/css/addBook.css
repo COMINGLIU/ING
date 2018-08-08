@@ -13,6 +13,9 @@
 #header #userName {
 	line-height: 80px;
 }
+#header #userName:hover {
+	color: #888;
+}
 /*logo*/
 #header h2 {
 	position: absolute;
@@ -46,6 +49,21 @@
 	width: 100%;
 	padding-top: 80px;
 }
+#editOkInfo {
+	position: absolute;
+	top: 200px;
+	left: 0;
+	right: 0;
+	width: 70px;
+	height: 30px;
+	margin: auto;
+	border-radius: 10px;
+	text-align: center;
+	line-height: 30px;
+	background-color: rgba(0,0,0,.8);
+	color: #fff;
+	opacity: 0;
+}
 ul#uped {
 	display: flex;
 	justify-content: space-around;
@@ -56,13 +74,16 @@ ul#uped {
 	overflow: hidden;
 	position: relative;
 	width: 300px;
-	height: 600px;
 	margin-right: 20px;
 	margin-top: 50px;
 	margin-left: 20px;
 	background-color: rgb(236,238,240);
 	box-shadow: 0 0 15px #ccc;
 	font-size: 12px;
+}
+#uped li.bookInfo li:first-child {
+	visibility: hidden;
+	transition-duration: .3s;
 }
 #uped li.bookInfo .img {
 	overflow: hidden;

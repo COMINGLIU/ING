@@ -43,12 +43,10 @@
             data = JSON.parse(res);
             console.log(data);
             // 渲染数据
-            // for(var i=0,len=bookInfo.aBookList.length;i<len;i++) {
-            for(var i=0,len=data.length;i<len;i++) {
-              // console.log(data[i].bookId);
-              // bookInfo.aBookImg.src = data[i].bookSrc;
+            for(var i=0,len=bookInfo.aBookList.length;i<len;i++) {
+              bookInfo.aBookImg[i].src = 'imgs/storeImg/'+data[i].bookSrc;
               bookInfo.aBookhref[i].href += data[i].bookId;
-              console.log(bookInfo.aBookhref[i].href);
+              bookInfo.aStoreHref[i].innerHTML = data[i].shopperName;
               bookInfo.aBookName[i].innerHTML = data[i].bookName;
               bookInfo.aBookAddr[i].innerHTML = data[i].schoolName;
               bookInfo.aStoreHref[i].href += data[i].shopperId;
@@ -63,7 +61,6 @@
     // 获取header里边的方法
     getHeaderModule: function(){
       seajs.use('header.js',function(header){
-        console.log(header);
           // header部分的事件委托
           header.headerEvent();
           // 登录注册部分的事件委托
@@ -142,7 +139,6 @@
           var oLike = aCovers[i];
           var oLikeI = aCovers[i].getElementsByTagName('i')[0];
           var bookId = aBookHref[i].href.split('?')[1].split('=')[1];
-          console.log(bookId);
           Index.prototype.DoEvent.addEvent(oLike,'click',function(e){
             if(oRigistBtn.innerHTML == 'SIGN OUT') {
               e=e||window.e;
@@ -152,34 +148,31 @@
               if(Index.prototype.getStyle(oLikeI,"color")=="rgb(0, 0, 0)") {
                 oLike.style.opacity = '1';
                 oLikeI.style.color = "#900";
-                if(likeBookList.indexOf(bookId)==-1){
-                  likeBookList.push(bookId);
-                  console.log(user);
-                  Index.prototype.getAjaxModule(function(ajax){
-                    ajax({
-                      url: '/',
-                      data: {
-                        act: 'collectBook',
-                        userId: user.userId,
-                        bookId: bookId,
-                      },
-                      method: 'get',
-                      error: function(err){
-                        console.log('err:'+err);
-                      },
-                      success: function(res){
-                        res = JSON.parse(res);
-                        console.log(res);
+                console.log(user);
+                Index.prototype.getAjaxModule(function(ajax){
+                  ajax({
+                    url: '/',
+                    data: {
+                      act: 'collectBook',
+                      userId: user.userId,
+                      bookId: bookId,
+                    },
+                    method: 'get',
+                    error: function(err){
+                      console.log('err:'+err);
+                    },
+                    success: function(res){
+                      res = JSON.parse(res);
+                      console.log(res);
+                      if(res.status == 'success'){
+                        Index.prototype.getLikeInfo('yse');
                       }
-                    })
+                    }
                   })
-                }
-                oLikeN.innerHTML = likeBookList.length;
+                })
               }else {
                 // 取消收藏
                 oLikeI.style.color = "#000";
-                likeBookList.pop(bookId);
-                oLikeN.innerHTML = likeBookList.length;
                 Index.prototype.getAjaxModule(function(ajax){
                   ajax({
                     url: '/',
@@ -195,6 +188,9 @@
                     success: function(res){
                       res = JSON.parse(res);
                       console.log(res);
+                      if(res.status == 'success'){
+                        Index.prototype.getLikeInfo('no');
+                      }
                     }
                   })
                 })
@@ -217,6 +213,19 @@
 				fn();
 			})
     },
+    // 收藏信息
+		getLikeInfo: function(item){
+      var likeInfo = doc.getElementById('likeInfo');
+      if(item=='yes'){
+        likeInfo.innerHTML = '已收藏';
+      }else if(item=='no'){
+        likeInfo.innerHTML = '已取消收藏';
+      }
+			likeInfo.style.opacity = '1';
+			var timer = setTimeout(function(){
+				likeInfo.style.opacity = '0';
+			},1000)
+		},
     // 点击加载更多
     clickAddMore: function(){
       var addBtn = doc.getElementById('addMore'),
