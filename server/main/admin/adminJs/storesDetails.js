@@ -20,8 +20,12 @@
             // console.log(res);
             if(res.status=='success'){
               var data = res.data;
-              storesDetail.readerData(data,storeInfoUl);
-              storesDetail.openSlogan();
+              if(data.length>0) {
+                storesDetail.readerData(data,storeInfoUl);
+                storesDetail.openSlogan();
+              }else {
+                storesDetail.openHintInfo();
+              }
             }else {
               alert(res.msg);
             }
@@ -79,7 +83,7 @@
               if(res.status=='success'){
                 var data = res.data;
                 if(data.length==0) {
-                  alert('没有相应的数据');
+                  storesDetail.openHintInfo();
                 }
                 // 渲染数据
                 storesDetail.readerData(data,oSearchStoreInfoUl);
@@ -146,6 +150,15 @@
       seajs.use('ajax.js',function(ajax){
         cb&&cb(ajax);
       })
+    },
+    openHintInfo: function(){
+      var oHintInfo = doc.getElementById('hintInfo');
+      console.log(oHintInfo);
+      oHintInfo.style.opacity = 1;
+      var timer = setTimeout(function(){
+        oHintInfo.style.opacity = 0;
+        clearTimeout(timer);
+      },1500)
     }
   };
   storesDetail.init();

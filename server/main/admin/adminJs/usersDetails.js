@@ -4,6 +4,7 @@
     // 请求数据
     init: function(){
       var userInfoUl = doc.querySelector('#content .userInfo');
+
       this.getAjaxModule(function(ajax){
         ajax({
           url: '/',
@@ -44,7 +45,8 @@
       }
       userInfoUl.appendChild(frag);
     },
-    readerBookLikeData: function(data,oUl){
+    readerBookLikeData: function(data,oUl,oNum){
+      oNum.innerHTML = data.length;
       var frag = doc.createDocumentFragment();
       for(var i=0,len=data.length;i<len;i++) {
         var item = doc.createElement('li');
@@ -53,7 +55,8 @@
       }
       oUl.appendChild(frag);
     },
-    readerStoreLikeData: function(data,oUl){
+    readerStoreLikeData: function(data,oUl,oNum){
+      oNum.innerHTML = data.length;
       var frag = doc.createDocumentFragment();
       for(var i=0,len=data.length;i<len;i++) {
         var item = doc.createElement('li');
@@ -100,10 +103,10 @@
               if(res.status=='success'){
                 var data= res.data;
                 if(data.length==0){
-                  alert('没有对应的数据');
+                  UsersDetails.openHintInfo();
                 }else{
                   // 渲染数据
-                  UsersDetails.readerUserData(data,userInfoUl);
+                  UsersDetails.readerUserData(data,oSearchUserUl);
                   UsersDetails.openBookList();
                 }
               }else {
@@ -122,10 +125,18 @@
           oBookListBox = doc.getElementById('book-list'),
           oCloseBookList = doc.querySelector("#book-list .close");
       var oBookLikeUl = doc.querySelector('#book-list .userInfo');
+      var userInfoNum = doc.querySelector('#book-list .head span');
       for(var i=0,len=aLiBtns.length;i<len;i++) {
         (function(i){
           aLiBtns[i].onclick = function(){
             oBookListBox.style.display = 'block';
+            var aBookLikeList = oBookLikeUl.querySelectorAll('#book-list .userInfo>li');
+            if(aBookLikeList.length>0) {
+              for(var i=1,len=aBookLikeList.length;i<len;i++) {
+                oBookLikeUl.removeChild(aBookLikeList[i]);
+              }
+            }
+            userInfoNum.innerHTML = '0';
             UsersDetails.getAjaxModule(function(ajax){
               ajax({
                 url: '/',
@@ -144,10 +155,10 @@
                   if(res.status=='success'){
                     var data = res.data;
                     if(data.length==0) {
-                      alert('没有对应的数据');
+                      UsersDetails.openHintInfo();
                     }else {
                       // 渲染数据
-                      UsersDetails.readerBookLikeData(data,oBookLikeUl);
+                      UsersDetails.readerBookLikeData(data,oBookLikeUl,userInfoNum);
                     }
                   }else {
                     alert('err:'+err);
@@ -169,8 +180,16 @@
           oStoreListBox = doc.getElementById('stores-list'),
           oCloseStoreList = doc.querySelector('#stores-list .close');
       var oStoreLikeUl = doc.querySelector('#stores-list .userInfo');
+      var oStoreLikeNum = doc.querySelector('#stores-list .head span');
       oStoreOpen.onclick = function(){
         oStoreListBox.style.display = 'block';
+        var aStoreList = oStoreLikeUl.getElementsByTagName('li');
+        if(aStoreList.lenghth>1) {
+          for(var i=1,len=aStoreList.length;i<len;i++) {
+            oStoreLikeUl.removeChild(aStoreList[i]);
+          }
+        }
+        oStoreLikeNum.innerHTML = '0';
         UsersDetails.getAjaxModule(function(ajax){
           ajax({
             url: '/',
@@ -189,10 +208,10 @@
               if(res.status=='success'){
                 var data = res.data;
                 if(data.length==0) {
-                  alert('没有对应的数据');
+                  UsersDetails.openHintInfo();
                 }else {
                   // 渲染数据
-                  UsersDetails.readerStoreLikeData(data,oStoreLikeUl);
+                  UsersDetails.readerStoreLikeData(data,oStoreLikeUl,oStoreLikeNum);
                 }
               }else {
                 alert('err:'+res.msg);
@@ -227,6 +246,15 @@
       seajs.use('ajax.js',function(ajax){
         cb&&cb(ajax);
       })
+    },
+    openHintInfo: function(){
+      var oHintInfo = doc.getElementById('hintInfo');
+      console.log(oHintInfo);
+      oHintInfo.style.opacity = 1;
+      var timer = setTimeout(function(){
+        oHintInfo.style.opacity = 0;
+        clearTimeout(timer);
+      },1500)
     }
   };
   UsersDetails.init();

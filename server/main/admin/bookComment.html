@@ -95,11 +95,30 @@
     .close:hover {
       box-shadow: 0 0 20px #000;
     }
+    /* 提示信息 */
+    #hintInfo {
+      position: fixed;
+      top: 100px;
+      left: 0;
+      right: 0;
+      width: 100px;
+      height: 30px;
+      margin: auto;
+      border-radius: 10px;
+      background-color: rgba(0,0,0,.8);
+      color: #fff;
+      line-height: 30px;
+      text-align: center;
+      opacity: 0;
+      transition-duration: .3s;
+      z-index: 50;
+    }
     </style>
   </head>
   <body>
     <div id="container">
       <div id="content">
+        <div id="hintInfo">没有对应的数据</div>
         <ul class="bookCommentInfo">
           <li class="title">
             <ul>

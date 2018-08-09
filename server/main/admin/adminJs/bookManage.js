@@ -74,7 +74,7 @@
               if(res.status=='success'){
                 var data = res.data;
                 if(data.length==0) {
-                  alert('没有对应的数据');
+                  bookManage.openHintInfo();
                 }else {
                   bookManage.readerData(data,oSearchBookInfoUl);
                   bookManage.openBookDetail();
@@ -92,7 +92,7 @@
       var frag = doc.createDocumentFragment();
       for(var i=0,len=data.length;i<len;i++) {
         var item = doc.createElement('li');
-        item.innerHTML = '<ul><li>'+data[i].bookId+'</li><li>'+data[i].bookName+'</li><li>'+data[i].bookPulic+'</li><li>'+data[i].bookType+'</li><li>'+data[i].bookPrice+'</li><li>'+data[i].bookTime+'</li><li>'+data[i].shopperName+'</li><li>'+data[i].bookDescribe+'</li><li><i class="iconfont icon-lajixiang"></i></li></ul>';
+        item.innerHTML = '<ul><li>'+data[i].bookId+'</li><li>'+data[i].bookName+'</li><li>'+data[i].bookPublic+'</li><li>'+data[i].bookType+'</li><li>'+data[i].bookPrice+'</li><li>'+data[i].bookTime+'</li><li>'+data[i].shopperName+'</li><li>'+data[i].bookDescribe+'</li><li><i class="iconfont icon-lajixiang"></i></li></ul>';
         frag.appendChild(item);
       }
       bookManagerInfoUl.appendChild(frag);
@@ -151,6 +151,15 @@
       seajs.use('ajax.js',function(ajax){
         cb&&cb(ajax);
       })
+    },
+    openHintInfo: function(){
+      var oHintInfo = doc.getElementById('hintInfo');
+      console.log(oHintInfo);
+      oHintInfo.style.opacity = 1;
+      var timer = setTimeout(function(){
+        oHintInfo.style.opacity = 0;
+        clearTimeout(timer);
+      },1500)
     }
   };
   bookManage.init();

@@ -389,16 +389,16 @@ server.get('/',function(req,res){
           user_sqlKey = 'user.schoolName';
           break;
       }
-      sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and user.'+user_sqlKey+'="'+user_value+'";'
+      sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and '+user_sqlKey+'="'+user_value+'";'
       conn.query(sql,function(err,data){
         console.log(sql);
         if(err){
           console.log("err:"+err);
         }else {
           console.log(data);
-          if(data.length>0) {
+          if(data.length>0){
             for(var i=0,len=data.length;i<len;i++) {
-              data[i].registTime = moment(data[i].registTime).forMat('YYYY-MM-DD HH:mm:ss');
+              data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
             }
           }
           res.send({status:'success',data:data});
@@ -625,6 +625,11 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
           res.send({status:'success',data: data});
         }
       })
@@ -637,9 +642,44 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
           res.send({status:'success',data: data});
         }
       })
+      break;
+    case 'delScreenMsg':
+      if(req.session['adminAcount']) {
+        if(reqUrl.adminAcount==req.session['adminAcount']){
+          console.log(req.session['adminAcount']);
+          var adminA = req.session['adminAcount'];
+          console.log(adminA.split('_')[1]);
+          if(adminA.split('_')[1]=="super") {
+            // 超级管理员
+            sql = 'DELETE FROM screenmsg WHERE msgId="'+reqUrl.msgId+'";';
+            conn.query(sql,function(err,data){
+              if(err){
+                console.log(err.sqlMessage);
+              }else {
+                console.log('删除成功');
+                res.send({status:'success',msg:'删除成功'});
+              }
+            })
+          }else {
+            // 普通管理员
+            res.send({status: 'fail',msg: '您没有删除语录的权限，详情请查看:权限须知'});
+          }
+        }else {
+          // 账号不对的情况
+          res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
+        }
+      }else {
+        // 没有登录或登录过期的情况
+        res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
+      }
       break;
   }
 })
@@ -970,6 +1010,7 @@ server.post('/',function(req,res){
                     newAcountNum = encodeURI(adminAcount+Math.floor(Math.random()*100000)+"_normal");
                   }
                   req.session['adminAcount'] = newAcountNum;
+                  console.log(req.session['adminAcount']);
                 }
                 console.log(req.session['adminAcount']);
                 res.send({status: 'success',msg:'登录成功',user: req.session['adminAcount']});
@@ -978,15 +1019,34 @@ server.post('/',function(req,res){
           })
           break;
         case 'addScreenMsg':
-          sql = 'INSERT INTO screenmsg(msg) VALUES("'+POST.msg+'");';
-          conn.query(sql,function(err,data){
-            if(err){
-              console.log(err.sqlMessage);
+          if(req.session['adminAcount']) {
+            console.log(req.session['adminAcount']);
+            if(POST.adminAcount==req.session['adminAcount']){
+              var adminA = req.session['adminAcount'];
+              console.log(adminA.split('_')[1]);
+              if(adminA.split('_')[1]=="super") {
+                // 超级管理员
+                sql = 'INSERT INTO screenmsg(msg) VALUES("'+POST.msg+'");';
+                conn.query(sql,function(err,data){
+                  if(err){
+                    console.log(err.sqlMessage);
+                  }else {
+                    console.log('添加成功');
+                    res.send({status:'success',msg: '添加成功'});
+                  }
+                })
+              }else {
+                // 普通管理员
+                res.send({status: 'fail',msg: '您没有添加语录的权限，详情请查看:权限须知'});
+              }
             }else {
-              console.log('添加成功');
-              res.send({status:'success',msg: '公屏语录添加成功'});
+              // 账号不对的情况
+              res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
             }
-          })
+          }else {
+            // 没有登录或登录过期的情况
+            res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
+          }
           break;
       }
     });

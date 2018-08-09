@@ -14,10 +14,17 @@
         text-align: center;
       }
       #content li {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
       }
       .time {
         color: #aaa;
+        margin-top: 3px;
+      }
+      .time .icon-lajixiang {
+        margin-left: 30px;
+      }
+      .time .icon-lajixiang:hover {
+        color: #900;
       }
       /*  */
       #addMsg {
@@ -60,36 +67,31 @@
       #addMsg .bottom input:hover {
         box-shadow: 0 0 10px #aaa;
       }
+      /* 提示信息 */
+      #hintInfo {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        width: 100px;
+        height: 30px;
+        margin: auto;
+        border-radius: 10px;
+        background-color: rgba(0,0,0,.8);
+        color: #fff;
+        line-height: 30px;
+        text-align: center;
+        opacity: 0;
+        transition-duration: .3s;
+        z-index: 50;
+      }
     </style>
   </head>
   <body>
     <div id="container">
       <div id="content">
+        <div id="hintInfo">添加成功</div>
         <ul>
-          <li>
-            <div class="msg">
-              this is QPQ's bok-store,join us if you want,come on
-            </div>
-            <div class="time">
-              2018-08-02 11:28:11
-            </div>
-          </li>
-          <li>
-            <div class="msg">
-              this is QPQ's bok-store,join us if you want,come on
-            </div>
-            <div class="time">
-              2018-08-02 11:28:11
-            </div>
-          </li>
-          <li>
-            <div class="msg">
-              this is QPQ's bok-store,join us if you want,come on
-            </div>
-            <div class="time">
-              2018-08-02 11:28:11
-            </div>
-          </li>
         </ul>
         <div id="addMsg">
           <div class="top">

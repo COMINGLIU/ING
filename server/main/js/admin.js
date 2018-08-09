@@ -121,6 +121,7 @@
     // 切换菜单选项
     checkMenu: function(){
       var oMenu = doc.getElementById('content-menu'),
+          aMenuLi = oMenu.getElementsByTagName('li'),
           oFrame = doc.querySelector('#content-center iframe');
       var oCloseUserAuth = doc.querySelector('#authNode .close');
       oCloseUserAuth.onclick = function(){
@@ -129,6 +130,12 @@
       oMenu.onclick = function(e){
         e = e||window.e;
         var target = e.target||e.srcElement;
+        for(var i=0,len=aMenuLi.length;i<len;i++) {
+          aMenuLi[i].classList.remove('menuChange');
+        }
+        if(target.nodeName!='UL'){
+          target.classList.add('menuChange');
+        }
         switch(target.id) {
           case 'usersDetails':
             oFrame.src = 'admin/usersDetails.html';

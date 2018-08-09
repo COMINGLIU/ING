@@ -208,11 +208,30 @@
       #stores-list .title {
         position: absolute;
       }
+      /* 提示信息 */
+      #hintInfo {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        width: 100px;
+        height: 30px;
+        margin: auto;
+        border-radius: 10px;
+        background-color: rgba(0,0,0,.8);
+        color: #fff;
+        line-height: 30px;
+        text-align: center;
+        opacity: 0;
+        transition-duration: .3s;
+        z-index: 50;
+      }
     </style>
   </head>
   <body>
     <div id="container">
       <div id="content">
+        <div id="hintInfo">没有对应的数据</div>
         <ul class="userInfo">
           <li class="title">
             <ul>
@@ -239,11 +258,11 @@
       </div>
       <div class="top">
         <select name="search-check">
-          <option value="用户ID">userId</option>
-          <option value="昵称">userName</option>
-          <option value="电话">tel</option>
-          <option value="邮箱">email</option>
-          <option value="学校">schoolName</option>
+          <option value="用户ID">用户ID</option>
+          <option value="昵称">昵称</option>
+          <option value="电话">电话</option>
+          <option value="邮箱">邮箱</option>
+          <option value="学校">学校</option>
         </select>
         <input type="text" name="search-content" value="">
       </div>
@@ -274,7 +293,7 @@
         <i>查看收藏的店铺</i>
       </div>
       <ul class="userName">
-        <li class="userId">ID:<span>29</span></li>
+        <li class="userId">ID:<span></span></li>
         <li class="userNickName">昵称:<span>qpq</span></li>
       </ul>
       <ul class='userInfo'>
@@ -296,7 +315,7 @@
         <i class="iconfont icon-guanbi"></i>
       </div>
       <div class="head">
-        该用户收藏的店铺: <span>29</span>
+        该用户收藏的店铺: <span></span>
       </div>
       <ul class="userName">
         <li>ID:<span>20</span></li>
@@ -309,7 +328,6 @@
             <li>店铺口号</li>
             <li>书籍总量(本)</li>
             <li>注册时间</li>
-            <li>书籍总量</li>
           </ul>
         </li>
     </ul>
