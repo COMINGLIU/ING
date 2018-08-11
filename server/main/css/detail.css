@@ -111,7 +111,6 @@ body {
 	line-height: 18px;
 }
 #comments em {
-	content: '回复';
 	position: absolute;
 	right: -30px;
 	bottom: 0;
@@ -147,7 +146,7 @@ body {
 }
 #add-comment textarea {
 	width: 100%;
-	height: 50px;
+	height: 80px;
 	outline: none;
 	resize: none;
 	text-align: left;

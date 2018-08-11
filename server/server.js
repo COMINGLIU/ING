@@ -193,15 +193,32 @@ server.get('/',function(req,res){
       break;
     // 获取书籍评论
     case 'getBookComment':
-      // sql = 'SELECT * FROM bookcomment where bookId="'+reqUrl.bookId+'"';
-      // conn.query(sql,function(err,data){
-      //   if(err){
-      //     console.log(err.code);
-      //   }else {
-      //     console.log('书籍评论返回成功');
-      //     res.send({status:'success',data:data});
-      //   }
-      // })
+      sql = 'SELECT * FROM ask where bookId="'+reqUrl.bookId+'"';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.code);
+        }else {
+          console.log('书籍评论返回成功');
+          if(data.length>0){
+            for(var i=0,len=data.length;i<len;i++){
+              data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          }
+          res.send({status:'success',data:data});
+        }
+      })
+      break;
+    case 'delBookComment':
+      sql = 'DELETE FROM ask where askId="'+reqUrl.askId+'";';
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log('评论删除成功');
+          res.send({status: 'success',msg: '书籍评论删除成功'});
+        }
+      })
       break;
     // 获取所有的店铺
     case 'getAllStores':
@@ -935,6 +952,51 @@ server.post('/',function(req,res){
                   })
                 }
               }
+            }
+          })
+          break;
+        // 添加书籍评论
+        case 'addBookComment':
+          let addBookComment_sql0 = 'SELECT shopperId from bookinfo where bookId="'+POST.bookId+'";';
+          conn.query(addBookComment_sql0,function(err,data){
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log(data);
+              let shopperId = data[0].shopperId;
+              sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.askUserId+'","'+POST.askUserName+'","'+POST.askContent+'");';
+              conn.query(sql,function(err,data2){
+                console.log(sql);
+                if(err) {
+                  console.log(err.sqlMessage);
+                }else {
+                  console.log('评论成功');
+                  // let addBookComment_sql1 = 'SELECT askId FROM ask where '
+                  console.log(data2);
+                  res.send({status: 'success',msg: '评论成功',askId:data2.insertId});
+                }
+              })
+            }
+          })
+          break;
+        case 'replyBookComment':
+          let replyBookComment_sql0 = 'SELECT shopperId from bookinfo where bookId="'+POST.bookId+'";';
+          conn.query(replyBookComment_sql0,function(err,data){
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log(data);
+              let shopperId = data[0].shopperId;
+              sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent,toWhoId,toWhoName) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.replyId+'","'+POST.replyName+'","'+POST.replyContent+'","'+POST.toWhoId+'","'+POST.toWhoName+'");';
+              conn.query(sql,function(err,data2){
+                console.log(sql);
+                if(err) {
+                  console.log(err.sqlMessage);
+                }else {
+                  console.log('评论成功');
+                  res.send({status: 'success',msg: '评论成功'});
+                }
+              })
             }
           })
           break;
