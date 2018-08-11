@@ -20,11 +20,13 @@
       overflow: hidden;
       text-overflow: hidden;
       white-space: nowrap;
+      font-size: 0;
     }
     .bookInfo>li {
       margin-bottom: 10px;
+      font-size: 12px;
     }
-    .bookInfo>li:nth-child(2) {
+    #content .bookInfo>li:nth-child(2) {
       padding-top: 30px;
     }
     .bookInfo>li:nth-child(1) i {
@@ -33,13 +35,18 @@
     .bookInfo>li:nth-child(1) i:hover{
       color: #999;
     }
+    .bookInfo>li>ul {
+      font-size: 0;
+    }
     .bookInfo>li>ul li{
       display: inline-block;
       width: 90px;
+      margin-right: 4px;
       text-align: center;
       overflow:hidden;
       text-overflow: hidden;
       white-space: nowrap;
+      font-size: 12px;
     }
     .bookInfo>li>ul {
       width: 1000px;
@@ -99,6 +106,9 @@
       box-shadow: 0 0 10px #555;
       margin: auto;
       background-color: #fff;
+    }
+    #search-box .title {
+      position: static;
     }
     #search-box .top {
       text-align: center;

@@ -4,7 +4,6 @@
     // 请求数据
     init: function(){
       var userInfoUl = doc.querySelector('#content .userInfo');
-
       this.getAjaxModule(function(ajax){
         ajax({
           url: '/',
@@ -44,7 +43,8 @@
         frag.appendChild(item);
       }
       userInfoUl.appendChild(frag);
-    },
+
+    console.log()},
     readerBookLikeData: function(data,oUl,oNum){
       oNum.innerHTML = data.length;
       var frag = doc.createDocumentFragment();
@@ -122,8 +122,12 @@
     openBookList: function(){
       var aLiBtns = doc.querySelectorAll('.userInfo>li:not(:nth-child(1))'),
           aLiUserId = doc.querySelectorAll('.userInfo>li:not(:nth-child(1))>ul li:nth-child(1)'),
+          aLiUserName = doc.querySelectorAll('.userInfo>li:not(:nth-child(1))>ul li:nth-child(2)'),
           oBookListBox = doc.getElementById('book-list'),
           oCloseBookList = doc.querySelector("#book-list .close");
+      // 用户信息提示
+      var oUserId = doc.querySelector('.userName .userId span'),
+          oUserName = doc.querySelector('.userName .userNickName span');
       var oBookLikeUl = doc.querySelector('#book-list .userInfo');
       var userInfoNum = doc.querySelector('#book-list .head span');
       for(var i=0,len=aLiBtns.length;i<len;i++) {
@@ -131,12 +135,14 @@
           aLiBtns[i].onclick = function(){
             oBookListBox.style.display = 'block';
             var aBookLikeList = oBookLikeUl.querySelectorAll('#book-list .userInfo>li');
-            if(aBookLikeList.length>0) {
-              for(var i=1,len=aBookLikeList.length;i<len;i++) {
-                oBookLikeUl.removeChild(aBookLikeList[i]);
+            if(aBookLikeList.length>1) {
+              for(var j=1,len=aBookLikeList.length;j<len;j++) {
+                oBookLikeUl.removeChild(aBookLikeList[j]);
               }
             }
             userInfoNum.innerHTML = '0';
+            oUserId.innerHTML = '';
+            oUserName.innerHTML = '';
             UsersDetails.getAjaxModule(function(ajax){
               ajax({
                 url: '/',
@@ -158,6 +164,8 @@
                       UsersDetails.openHintInfo();
                     }else {
                       // 渲染数据
+                      oUserId.innerHTML = aLiUserId[i].innerHTML;
+                      oUserName.innerHTML = aLiUserName[i].innerHTML;
                       UsersDetails.readerBookLikeData(data,oBookLikeUl,userInfoNum);
                     }
                   }else {

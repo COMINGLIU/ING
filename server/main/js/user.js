@@ -58,19 +58,6 @@
 				oUserName = doc.querySelector("#welcome .username"),
 				oRegistLogin = doc.getElementById('regitLog'),
 				oLogin = doc.getElementsByClassName('login')[0];
-			var oWelContent = [
-				"你来啦",
-				"我等你好久了",
-				"welcome to the page",
-				"没有什么能够阻挡",
-				"你对自由的向往",
-				"天马行空的微笑",
-				"你的笑了无牵挂",
-				"欢迎欢迎，热烈欢迎",
-				"就知道你会点进来",
-				"想知道下一句吗",
-				"哈哈，就不告诉你",
-			];
 			var personalInfo = {
 				nickName: doc.getElementsByName('nickName')[0],
 				tel: doc.getElementsByName('tel')[0],
@@ -109,8 +96,12 @@
 								// 填写
 								personalInfo.shopperName.value = res.myShopper['shopperName'];
 								personalInfo.shopperSlogan.value = res.myShopper['shopperDescribe'];
+								// 渲染左侧个人信息
 								User.prototype.modEvent();
+								// 渲染收藏数据
 								User.prototype.renderLikes(res);
+								// 取消收藏
+								User.prototype.delLikes();
 							}
 						})
 					})
@@ -302,10 +293,26 @@
 						count++;
 						break;
 					case 'openStore-li':
-						window.location.href = 'them1.html';
+						console.log(user);
+						if(user.isSeller==null) {
+							var con = confirm('您还没有注册书店，是否跳转到主页注册？');
+							if(con) {
+								window.location.href = 'index.html';
+							}
+						}else {
+							window.location.href = 'them1.html?storeId='+user.userId;
+						}
 						break;
 					case 'openStoreCenter-li':
-						window.location.href = 'addBook.html';
+						console.log(user);
+						if(user.isSeller==null) {
+							var con = confirm('您还没有注册书店，是否跳转到首页注册？');
+							if(con) {
+								window.location.href = 'index.html';
+							}
+						}else {
+							window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
+						}
 						break;
 				}
 			})
@@ -417,74 +424,114 @@
 				}
 			})
 		},
-		// 右侧信息
+		// 渲染右侧信息
 		renderLikes: function(config){
 			var oBookUl = doc.getElementsByClassName('booksUl')[0],
-					aBookList = oBookUl.getElementsByTagName('li');
-			var bookInfo = {
-				img: oBookUl.getElementsByTagName('img'),
-				href: oBookUl.getElementsByTagName('a'),
-				name: oBookUl.getElementsByTagName('h3')
-			};
-			var oStoreUl = doc.getElementsByClassName('storeUl')[0],
-					aStoreList = oStoreUl.getElementsByTagName('li');
-			var storeInfo = {
-				img: oStoreUl.getElementsByTagName('img'),
-				href: oStoreUl.getElementsByTagName('a'),
-				name: oStoreUl.getElementsByTagName('h3')
-			};
-			// 渲染书籍节点
-			if(config.like_books.length<aBookList.length){
-				aBookListTmp = doc.querySelectorAll('.booksUl li');
-				if(config.like_books.length==0) {
-					for(var i=1,len=aBookListTmp.length;i<len;i++) {
-						oBookUl.removeChild(aBookListTmp[i]);
-					}
-				}else {
-					for(var i=config.like_books.length,len=aBookListTmp.length;i<len;i++) {
-						oBookUl.removeChild(aBookListTmp[i]);
-					}
-				}
-			}else if(config.like_books.length>aBookList.length){
-				var frag = doc.createDocumentFragment();
-				for(var i=aBookList.length,len=config.like_books.length;i<len;i++) {
-					var item = aBookList[0].cloneNode(true);
-					frag.appendChild(item);
-				}
-				oBookUl.appendChild(frag);
+					oStoreUl = doc.getElementsByClassName('storeUl')[0],
+					frag1 = doc.createDocumentFragment(),
+					frag2 = doc.createDocumentFragment();
+			for(var i=0,len1=config.like_books.length;i<len1;i++) {
+				var item = doc.createElement('li');
+				item.innerHTML = '<a href="detail.html?bookId='+config.like_books[i].bookId+'" target="blank"><div><img src="imgs/storeImg/'+config.like_books[i].bookSrc+'"></div></a><h3>'+config.like_books[i].bookName+'<i class="iconfont icon-lajixiang"></i></h3>';
+				frag1.appendChild(item);
 			}
-			// 渲染书籍
-			for(var k=0,len=aBookList.length;k<len;k++){
-				bookInfo.img[k].src = 'imgs/storeImg/' + config.like_books[k].bookSrc;
-				bookInfo.href[k].href += config.like_books[k].bookId;
-				bookInfo.name[k].innerHTML = config.like_books[k].bookName;
+			oBookUl.appendChild(frag1);
+			for(var j=0,len2=config.like_stores.length;j<len2;j++){
+				var item = doc.createElement('li');
+				item.innerHTML = '<a href="them1.html?storeId='+config.like_stores[j].userId+'" target="blank"><div><img src="imgs/storeImg/'+config.like_stores[j].shopperImg+'"></div></a><h3>'+config.like_stores[j].shopperName+'<i class="iconfont icon-lajixiang"></i></h3>';
+				frag2.appendChild(item);
 			}
-			// 渲染书店节点
-			if(config.like_stores.length<aStoreList.length){
-				aStoreListTmp = doc.querySelectorAll('.storeUl li');
-				if(config.like_stores.length==0) {
-					for(var i=1,len=aStoreListTmp.length;i<len;i++) {
-						oStoreUl.removeChild(aStoreListTmp[i]);
-					}
-				}else {
-					for(var i=config.like_stores.length,len=aStoreListTmp.length;i<len;i++) {
-						oStoreUl.removeChild(aStoreListTmp[i]);
-					}
-				}
-			}else if(config.like_stores.length>aStoreList.length){
-				var frag = doc.createDocumentFragment();
-				for(var i=aStoreList.length,len=config.like_stores.length;i<len;i++) {
-					var item = aStoreList[0].cloneNode(true);
-					frag.appendChild(item);
-				}
-				oStoreUl.appendChild(frag);
+			oStoreUl.appendChild(frag2);
+		},
+		// 取消收藏
+		delLikes: function(){
+			var aDelBookBtn = doc.querySelectorAll('.booksUl .icon-lajixiang'),
+					aBookHref = doc.querySelectorAll('.booksUl a'),
+					oBookUl = doc.querySelector('.booksUl'),
+					aDelStoreBtn = doc.querySelectorAll('.storeUl .icon-lajixiang');
+					aStoreHref = doc.querySelectorAll('.storeUl a'),
+					oStoreUl = doc.querySelector('.storeUl');
+			for(var i=0,len1=aDelBookBtn.length;i<len1;i++){
+				(function(i){
+					var bookId = aBookHref[i].href.split('?')[1].split('=')[1];
+					aDelBookBtn[i].onclick = function(){
+						var con = confirm('确定取消收藏该书籍吗?');
+						if(con){
+							User.prototype.getAjaxModule(function(ajax){
+								ajax({
+									url: '/',
+									data: {
+										act: 'cancelCollectBook',
+										userId: user.userId,
+										bookId: bookId
+									},
+									method: 'get',
+									error: function(err){
+										alert('err:'+err);
+									},
+									success: function(res){
+										res = JSON.parse(res);
+										console.log(res);
+										if(res.status=='success'){
+											// 取消收藏成功
+											User.prototype.getLikeInfo('已取消收藏');
+											oBookUl.removeChild(aDelBookBtn[i].parentNode.parentNode);
+										}else {
+											// 取消收藏失败
+											User.prototype.getLikeInfo('取消收藏失败');
+										}
+									}
+								})
+							})
+						}
+					};
+				})(i)
 			}
-			// 渲染书店信息
-			for(var k=0,len=aStoreList.length;k<len;k++) {
-				storeInfo.img[k].src = 'imgs/storeImg/' + config.like_stores[k].shopperImg;
-				storeInfo.href[k].href += config.like_stores[k].storeId;
-				storeInfo.name[k].innerHTML = config.like_stores[k].shopperName;
+			for(var j=0,len2=aDelStoreBtn.length;j<len2;j++) {
+				(function(j){
+					var storeId = aStoreHref[j].href.split('?')[1].split('=')[1];
+					aDelStoreBtn[j].onclick = function(){
+						var con = confirm('确定取消收藏该书店吗？');
+						if(con){
+							User.prototype.getAjaxModule(function(ajax){
+								ajax({
+									url: '/',
+									data: {
+										act: 'cancelCollectStore',
+										userId: user.userId,
+										storeId: storeId
+									},
+									method: 'get',
+									error: function(err){
+										alert('err:'+err);
+									},
+									success: function(res){
+										res = JSON.parse(res);
+										console.log(res);
+										if(res.status=='success'){
+											// 取消收藏成功
+											User.prototype.getLikeInfo('已取消收藏');
+											oStoreUl.removeChild(aDelStoreBtn[j].parentNode.parentNode);
+										}else {
+											// 取消收藏失败
+											User.prototype.getLikeInfo('取消收藏失败');
+										}
+									}
+								})
+							})
+						}
+					};
+				})(j)
 			}
+		},
+		// 提示信息
+		getLikeInfo: function(msg){
+			var likeInfo = doc.getElementById('likeInfo');
+			likeInfo.style.opacity = '1';
+			likeInfo.innerHTML = msg;
+			var timer = setTimeout(function(){
+				likeInfo.style.opacity = '0';
+			},1000)
 		},
 		logo: function(){
 			var oLogo = doc.getElementById('logo');

@@ -115,6 +115,19 @@ server.get('/',function(req,res){
         }
       })
       break;
+    // 取消收藏书店
+    case 'cancelCollectStore':
+      sql = 'delete from booklike where userId="'+reqUrl.userId+'" and storeId="'+reqUrl.storeId+'" and likeType="店铺";';
+      conn.query(sql,function(err,data){
+        console.log(sql);
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log('取消成功');
+          res.send({status: 'success',msg: '已取消收藏该书店'});
+        }
+      })
+      break;
     // 获取收藏的书籍（客户端）
     case 'getColllectBooks':
       sql = 'SELECT booklike.bookId,bookinfo.bookName,bookinfo.bookPrice,user.schoolName FROM booklike,bookinfo,user where booklike.userId="'+reqUrl.userId+'" and booklike.likeType="书籍" and booklike.bookId=bookinfo.bookId and booklike.userId=user.userId';
@@ -128,18 +141,6 @@ server.get('/',function(req,res){
         }
       })
       break;
-    // 获取用户收藏的店铺（客户端）
-    // case 'getColletStores':
-    //   sql = 'SELECT * FROM booklike where userId="'+reqUrl.userId+'" and likeType="店铺";';
-    //   conn.query(sql,function(err,data){
-    //     if(err){
-    //       console.log(err.sqlMessage);
-    //     }else {
-    //       console.log(data);
-    //       res.send({status:'success',data: data});
-    //     }
-    //   })
-    //   break;
     // 搜索书籍
     case 'searchBook':
       let bookName,bookPublic,bookCollege;
@@ -208,6 +209,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+    // 删除个人的书籍评论
     case 'delBookComment':
       sql = 'DELETE FROM ask where askId="'+reqUrl.askId+'";';
       conn.query(sql,function(err,data){
@@ -228,6 +230,11 @@ server.get('/',function(req,res){
           console.log(err.sqlMessage);
         }else {
           console.log(data);
+          if(data.length>0){
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].shopperTime = moment(data.shopperTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
           res.send({status: 'success',data:data});
         }
       })
@@ -278,6 +285,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+    //删除某本书籍
     case 'delShopperBook':
 
       break;
@@ -313,10 +321,12 @@ server.get('/',function(req,res){
               console.log('data2')
               console.log(data2);
               like_books = data2;
-              let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
+              // let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
+              let sql3 = 'SELECT shopper.userId,shopper.shopperImg,shopper.shopperName FROM shopper where userId in (SELECT storeId FROM booklike where userId="'+userId+'" and likeType="店铺");';
               conn.query(sql3,function(err,data3){
+                console.log(sql3);
                 if(err){
-                  console.log(err.code);
+                  console.log(err.sqlMessage);
                   console.log('data3错了');
                 }else {
                   console.log("data3");
@@ -456,7 +466,6 @@ server.get('/',function(req,res){
         }
       })
       break;
-
     // 获取店铺详情
     case 'getStoresInfo':
       if(req.session['adminAcount']) {
@@ -668,6 +677,7 @@ server.get('/',function(req,res){
         }
       })
       break;
+    // 删除公屏语录
     case 'delScreenMsg':
       if(req.session['adminAcount']) {
         if(reqUrl.adminAcount==req.session['adminAcount']){
@@ -794,7 +804,15 @@ server.post('/',function(req,res){
                         console.log(err.sqlMessage);
                       }else {
                         console.log('书籍插入成功');
-                        res.send({status:'success',msg:'书籍插入成功'});
+                        let sql5 = 'UPDATE shopper SET booksNum=booksNum+1 where shopper.userId="'+comingData.shopperId+'";';
+                        conn.query(sql5,function(err,data5){
+                          if(err){
+                            console.log(err.sqlMessage);
+                          }else {
+                            console.log('shopper更新成功');
+                            res.send({status:'success',msg:'书籍插入成功'});
+                          }
+                        })
                       }
                     })
                   }
@@ -872,38 +890,68 @@ server.post('/',function(req,res){
           if(preventSqlWords.test(userName)||preventSqlWords.test(tel)||preventSqlWords.test(email)||preventSqlWords.test(college)||preventSqlWords.test(pass)){
             res.send({status: 'fail',msg: '请不要尝试输入sql特殊字符，没戏'});
           }else {
-            let openSql = 'select userName from user where tel = "'+tel+'" OR email="'+email+'";';
-            conn.query(openSql,function(err,data){
-              console.log(openSql);
+            let sql0 = 'select userName from user where tel = "'+tel+'" OR email="'+email+'";';
+            conn.query(sql0,function(err,data0){
+              console.log(sql0);
               if(err){
                 res.send({status:'fail',msg: err.code});
               }else {
-                if(data.toString()== ""){
-                  // 先加入学校
-                  let sql0 = 'INSERT INTO school(schoolName) VALUES("'+college+'")';
-                  conn.query(sql0,function(err,data1){
+                if(data0.toString()== ""){
+                  // 如果没有学校先加入学校
+                  let sql1 = 'SELECT schoolName from school where schoolName="'+college+'"';
+                  conn.query(sql1,function(err,data1){
                     if(err){
                       // 程序失败
-                      console.log(err.code);
+                      console.log(err.sqlMessage);
                     }else {
-                      sql = 'INSERT INTO user(userName,tel,email,schoolName,pass) VALUES("'+userName+'","'+tel+'","'+email+'","'+college+'","'+pass+'");'
-                      conn.query(sql,function(err,data2){
-                        if(err){
-                          res.send({status:'fail',msg: '注册失败'});
-                          console.log(err.code);
-                        }else {
-                          console.log(data2.insertId);
-                          let sql2 = 'INSERT INTO logintimes(userId) VALUES("'+data2.insertId+'");';
-                          conn.query(sql2,function(err,data3){
-                            if(err) {
-                              console.log('err:'+err.code);
-                            }else {
-                              console.log('注册成功');
-                              res.send({status: 'success',msg: '注册成功'});
-                            }
-                          })
-                        }
-                      })
+                      if(data1.toString()==''){
+                        // 没有该学校添加
+                        let sql2 = 'INSERT INTO school(schoolName) VALUES("'+college+'")';
+                        conn.query(sql2,function(err,data2){
+                          if(err){
+                            console.log('插入学校失败');
+                          }else {
+                            let sql3 = 'INSERT INTO user(userName,tel,email,schoolName,pass) VALUES("'+userName+'","'+tel+'","'+email+'","'+college+'","'+pass+'");'
+                            conn.query(sql3,function(err,data3){
+                              if(err){
+                                res.send({status:'fail',msg: '注册失败'});
+                                console.log(err.code);
+                              }else {
+                                console.log(data3.insertId);
+                                let sql4 = 'INSERT INTO logintimes(userId) VALUES("'+data3.insertId+'");';
+                                conn.query(sql4,function(err,data4){
+                                  if(err) {
+                                    console.log('err:'+err.code);
+                                  }else {
+                                    console.log('注册成功');
+                                    res.send({status: 'success',msg: '注册成功'});
+                                  }
+                                })
+                              }
+                            })
+                          }
+                        })
+                      }else {
+                        // 有该学校
+                        let sql3 = 'INSERT INTO user(userName,tel,email,schoolName,pass) VALUES("'+userName+'","'+tel+'","'+email+'","'+college+'","'+pass+'");'
+                        conn.query(sql3,function(err,data3){
+                          if(err){
+                            res.send({status:'fail',msg: '注册失败'});
+                            console.log(err.code);
+                          }else {
+                            console.log(data3.insertId);
+                            let sql4 = 'INSERT INTO logintimes(userId) VALUES("'+data3.insertId+'");';
+                            conn.query(sql4,function(err,data4){
+                              if(err) {
+                                console.log('err:'+err.code);
+                              }else {
+                                console.log('注册成功');
+                                res.send({status: 'success',msg: '注册成功'});
+                              }
+                            })
+                          }
+                        })
+                      }
                     }
                   })
                 }else {

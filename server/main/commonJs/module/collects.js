@@ -3,13 +3,11 @@ define(function(require,exports,module){
     var oCollectBtn = document.getElementById('collects'),
         oCollectNum = oCollectBtn.getElementsByClassName('num')[0];
         oCollectBox = document.getElementById('collets-box'),
-        aCollectLi = oCollectBox.getElementsByTagName('li'),
+        oColletctLi = oCollectBox.getElementsByTagName('li'),
         aCollectHref = oCollectBox.getElementsByTagName('a'),
-        aCollectName = oCollectBox.getElementsByTagName('h3'),
-        aCollectAddr = oCollectBox.getElementsByClassName('addr'),
-        aCollectPrice = oCollectBox.getElementsByClassName('price'),
         aCollectDelBtn = oCollectBox.getElementsByClassName('icon-lajixiang'),
         count = 0;
+    var likeInfo = document.getElementById('likeInfo');
     var ajax = require('ajax.js');
     var cookie = require('cookie.js');
     oCollectBtn.onclick = function(){
@@ -32,36 +30,22 @@ define(function(require,exports,module){
               res = JSON.parse(res);
               console.log(res);
               if(res.status=='success'){
-                data = res.data;
-                console.log(data);
+                var data = res.data;
+                var frag = document.createDocumentFragment();
                 oCollectNum.innerHTML = data.length;
                 // 渲染节点
-                if(data.length<aCollectLi.length){
-                  if(data.length==0) {
-                    for(var i=1,len=aCollectLi.length;i<len;i++) {
-                      oCollectBox.removeChild(aCollectLi[i]);
-                    }
-                  }else {
-                    for(var i=data.length,len=aCollectLi.length;i<len;i++) {
-                      oCollectBox.removeChild(aCollectLi[i]);
-                    }
+                if(oColletctLi.length>0) {
+                  oColletctLiTmp = document.querySelectorAll('#collets-box li');
+                  for(var i=0,len=oColletctLiTmp.length;i<len;i++) {
+                    oCollectBox.removeChild(oColletctLiTmp[i]);
                   }
-                }else if(data.length>aCollectLi.length) {
-                  var frag = document.createDocumentFragment();
-                  for(var i=aCollectLi.length,len=data.length;i<len;i++) {
-                    var item= aCollectLi[0].cloneNode(true);
-                    frag.appendChild(item);
-                  }
-                  oCollectBox.appendChild(frag);
                 }
-                // 渲染数据
-                for(var j=0,len2 = aCollectLi.length;j<len2;j++) {
-                  // aCollectHref[j].href += data[j].bookId;
-                  aCollectHref[j].href = 'detail.html?bookId=' + data[j].bookId;
-                  aCollectName[j].innerHTML = data[j].bookName;
-                  aCollectAddr[j].innerHTML = data[j].schoolName;
-                  aCollectPrice[j].innerHTML = data[j].bookPrice;
+                for(var i=0,len=data.length;i<len;i++) {
+                  var item = document.createElement('li');
+                  item.innerHTML = '<a href="detail.html?bookId='+data[i].bookId+'"><h3>'+data[i].bookName+'</h3><p><i class="iconfont icon-liebiaoyedizhi"></i><span class="addr">'+data[i].schoolName+'</span></p><p>￥<span class="price">'+data[i].bookPrice+'</span></p></a><i class="iconfont icon-lajixiang"></i>';
+                  frag.appendChild(item);
                 }
+                oCollectBox.appendChild(frag);
                 // 删除收藏
                 for(var k=0,len3=aCollectDelBtn.length;k<len3;k++) {
                   (function(k){
@@ -85,6 +69,19 @@ define(function(require,exports,module){
                           success: function(res){
                             res = JSON.parse(res);
                             console.log(res);
+                            if(res.status=='success'){
+                              // 移除节点
+                              oCollectBox.removeChild(aCollectDelBtn[k].parentNode);
+                              // 数目减少
+                              oCollectNum.innerHTML = oColletctLi.length;
+                              // 提示信息
+                              likeInfo.innerHTML = '已取消收藏';
+                        			likeInfo.style.opacity = '1';
+                        			var timer = setTimeout(function(){
+                        				likeInfo.style.opacity = '0';
+                                clearTimeout(timer);
+                        			},1000)
+                            }
                           }
                         })
                       }

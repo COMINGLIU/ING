@@ -80,34 +80,7 @@
         console.log(ADDSTORE);
       })
     },
-    // 元素事件
-    DoEvent: {
-      addEvent: function(element,type,handle){
-        if(element.addEventListener){
-          element.addEventListener(type,handle);
-        }else if(ele.attachEvent){
-          element.attachEvent('on'+type,handle);
-        }else {
-          element['on'+type]=handle;
-        }
-      },
-      delEvent: function(element,type,handle){
-        if(element.removeEventListener){
-          element.removeEventListener(type,handle);
-        }else if(ele.dettachEvent){
-          element.dettachEvent('on'+type,handle);
-        }else {
-          element['on'+type]=null;
-        }
-      },
-      stop: function(e){
-        if(e.stopPropagation){
-          e.stopPropagation();
-        }else {
-          e.cancelBubble = true;
-        }
-      }
-    },
+
     aboutCanvas: function(){
       var oCanvas = doc.getElementById('canvas'),
       oBubble = doc.getElementById('bubble');
@@ -145,56 +118,30 @@
               Index.prototype.DoEvent.stop(e);
               console.log(Index.prototype.getStyle(oLike,"color"));
               // 点击收藏
-              if(Index.prototype.getStyle(oLikeI,"color")=="rgb(0, 0, 0)") {
-                oLike.style.opacity = '1';
-                oLikeI.style.color = "#900";
-                console.log(user);
-                Index.prototype.getAjaxModule(function(ajax){
-                  ajax({
-                    url: '/',
-                    data: {
-                      act: 'collectBook',
-                      userId: user.userId,
-                      bookId: bookId,
-                    },
-                    method: 'get',
-                    error: function(err){
-                      console.log('err:'+err);
-                    },
-                    success: function(res){
-                      res = JSON.parse(res);
-                      console.log(res);
-                      if(res.status == 'success'){
-                        Index.prototype.getLikeInfo('yse');
-                      }
+              oLike.style.opacity = '1';
+              oLikeI.style.color = "#900";
+              console.log(user);
+              Index.prototype.getAjaxModule(function(ajax){
+                ajax({
+                  url: '/',
+                  data: {
+                    act: 'collectBook',
+                    userId: user.userId,
+                    bookId: bookId,
+                  },
+                  method: 'get',
+                  error: function(err){
+                    console.log('err:'+err);
+                  },
+                  success: function(res){
+                    res = JSON.parse(res);
+                    console.log(res);
+                    if(res.status == 'success'){
+                      Index.prototype.getLikeInfo('已收藏');
                     }
-                  })
+                  }
                 })
-              }else {
-                // 取消收藏
-                oLikeI.style.color = "#000";
-                Index.prototype.getAjaxModule(function(ajax){
-                  ajax({
-                    url: '/',
-                    data: {
-                      act: 'cancelCollectBook',
-                      userId: user.userId,
-                      bookId: bookId,
-                    },
-                    method: 'get',
-                    error: function(err){
-                      console.log('err:'+err);
-                    },
-                    success: function(res){
-                      res = JSON.parse(res);
-                      console.log(res);
-                      if(res.status == 'success'){
-                        Index.prototype.getLikeInfo('no');
-                      }
-                    }
-                  })
-                })
-              }
+              })
             }else if(oRigistBtn.innerHTML == 'LOGIN'){
               var con = confirm('登录后收藏才能保存哦，登录吗?');
               if(con) {
@@ -216,14 +163,11 @@
     // 收藏信息
 		getLikeInfo: function(item){
       var likeInfo = doc.getElementById('likeInfo');
-      if(item=='yes'){
-        likeInfo.innerHTML = '已收藏';
-      }else if(item=='no'){
-        likeInfo.innerHTML = '已取消收藏';
-      }
+      likeInfo.innerHTML = item;
 			likeInfo.style.opacity = '1';
 			var timer = setTimeout(function(){
 				likeInfo.style.opacity = '0';
+        clearTimeout(timer);
 			},1000)
 		},
     // 点击加载更多
@@ -249,7 +193,35 @@
     },
     getStyle: function(obj,attr){
       return getComputedStyle?getComputedStyle(obj)[attr]:obj.currentStyle[attr];
-    }
+    },
+    // 元素事件
+    DoEvent: {
+      addEvent: function(element,type,handle){
+        if(element.addEventListener){
+          element.addEventListener(type,handle);
+        }else if(ele.attachEvent){
+          element.attachEvent('on'+type,handle);
+        }else {
+          element['on'+type]=handle;
+        }
+      },
+      delEvent: function(element,type,handle){
+        if(element.removeEventListener){
+          element.removeEventListener(type,handle);
+        }else if(ele.dettachEvent){
+          element.dettachEvent('on'+type,handle);
+        }else {
+          element['on'+type]=null;
+        }
+      },
+      stop: function(e){
+        if(e.stopPropagation){
+          e.stopPropagation();
+        }else {
+          e.cancelBubble = true;
+        }
+      }
+    },
   };
   // Index.prototype.getCookieModule(function(cookie){
   //   cookie.unset('user');

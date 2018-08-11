@@ -81,7 +81,6 @@
 			for(var i=0,len=aLikeBtn.length;i<len;i++) {
 				(function(i){
 					var storeId = aStoreHref[i].href.split('?')[1].split('=')[1];
-					console.log(storeId);
 					aLikeBtn[i].onclick = function(){
 						Stores.prototype.getCookieModule(function(cookie){
 							if(cookie.get('user')){

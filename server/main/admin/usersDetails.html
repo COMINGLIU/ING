@@ -20,9 +20,12 @@
         overflow: hidden;
         text-overflow: hidden;
         white-space: nowrap;
+        font-size: 0;
       }
       .userInfo>li {
         margin-bottom: 10px;
+        margin-right: 4px;
+        font-size: 12px;
       }
       .userInfo>li:nth-child(1) i {
         transition-duration: .3s;
@@ -37,14 +40,16 @@
         color: #aaa;
       }
       .userInfo>li>ul {
-        width: 990px;
+        font-size: 0;
       }
       .userInfo>li>ul li{
         display: inline-block;
         width: 90px;
+        margin-right: 4px;
         text-align: center;
+        font-size: 12px;
       }
-      .userInfo>li:nth-child(2) {
+      #content .userInfo>li:nth-child(2) {
         padding-top: 30px;
       }
       .userInfo>li>ul li:nth-child(3),
@@ -53,7 +58,7 @@
       .userInfo>li>ul li:nth-child(8){
         width: 150px;
       }
-      .title {
+      #content .title {
         position: fixed;
       }
       .title li {
@@ -138,6 +143,10 @@
         margin: auto;
         background-color: #fff;
       }
+      #book-list title,
+      #stores-list .title {
+        position: static;
+      }
       #book-list .userInfo>li:not(:nth-child(1))>ul li:last-child:hover i,
       #stores-list .userInfo>li:not(:nth-child(1))>ul li:last-child:hover i{
         color: #f00;
@@ -202,11 +211,6 @@
       #login-status ul li{
         text-align: center;
         margin-bottom: 14px;
-      }
-      #search-box .title,
-      #book-list .title，
-      #stores-list .title {
-        position: absolute;
       }
       /* 提示信息 */
       #hintInfo {
@@ -289,12 +293,12 @@
         <i class="iconfont icon-guanbi"></i>
       </div>
       <div class="head">
-        该用户收藏的书籍: <span>20</span>
+        该用户收藏的书籍: <span></span>
         <i>查看收藏的店铺</i>
       </div>
       <ul class="userName">
         <li class="userId">ID:<span></span></li>
-        <li class="userNickName">昵称:<span>qpq</span></li>
+        <li class="userNickName">昵称:<span></span></li>
       </ul>
       <ul class='userInfo'>
         <li class="title">
@@ -318,8 +322,8 @@
         该用户收藏的店铺: <span></span>
       </div>
       <ul class="userName">
-        <li>ID:<span>20</span></li>
-        <li>昵称:<span>qpq</span></li>
+        <li>ID:<span></span></li>
+        <li>昵称:<span></span></li>
       </ul>
       <ul class='userInfo'>
         <li class="title">

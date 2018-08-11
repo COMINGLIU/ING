@@ -157,7 +157,7 @@
 							// 添加评论方法
 							Detail.prototype.addComment(bookId,oCommentUl,oCommentNum);
 							// 添加删除函数
-							Detail.prototype.delReply();
+							Detail.prototype.delReply(oCommentNum);
 						}else {
 							console.log('书籍评论获取失败');
 						}
@@ -224,7 +224,7 @@
 				}
 			};
 		},
-
+		// 回复
 		replyComment: function(){
 			var aReplyBtn = doc.getElementsByClassName('reply');
 					aReplyLi = doc.querySelectorAll('#comments ul li'),
@@ -241,17 +241,13 @@
 			}
 		},
 		// 删除回复
-		delReply: function(){
+		delReply: function(oCommentNum){
 			var oCommentUl = doc.querySelector('#comments ul');
 			var aDelBtn = doc.querySelectorAll('.delComment');
-			console.log(aDelBtn.length);
 			for(var i=0,len=aDelBtn.length;i<len;i++){
-				console.log(i);
 				(function(i){
 					var askId = aDelBtn[i].parentNode.getAttribute('data-askId');
-					console.log(askId);
 					aDelBtn[i].onclick = function(){
-						console.log(i);
 						var con = confirm('确定删除该评论吗');
 						if(con){
 							Detail.prototype.getAjaxModule(function(ajax){
@@ -271,6 +267,7 @@
 										if(res.status=='success'){
 											// 删除成功
 											Detail.prototype.getLikeInfo('删除成功');
+											oCommentNum.innerHTML = parseInt(oCommentNum.innerHTML)-1;
 										}else {
 											// 删除失败
 											Detail.prototype.getLikeInfo('删除失败');

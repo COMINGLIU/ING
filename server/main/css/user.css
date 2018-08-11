@@ -36,17 +36,17 @@
 }
 #menuUl li{
 	width: 100%;
-	height: 120px;
+	height: 80px;
 	border-bottom: 1px solid #fff;
-	background-color: #000;
+	background-color: rgb(170,170,170);
 	color: #fff;
-	line-height: 120px;
+	line-height: 80px;
 	text-align: center;
 	transition-duration: .3s;
 }
 #menuUl li:hover {
-	color: #000;
-	background-color: #fff;
+	color: #fff;
+	background-color: #000;
 	transform: scale(1.2);
 }
 /**/
@@ -210,6 +210,10 @@
 	margin-bottom: 40px;
 	border-bottom: 1px solid #000;
 	text-align: center;
+}
+
+#collectFold li i:hover {
+	color: #888;
 }
 #collectFold li div {
 	overflow: hidden;
@@ -408,4 +412,47 @@ a{
 }
 a:hover {
 	color: #000;
+}
+
+#top {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 40px;
+	height: 90px;
+	margin: auto;
+	line-height: 30px;
+	text-align: right;
+}
+#top a {
+	display: block;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	box-shadow: 0 0 10px #ccc;
+	text-align: center;
+	line-height: 40px;
+	transition-duration: .3a;
+}
+#top a:first-child{
+	margin-bottom: 10px;
+}
+/* 提示信息 */
+#likeInfo {
+	position: fixed;
+	z-index: 10;
+	right: 100px;
+	top: 0;
+	bottom: 0;
+	width: 100px;
+	height: 30px;
+	margin: auto;
+	border-radius: 10px;
+	background-color: #000;
+	color: #fff;
+	line-height: 30px;
+	text-align: center;
+	opacity: 0;
+	transition-duration: .3s;
 }
