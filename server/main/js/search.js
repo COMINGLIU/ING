@@ -152,7 +152,6 @@
 				searchValue[searchData[i].split('=')[0]] = searchData[i].split('=')[1];
 				keyWord[searchData[i].split('=')[0]].innerHTML = searchData[i].split('=')[1];
 				}
-			console.log(searchValue);
 			this.getAjaxModule(function(ajax){
 				ajax({
 					url:'/',
@@ -174,7 +173,7 @@
 							data = res.data;
 							console.log(data);
 							if(data.toString()=="") {
-								alert('暂时没有您搜索的书籍');
+								Search.prototype.getNobookInfo();
 							}else {
 								Search.prototype.renderData(data);
 							}
@@ -188,26 +187,26 @@
 		// 渲染数据
 		renderData: function(data){
 			var oBookUl = doc.getElementsByClassName('books')[0],
-				bookInfo = {
-					aBookLi: oBookUl.getElementsByTagName('li'),
-					aBookHref:　oBookUl.getElementsByTagName('a'),　
-					aBookImg: oBookUl.getElementsByTagName('img'),
-					aBookPrice: oBookUl.querySelectorAll('.price span'),
-					aBookName: oBookUl.getElementsByTagName('h3'),
-					aBookPublic: oBookUl.getElementsByClassName('public'),
-					aBookAddr: oBookUl.querySelectorAll('.addr span')
-				};
-			for(var i=0,len=data.length;i<len;i++) {
-				bookInfo.aBookImg[i].src = 'imgs/storeImg/'+data[i].bookSrc;
-				bookInfo.aBookHref[i].href = 'detail.html?bookId='+data[i].bookId;
-				bookInfo.aBookPrice[i].innerHTML = data[i].bookPrice;
-				bookInfo.aBookName[i].innerHTML = data[i].bookName;
-				bookInfo.aBookPublic[i].innerHTML = data[i].bookPublic;
-				bookInfo.aBookAddr[i].innerHTML = data[i].schoolName;
-				// 点击收藏
-				Search.prototype.collectBook();
-			}
+          aBookLi = oBookUl.getElementsByTagName('li');
+          frag = doc.createDocumentFragment();
+      if(aBookLi.length>0){
+        console.log(aBookLi);
+        var aBookLiTmp = doc.querySelectorAll('#content .books>li');
+        console.log(aBookLiTmp);
+        for(var j=0,len=aBookLiTmp.length;j<len;j++){
+          oBookUl.removeChild(aBookLiTmp[j]);
+        }
+      }
+      for(var i=0,len = data.length;i<len;i++){
+        var item = doc.createElement('li');
+        item.innerHTML = '<div><img src="imgs/storeImg/'+data[i].bookSrc+'" alt="book"></div><i class="iconfont icon-heart-fill"></i><a href="detail.html?bookId='+data[i].bookId+'" target="blank"><p class="price">￥<span>'+data[i].bookPrice+'</span></p><h3>'+data[i].bookName+'</h3><p class="public">'+data[i].bookPublic+'</p><p class="addr"><i class="iconfont icon-location"></i><span>'+data[i].schoolName+'</span></p></a>';
+        frag.appendChild(item);
+      }
+      oBookUl.appendChild(frag);
+      // 点击收藏
+      Search.prototype.collectBook();
 		},
+    // 
 		getAddStoreModule: function(){
 			seajs.use('addStore.js',function(ADDSTORE){
 			})
@@ -251,7 +250,7 @@
 											if(res.status=='success'){
 												data = res.data;
 												if(data.toString()=="") {
-													alert('暂时没有您搜索的书籍');
+                          Search.prototype.getNobookInfo();
 												}else {
 													Search.prototype.renderData(data);
 												}
@@ -336,6 +335,14 @@
 				likeInfo.style.opacity = '0';
 			},1000)
 		},
+    // 搜索不到书籍的信息提示
+    getNobookInfo: function() {
+      var oInfo = doc.getElementById('noBookInfo');
+      oInfo.style.opacity = '1';
+      var timer = setTimeout(function(){
+        oInfo.style.opacity = '0';
+      },1500)
+    },
 		getAjaxModule: function(callback){
 			seajs.use('ajax.js',function(ajax){
 				callback&&callback(ajax);

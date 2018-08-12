@@ -53,44 +53,25 @@
 						res = JSON.parse(res);
 						console.log(res);
 						if(res.status=='success'){
-							data = res.data;
+							var data = res.data;
 							// 填入店名
 							oHeadName.innerHTML = res.shopperInfo.shopperName+' ('+res.shopperInfo.schoolName+')';
 							// 渲染节点
-							if(data.length<aBookLi.length){
-								oTmpookLi = doc.querySelectorAll('.bookUl li');
-								if(data.length==0) {
-									for(var i=1,len=aBookLi.length;i<len;i++) {
-										console.log(oTmpookLi[i]);
-										oBookUl.removeChild(oTmpookLi[i]);
-									}
-								}else {
-									for(var i=data.length,len=aBookLi.length;i<len;i++) {
-										oBookUl.removeChild(oTmpookLi[i]);
-									}
-								}
-							}else if(data.length>aBookLi.length){
-								var frag = document.createDocumentFragment();
-								for(var j=aBookLi.length,len2=data.length;j<len2;j++) {
-									var item = aBookLi[0].cloneNode(true);
-									frag.appendChild(item);
-								}
-								oBookUl.appendChild(frag);
-							}
-							// 渲染数据
-							for(var k=0,len3=aBookLi.length;k<len3;k++) {
-								aBookImg[k].src = 'imgs/storeImg/' + data[k].bookSrc;
-								aBookhref[k].href += data[k].bookId;
-								aBookName[k].innerHTML = data[k].bookName;
-								aBookDes[k].innerHTML = data[k].bookDescribe;
-								aBookPublic[k].innerHTML = data[k].bookPublic;
-								aBookAllNum[k].innerHTML = data[k].bookAllNum;
-								aBookPrice[k].innerHTML = data[k].bookPrice;
-							}
+              if(data.length>0){
+                var frag = doc.createDocumentFragment();
+                for(var i=0,len=data.length;i<len;i++) {
+                  var item = doc.createElement('li');
+                  item.className = 'transfrom-speedup';
+                  item.innerHTML = '<a href="detail.html?bookId='+data[i].bookId+'" target="blank"><div class="img"><img src="imgs/storeImg/'+data[i].bookSrc+'"></div></a><i class="isconfont icon-heart-fill"></i><h3 class="book-name">'+data[i].bookName+'</h3><p class="book-describe">'+data[i].bookDescribe+'</p><p class="book-public">'+data[i].bookPublic+'</p><p>库存：<span class="book-allNum">'+data[i].bookAllNum+'</span>本</p><p>单价：￥<span class="book-price">'+data[i].bookPrice+'</span></p>';
+                  frag.appendChild(item);
+                }
+                oBookUl.appendChild(frag);
+              }
 							// 点击收藏书籍
 							Them1.prototype.ClickcollectBook();
 						}else {
-							alert(res.msg);
+							// alert(res.msg);
+              Them1.prototype.getNoBooksInfo();
 						}
 					}
 				})
@@ -148,6 +129,15 @@
 				window.location.href = 'index.html';
 			};
 		},
+    // 没有书籍反馈
+    getNoBooksInfo: function(){
+      var oInfo = doc.getElementById('noBooksInfo');
+      oInfo.style.opacity = '1';
+      var timer = setTimeout(function(){
+        oInfo.style.opacity = '0';
+        clearTimeout(timer);
+      },1500)
+    },
 		// 收藏反馈
 		getLikeInfo: function(){
 			var likeInfo = doc.getElementById('likeInfo');

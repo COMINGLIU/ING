@@ -61,20 +61,16 @@
 							bookInfo.bookPublic.innerHTML = res.bookDetail.bookPublic;
 							bookInfo.bookTel.innerHTML = res.bookDetail.tel;
 							bookInfo.bookDescribe.innerHTML = res.bookDetail.bookDescribe;
-							// 渲染节点
-							if(relaBookLi.length>res.anotherBook.length){
-								for(var i=res.anotherBook.length,len=relaBookLi.length;i<len;i++) {
-									relaBookUl.removeChild(relaBookLi[i]);
-								}
-							}else if(relaBookLi.length<res.anotherBook.length){
-								var frag = doc.createDocumentFragment();
-								for(var i=relaBookLi.length,len2=res.anotherBook.length;i<len2;i++) {
-									var item = doc.createElement('li');
-									item.innerHTML = '<a href="detail.html?bookId="><img src="" alt="otherbook"></a><p></p>';
-									frag.appenChild(item);
-								}
-								relaBookUl.appendChild(frag);
-							}
+              // 渲染相关书籍
+              if(res.anotherBook.length>0) {
+                var frag = doc.createDocumentFragment();
+                for(var i=0,len = res.anotherBook.length;i<len;i++) {
+                  var item = doc.createElement('li');
+                  item.innerHTML = '<li><a href="detail.html?bookId='+res.anotherBook[i].bookId+'" target="blank"><img src="imgs/storeImg/'+res.anotherBook[i].bookSrc+'" alt="otherbook"></a><p>'+res.anotherBook[i].bookName+'</p></li>';
+                  frag.appendChild(item);
+                }
+                relaBookUl.appendChild(frag);
+              }
 							// 点击收藏
 							collectBtn.onclick = function() {
 								Detail.prototype.getCookieModule(function(cookie){
@@ -284,7 +280,7 @@
 		// 渲染书籍评论
 		renderBookComment: function(data,oUl){
 			var frag = doc.createDocumentFragment();
-			console.log(user);
+      console.log('user:'+user);
 			for(var i=0,len=data.length;i<len;i++) {
 				var item = doc.createElement('li');
 				var commentName = '';
@@ -313,6 +309,7 @@
 				likeInfo.style.opacity = '0';
 			},1000)
 		},
+    // 获取header模块
 		getHeaderModule: function(){
 			seajs.use('header.js',function(header){
 				// header部分的事件委托
@@ -323,6 +320,7 @@
 		        header.scrollHeader();
 			})
 		},
+    // 获取当前时间
 		getNowTime: function(){
 			var TIME = '';
 		  var date = new Date(),
@@ -335,11 +333,13 @@
 		  TIME = year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
 		  return TIME;
 		},
+    // 获取时间绑定模块
 		getDoEventModule: function(){
 			seajs.use('doEvent.js',function(doEvent){
 				console.log(doEvent);
 			})
 		},
+    // 获取添加书籍模块
 		getAddStore: function(){
 			seajs.use('addStore.js',function(ADDSTORE){
 			})

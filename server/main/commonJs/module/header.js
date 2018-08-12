@@ -238,7 +238,6 @@ define(function(require,exports,module){
 									loginArr.push(key2);
 								}
 							}else {
-								console.log(doc.getElementById(key2));
 								doc.getElementById(key2).innerHTML = "";
 								loginEle[key2].style.borderColor = '#ccc';
 							}

@@ -29,13 +29,18 @@
     .bookCommentInfo>li:nth-child(2) {
       padding-top: 30px;
     }
+    .bookCommentInfo>li>ul {
+      font-size: 0;
+    }
     .bookCommentInfo>li>ul li{
       display: inline-block;
       width: 90px;
+      margin-right: 4px;
       text-align: center;
       overflow:hidden;
       text-overflow: hidden;
       white-space: nowrap;
+      font-size: 12px;
     }
     .bookCommentInfo>li>ul li:nth-last-child(2) {
       width: 140px;
@@ -125,45 +130,12 @@
           <li class="title">
             <ul>
               <li>书籍ID</li>
+              <li>书名</li>
               <li>店铺ID</li>
-              <li>店铺名</li>
               <li>评论者ID</li>
               <li>评论者昵称</li>
               <li>评论时间</li>
               <li>评语</li>
-            </ul>
-          </li>
-          <li>
-            <ul>
-              <li>10</li>
-              <li>12</li>
-              <li>小姜书店</li>
-              <li>29</li>
-              <li>qpq</li>
-              <li>2018-08-02 11:28:11</li>
-              <li>这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了</li>
-            </ul>
-          </li>
-          <li>
-            <ul>
-              <li>10</li>
-              <li>12</li>
-              <li>小姜书店</li>
-              <li>29</li>
-              <li>qpq</li>
-              <li>2018-08-02 11:28:11</li>
-              <li>这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了</li>
-            </ul>
-          </li>
-          <li>
-            <ul>
-              <li>10</li>
-              <li>12</li>
-              <li>小姜书店</li>
-              <li>29</li>
-              <li>qpq</li>
-              <li>2018-08-02 11:28:11</li>
-              <li>这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了</li>
             </ul>
           </li>
         </ul>
@@ -173,9 +145,12 @@
         <div class="close">
           <i class="iconfont icon-guanbi"></i>
         </div>
-        这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了，啊哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈哈哈
+        <p>
+          这个书不错，我挺喜欢这本书的，一直挺想买来着，终于找到了，啊哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈哈哈
+        </p>
       </div>
     </div>
+    <script src="../commonJs/module/sea.js"></script>
     <script src='adminJs/bookComment.js'></script>
   </body>
 </html>

@@ -39,33 +39,17 @@
 						if(res.status=='success'){
 							data = res.data;
 							console.log(data);
-							// 节点
-							if(data.length<storeInfo.storeList.length){
-								if(data.length==0) {
-									for(var i=1;i<storeInfo.storeList.length;i++) {
-										storeUl.removeChild(storeInfo.storeList[i]);
-									}
-								}else {
-									for(var i=data.length;i<storeInfo.storeList.length;i++) {
-										storeUl.removeChild(storeInfo.storeList[i]);
-									}
-								}
-							}else if(data.length>storeInfo.storeList.length){
-								var frag = doc.createDocumentFragment();
-								for(var i=storeInfo.storeList.length;i<data.length;i++) {
-									var item = storeInfo.storeList[0].cloneNode(true);
-									frag.appendChild(item);
-								}
-								storeUl.appendChild(frag);
-							}
-							// 渲染数据
-							for(var i=0,len=data.length;i<len;i++) {
-								storeInfo.atoreHref[i].href += data[i].userId;
-								storeInfo.storeImg[i].src = 'imgs/storeImg/' + data[i].shopperImg;
-								storeInfo.storeName[i].innerHTML = data[i].shopperName;
-								storeInfo.storeDes[i].innerHTML = data[i].shopperDescribe;
-								storeInfo.storeTime[i].innerHTML = data[i].shopperTime;
-							}
+              // 渲染数据
+              if(data.length>0){
+                var frag = doc.createDocumentFragment();
+  								for(var i=0,len=data.length;i<len;i++) {
+  									var item = doc.createElement('li');
+                    item.innerHTML = '<div class="store-info"><a href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span><i class="iconfont icon-heart-fill"></i></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p></div><p class="store-time">'+data[i].shopperTime+'</p>';
+  									frag.appendChild(item);
+  								}
+                 storeUl.appendChild(frag);
+              }
+              // 添加书籍收藏
 							Stores.prototype.addStoreLike();
 						}else {
 							console.log('数据拉去失败');

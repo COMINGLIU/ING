@@ -179,7 +179,7 @@ server.get('/',function(req,res){
           console.log(bookDetail);
           let bookName = bookDetail[0].bookName;
           //以下处理anotherbook
-          let anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%+bookName+%"';
+          let anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%'+bookName+'%" and bookId!="'+reqUrl.bookId+'";';
           conn.query(anotherBookSql,function(err,anotherBook){
             console.log(anotherBookSql);
             if(err){
@@ -192,7 +192,7 @@ server.get('/',function(req,res){
         }
       })
       break;
-    // 获取书籍评论
+    // 获取某本书籍评论
     case 'getBookComment':
       sql = 'SELECT * FROM ask where bookId="'+reqUrl.bookId+'"';
       conn.query(sql,function(err,data){
@@ -248,7 +248,7 @@ server.get('/',function(req,res){
         }else {
           console.log(data);
           if(data.toString()==''){
-            res.send({status:'fail',msg:'该小店还没有书籍'});
+            res.send({status:'fail',msg: '该小店还没有书籍'});
           }else {
             let sql0 = 'SELECT shopperName,schoolName from shopper,user where shopper.userId="'+reqUrl.shopperId+'" and shopper.userId=user.userId;';
             conn.query(sql0,function(err,data2){
@@ -642,6 +642,23 @@ server.get('/',function(req,res){
         // 没有登录或登录过期的情况
         res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
       }
+      break;
+    // 获取所有的书籍评论
+    case 'getAllBookComment':
+      sql = 'SELECT ask.bookId,bookinfo.bookName,ask.shopperId,askUserId,askUserName,askTime,askContent FROM ask,bookinfo where ask.bookId=bookinfo.bookId';
+      conn.query(sql,function(err,data){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          }
+          res.send({status:'success',data: data});
+        }
+      })
       break;
     // 获取留言条
     case 'getMessageNote':
