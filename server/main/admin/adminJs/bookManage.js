@@ -28,6 +28,8 @@
                 bookManage.readerData(data,oBookInfoUl);
                 bookManage.openBookDetail();
               }
+              // 删除书籍事件
+              bookManage.delBook();
             }else {
               alert(res.msg);
             }
@@ -74,7 +76,7 @@
               if(res.status=='success'){
                 var data = res.data;
                 if(data.length==0) {
-                  bookManage.openHintInfo();
+                  bookManage.openHintInfo('没有对应的数据');
                 }else {
                   bookManage.readerData(data,oSearchBookInfoUl);
                   bookManage.openBookDetail();
@@ -117,7 +119,9 @@
     },
     // 删除店铺
     delBook: function(){
-      var aDelBtn = doc.querySelectorAll('.bookInfo>li:not(:nth-child(1))>ul li:nth-child(9)');
+      var oBookInfoUl = doc.querySelector('#content .bookInfo'),
+          aBookInfoLi = doc.querySelectorAll('#content .bookInfo>li:not(:nth-child(1))'),
+          aDelBtn = doc.querySelectorAll('.bookInfo>li:not(:nth-child(1))>ul li:nth-child(9)'),
           aDelBookId = doc.querySelectorAll('.bookInfo>li:not(:nth-child(1))>ul li:nth-child(1)');
       for(var i=0,len=aDelBtn.length;i<len;i++) {
         (function(i){
@@ -129,7 +133,7 @@
                 ajax({
                   url: '/',
                   data: {
-                    act: 'delSomeBook',
+                    act: 'delShopperBook',
                     bookId: aDelBookId[i].innerHTML
                   },
                   method: 'get',
@@ -139,6 +143,12 @@
                   success: function(res){
                     res = JSON.parse(res);
                     console.log(res);
+                    if(res.status=='success'){
+                      bookManage.openHintInfo('删除成功');
+                      oBookInfoUl.removeChild(aBookInfoLi[i]);
+                    }else{
+                      bookManage.openHintInfo('删除失败');
+                    }
                   }
                 })
               })
@@ -152,8 +162,10 @@
         cb&&cb(ajax);
       })
     },
-    openHintInfo: function(){
+    openHintInfo: function(msg){
       var oHintInfo = doc.getElementById('hintInfo');
+      // ='没有对应的数据'
+      oHintInfo.innerHTML = msg;
       console.log(oHintInfo);
       oHintInfo.style.opacity = 1;
       var timer = setTimeout(function(){

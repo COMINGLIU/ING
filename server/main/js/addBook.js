@@ -66,7 +66,7 @@
 									AddBook.prototype.editBookInfo();
 									// 添加书籍
 									AddBook.prototype.addBook(data);
-									//
+									//挑战到store
 									AddBook.prototype.gotoStore(oUserId);
 								}else {
 									alert('您请求的信息不存在');
@@ -118,7 +118,9 @@
 		},
 		// 删除书籍
 		delBook: function(){
-			var bookDelBtn = doc.getElementById('uped').getElementsByClassName('del');
+			var oBookUl = doc.getElementById('uped'),
+          oBookList = doc.querySelectorAll('#uped>li'),
+          bookDelBtn = oBookUl.getElementsByClassName('del');
 			for(var j=0,len2=bookDelBtn.length;j<len2;j++) {
 				(function(j){
 					var bookId = booksInfo.href[j].href.split('?')[1].split('=')[1];
@@ -140,6 +142,13 @@
 									success: function(res){
 										res = JSON.parse(res);
 										console.log(res);
+                    if(res.status=='success'){
+                      AddBook.prototype.editOkInfo('删除成功');
+                      // 删除节点
+                      oBookUl.removeChild(oBookList[j]);
+                      // 给每个li绑定修改书籍信息的操作
+    									AddBook.prototype.editBookInfo();
+                    }
 									}
 								})
 							})
@@ -321,7 +330,7 @@
 								if((xhr.status>=200&&xhr.status<300)||xhr.status==304){
 									var res = JSON.parse(xhr.responseText);
 									if(res.status=='success'){
-										AddBook.prototype.editOkInfo();
+										AddBook.prototype.editOkInfo('修改成功');
 										oBookTextarea.readOnly = false;
 										for(var j=0,len2 = aBookInput.length;j<len2;j++){
 											aBookInput[j].readOnly = true;
@@ -347,21 +356,23 @@
 							aBookInput[j].style.borderBottom = '0';
 							aEditSubResetBtn[0].style.width = '0';
 							aEditSubResetBtn[1].style.width = '0';
+              aBookImgLi.style.visibility = 'hidden';
 							// 重新渲染数据
 						}
 					};
 				})(i);
 			}
 		},
-		editOkInfo: function(){
+    // 提示信息
+		editOkInfo: function(msg){
 			var oInfo = doc.getElementById('editOkInfo');
+      oInfo.innerHTML = msg;
 			oInfo.style.opacity = '1';
 			var timer = setTimeout(function(){
 				oInfo.style.opacity = '0';
 				clearTimeout(timer);
 			},1500)
 		},
-		// logo
 		logo: function(){
 			var oLogo = doc.getElementById('logo');
 			oLogo.onclick = function(){

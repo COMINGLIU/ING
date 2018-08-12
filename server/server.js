@@ -287,7 +287,47 @@ server.get('/',function(req,res){
       break;
     //删除某本书籍
     case 'delShopperBook':
-
+      let delShopperBook_slq0 = 'delete from ask where bookId="'+reqUrl.bookId+'";';
+      conn.query(delShopperBook_slq0,function(err,data0){
+        if(err){
+          console.log(err.sqlMessage);
+        }else {
+          console.log('书籍评论删了');
+          let sql1 = 'delete from booklike where bookId="'+reqUrl.bookId+'";';
+          conn.query(sql1,function(err,data1){
+            if(err){
+              console.log(err.sqlMessage);
+            }else {
+              console.log('书籍收藏消息删了');
+              let sql2 = 'delete from bookscore where bookId="'+reqUrl.bookId+'";';
+              conn.query(sql2,function(err,data2){
+                if(err){
+                  console.log(err.sqlMessage);
+                }else {
+                  console.log('书籍成就删了');
+                  let sql3 = 'delete from bookinfo where bookId="'+reqUrl.bookId+'";';
+                  conn.query(sql3,function(err,data3){
+                    if(err){
+                      console.log(err.sqlMessage);
+                    }else {
+                      console.log('书籍删除完毕');
+                      let sql4 = 'UPDATE shopper SET booksNum=booksNum-1 where userId in (select shopperId from bookinfo where bookId="'+reqUrl.bookId+'");';
+                      conn.query(sql4,function(err,data4){
+                        if(err){
+                          console.log(err.sqlMessage);
+                        }else {
+                          console.log('shopper重置完成,书籍删除成功');
+                          res.send({status:'success',msg: '书籍删除成功'});
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
       break;
     // 个人中心
     case 'getUserCenterInfo':
@@ -544,16 +584,13 @@ server.get('/',function(req,res){
       break;
     // 删除某个书店
     case 'delStore':
-      sql = 'delete from shopper where userId="'+reqUrl.storeId+'";';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          // 删除书店所有的书籍
-          //删除收藏
-          // res.send({status:'success',msg: '删除成功'});
-        }
+      // let delStore_sql0 = '';
+      // conn.query(delStore_sql0,function(err,data){
+      //   if(err){
+      //     console.log(err.sqlMessage);
+      //   }else {
+      //
+      //   }
       })
       break;
     // 获取书籍信息
