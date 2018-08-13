@@ -9,7 +9,7 @@ user guid:  https://comingliu.github.io/ING/server/main/asking.html
 
 数据库：mysql
 
-后台： node.js （代码： serve.js）
+后台： node.js （代码： server.js）
 
 
 
