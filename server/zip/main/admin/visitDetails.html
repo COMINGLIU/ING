@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=stylesheet href=../commonCss/reset.css><link rel=stylesheet href=../commonCss/iconfont.css><link rel="shortcut icon" href=../imgs/logo.ico><title>今日访问</title><style>
+    body {
+        height: auto;
+    }
+    #content {
+      min-width: 350px;
+    }
+    .visitInfo {
+      width: 350px;
+      background-color: #fff;
+      overflow: hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+    .visitInfo>li {
+      margin-bottom: 10px;
+    }
+    #content .visitInfo>li:nth-child(2) {
+      padding-top: 30px;
+    }
+    .visitInfo>li:nth-child(1) i {
+      transition-duration: .3s;
+    }
+    .visitInfo>li:nth-child(1) i:hover{
+      color: #999;
+    }
+    .visitInfo>li>ul li{
+      display: inline-block;
+      width: 90px;
+      text-align: center;
+      overflow:hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+    }
+    .visitInfo>li>ul {
+      width: 300px;
+    }
+    .visitInfo>li:not(:nth-child(1)):not(:nth-child(2)):hover {
+      background-color: #ddd;
+    }
+    .title {
+      position: fixed;
+    }
+    .title li {
+      background-color: #ccc;
+    }
+    .title li i {
+      font-size: 12px;
+    }
+    /* 搜索框 */
+    #search {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      margin: auto;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #888;
+      text-align: center;
+      line-height: 40px;
+    }
+    #search i {
+      font-size: 30px;
+    }
+    #search-box {
+      display: none;
+      position: absolute;
+      overflow: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 350px;
+      height: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px #555;
+      margin: auto;
+      background-color: #fff;
+    }
+    #search-box .top {
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+    }
+    #search-box .top input {
+      border: 1px solid #ccc;
+    }
+    #search-box .top input[type="submit"] {
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+    }
+    #search-box .top input[type="submit"]:hover {
+      box-shadow: 0 0 10px #ccc;
+    }
+    #search-box .visitInfo .title {
+      position: static;
+    }
+    .close {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #000;
+      background-color: #ccc;
+      color: #888;
+      text-align: center;
+      line-height: 20px;
+      cursor: pointer;
+      transition-duration: .3s;
+    }
+    .close:hover {
+      box-shadow: 0 0 20px #000;
+    }
+    </style></head><body><div id=container><div id=content><div id=search><i class="iconfont icon-sousuo"></i></div><ul class=visitInfo><li class=title><ul><li>用户ID</li><li>用户昵称</li><li>访问次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li></ul></li></ul></div><div id=search-box><div class=close><i class="iconfont icon-guanbi"></i></div><div class=top><input type=date name=date> <input type=submit name=sub value=ok></div><div class=bottom><ul class=visitInfo><li class=title><ul><li>用户ID</li><li>用户昵称</li><li>访问次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li></ul></li></ul></div></div></div><script src=../commonJs/module/sea.js></script><script src=adminJs/visitDetails.js></script></body></html>

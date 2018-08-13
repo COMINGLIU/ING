@@ -56,7 +56,6 @@
           }
         })
       });
-
     },
     // 获取header里边的方法
     getHeaderModule: function(){
@@ -80,7 +79,6 @@
         console.log(ADDSTORE);
       })
     },
-
     aboutCanvas: function(){
       var oCanvas = doc.getElementById('canvas'),
       oBubble = doc.getElementById('bubble');

@@ -1,0 +1,79 @@
+<html lang=en dir=ltr><!DOCTYPE html><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=stylesheet href=../commonCss/reset.css><link rel=stylesheet href=../commonCss/iconfont.css><link rel="shortcut icon" href=../imgs/logo.ico><title>公屏语录</title><style>
+      #content {
+        width: 800px;
+        margin: 20px auto;
+        text-align: center;
+      }
+      #content li {
+        margin-bottom: 16px;
+      }
+      .time {
+        color: #aaa;
+        margin-top: 3px;
+      }
+      .time .icon-lajixiang {
+        margin-left: 30px;
+      }
+      .time .icon-lajixiang:hover {
+        color: #900;
+      }
+      /*  */
+      #addMsg {
+        margin-top: 40px;
+      }
+      #addMsg .top {
+        width: 352px;
+        height: 50px;
+        margin: auto;
+        text-align: center;
+        line-height: 50px;
+      }
+      #addMsg .top i {
+        font-size: 30px;
+      }
+      #addMsg .top i:hover{
+        text-shadow: 0 0 40px #000;
+        color: #aaa;
+      }
+      #addMsg .bottom textarea{
+        width: 350px;
+        height: 100px;
+        resize: none;
+        outline: none;
+      }
+      #addMsg .bottom {
+        height: 0;
+        margin: auto;
+        overflow: hidden;
+        transition-duration: .3s;
+      }
+      #addMsg .bottom input {
+        display: block;
+        width: 352px;
+        height: 30px;
+        margin: auto;
+        cursor: pointer;
+        transition-duration: .3s;
+      }
+      #addMsg .bottom input:hover {
+        box-shadow: 0 0 10px #aaa;
+      }
+      /* 提示信息 */
+      #hintInfo {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        width: 100px;
+        height: 30px;
+        margin: auto;
+        border-radius: 10px;
+        background-color: rgba(0,0,0,.8);
+        color: #fff;
+        line-height: 30px;
+        text-align: center;
+        opacity: 0;
+        transition-duration: .3s;
+        z-index: 50;
+      }
+    </style></head><body><div id=container><div id=content><div id=hintInfo>添加成功</div><ul></ul><div id=addMsg><div class=top><i class="iconfont icon-jiajianzujianjiahao"></i></div><div class=bottom><textarea name=addContent rows=8 cols=80></textarea> <input type=submit name=sub value=ok></div></div></div></div><script src=../commonJs/module/sea.js></script><script src=adminJs/screenMsg.js></script></body></html>

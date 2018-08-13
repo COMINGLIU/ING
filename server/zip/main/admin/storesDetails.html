@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=stylesheet href=../commonCss/reset.css><link rel=stylesheet href=../commonCss/iconfont.css><link rel="shortcut icon" href=../imgs/logo.ico><title>店铺管理</title><style>
+    body {
+        height: auto;
+    }
+    #content {
+      min-width: 1000px;
+    }
+    .storeInfo {
+      width: 1000px;
+      background-color: #fff;
+      overflow: hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+      font-size: 0;
+    }
+    .storeInfo>li {
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    #content .storeInfo>li:nth-child(2) {
+      padding-top: 30px;
+    }
+    .storeInfo>li:nth-child(1) i {
+      transition-duration: .3s;
+    }
+    .storeInfo>li:nth-child(1) i:hover{
+      color: #999;
+    }
+    .storeInfo>li>ul {
+      font-size: 0;
+    }
+    .storeInfo>li>ul li{
+      display: inline-block;
+      width: 90px;
+      margin-right: 4px;
+      text-align: center;
+      overflow:hidden;
+      text-overflow: hidden;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+    .storeInfo>li>ul {
+      width: 1000px;
+    }
+    .storeInfo>li>ul li:nth-child(2),
+    .storeInfo>li>ul li:nth-child(6),
+    .storeInfo>li>ul li:nth-child(7),
+    .storeInfo>li>ul li:nth-child(8){
+      width: 130px;
+    }
+    .storeInfo>li:not(:nth-child(1))>ul li:nth-child(8):hover{
+      color: #aaa;
+    }
+    .storeInfo>li:not(:nth-child(1))>ul li:nth-child(9):hover i {
+      color: #f00;
+    }
+    .storeInfo>li:not(:nth-child(1)):not(:nth-child(2)):hover {
+      background-color: #ddd;
+    }
+    .title {
+      position: fixed;
+    }
+    .title li {
+      background-color: #ccc;
+    }
+    .title li i {
+      font-size: 12px;
+    }
+    /* 搜索框 */
+    #search {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      margin: auto;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #888;
+      text-align: center;
+      line-height: 40px;
+    }
+    #search i {
+      font-size: 30px;
+    }
+    #search-box {
+      display: none;
+      position: absolute;
+      overflow: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 1000px;
+      height: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px #555;
+      margin: auto;
+      background-color: #fff;
+    }
+    #search-box .title {
+      position: static;
+    }
+    #search-box .top {
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+    }
+    #search-box .top input {
+      width: 200px;
+      border: 1px solid #ccc;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      left:10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #000;
+      background-color: #ccc;
+      color: #888;
+      text-align: center;
+      line-height: 20px;
+      cursor: pointer;
+      transition-duration: .3s;
+    }
+    .close:hover {
+      box-shadow: 0 0 20px #000;
+    }
+    /* 书店口号详情 */
+    #storeDetail {
+      display: none;
+      box-sizing: border-box;
+      position: absolute;
+      overflow: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 350px;
+      height: 200px;
+      padding: 20px;
+      margin: auto;
+      box-shadow: 0 0 10px #555;
+      line-height: 20px;
+      background-color: #fff;
+    }
+    #storeDetail h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    /* 提示信息 */
+    #hintInfo {
+      position: fixed;
+      top: 100px;
+      left: 0;
+      right: 0;
+      width: 100px;
+      height: 30px;
+      margin: auto;
+      border-radius: 10px;
+      background-color: rgba(0,0,0,.8);
+      color: #fff;
+      line-height: 30px;
+      text-align: center;
+      opacity: 0;
+      transition-duration: .3s;
+      z-index: 50;
+    }
+    </style></head><body><div id=container><div id=content><div id=hintInfo>没有对应的数据</div><div id=search><i class="iconfont icon-sousuo"></i></div><ul class=storeInfo><li class=title><ul><li>店铺ID</li><li>店名</li><li>书籍总量<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>店长昵称</li><li>电话</li><li>邮箱</li><li>开店时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>小店口号</li><li>删除</li></ul></li></ul></div><div id=search-box><div class=close><i class="iconfont icon-guanbi"></i></div><div class=top><select name=search-check><option value=用户ID>用户ID</option><option value=店名>店名</option><option value=店长昵称>店长昵称</option><option value=电话>电话</option><option value=邮箱>邮箱</option></select><input type=text name=search-content></div><div class=bottom><ul class=storeInfo><li class=title><ul><li>店铺ID</li><li>店名</li><li>书籍总量<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>店长昵称</li><li>电话</li><li>邮箱</li><li>开店时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>小店口号</li><li>删除</li></ul></li></ul></div></div><div id=storeDetail><div class=close><i class="iconfont icon-guanbi"></i></div><h3></h3><p></p></div></div><script src=../commonJs/module/sea.js></script><script src=adminJs/storesDetails.js></script></body></html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=stylesheet href=../commonCss/reset.css><link rel=stylesheet href=../commonCss/iconfont.css><link rel="shortcut icon" href=../imgs/logo.ico><title>用户详情</title><style>
+      body {
+          height: auto;
+      }
+      #content {
+        min-width: 1240px;
+      }
+      .userInfo {
+        width: 990px;
+        background-color: #fff;
+        overflow: hidden;
+        text-overflow: hidden;
+        white-space: nowrap;
+        font-size: 0;
+      }
+      .userInfo>li {
+        margin-bottom: 10px;
+        margin-right: 4px;
+        font-size: 12px;
+      }
+      .userInfo>li:nth-child(1) i {
+        transition-duration: .3s;
+      }
+      .userInfo>li:nth-child(1) i:hover{
+        color: #999;
+      }
+      .userInfo>li:not(:nth-child(1)):not(:nth-child(2)):hover {
+        background-color: #ddd;
+      }
+      .userInfo>li:not(:nth-child(1)):hover{
+        color: #aaa;
+      }
+      .userInfo>li>ul {
+        font-size: 0;
+      }
+      .userInfo>li>ul li{
+        display: inline-block;
+        width: 90px;
+        margin-right: 4px;
+        text-align: center;
+        font-size: 12px;
+      }
+      #content .userInfo>li:nth-child(2) {
+        padding-top: 30px;
+      }
+      .userInfo>li>ul li:nth-child(3),
+      .userInfo>li>ul li:nth-child(4),
+      .userInfo>li>ul li:nth-child(6),
+      .userInfo>li>ul li:nth-child(8){
+        width: 150px;
+      }
+      #content .title {
+        position: fixed;
+      }
+      .title li {
+        background-color: #ccc;
+      }
+      .title li i {
+        font-size: 12px;
+      }
+      /* 关于搜索 */
+      #search {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        margin: auto;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #888;
+        text-align: center;
+        line-height: 40px;
+      }
+      #search i {
+        font-size: 30px;
+      }
+      #search-box {
+        display: none;
+        position: absolute;
+        overflow: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 990px;
+        height: 400px;
+        margin: auto;
+        box-shadow: 0 0 10px #555;
+        margin: auto;
+        background-color: #fff;
+      }
+      #search-box .top {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+      }
+      #search-box .top input {
+        width: 200px;
+        border: 1px solid #ccc;
+      }
+      .close {
+        position: absolute;
+        left: 10px;
+        top:10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #000;
+        background-color: #ccc;
+        color: #888;
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+        transition-duration: .3s;
+      }
+      .close:hover {
+        box-shadow: 0 0 20px #000;
+      }
+      /* 查看每个用户收藏的书籍 */
+      #book-list,
+      #stores-list {
+        display: none;
+        position: absolute;
+        overflow: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 990px;
+        height: 400px;
+        margin: auto;
+        box-shadow: 0 0 10px #555;
+        margin: auto;
+        background-color: #fff;
+      }
+      #book-list title,
+      #stores-list .title {
+        position: static;
+      }
+      #book-list .userInfo>li:not(:nth-child(1))>ul li:last-child:hover i,
+      #stores-list .userInfo>li:not(:nth-child(1))>ul li:last-child:hover i{
+        color: #f00;
+      }
+      .head {
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+      }
+      #book-list .userInfo>li>ul li {
+        overflow: hidden;
+        width: 140px;
+        cursor: pointer;
+      }
+      #book-list .userInfo {
+        width: 860px;
+      }
+      #book-list .head i {
+        font-style: italic;
+        margin-left: 50px;
+        color: rgb(199,199,199);
+        transform: scale(0.5);
+        cursor: pointer;
+      }
+      #book-list .head i:hover {
+        text-decoration: underline;
+      }
+      .userName{
+        overflow: hidden;
+        position: absolute;
+        right: 5px;
+        top: 100px;
+        margin: auto;
+        height: 50px;
+        max-width: 190px;
+        box-shadow: 0 0 10px #333;
+        text-align: center;
+      }
+      /* 书店收藏列表 */
+      #stores-list .userInfo {
+        width: 825px;
+        cursor: pointer;
+      }
+      #stores-list .userInfo>li>ul li:not(:last-child) {
+        width: 180px;
+      }
+      /* 用户登录状态 */
+      #login-status {
+        display: none;
+        overflow: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+        margin: auto;
+        box-shadow: 0 0 10px #333;
+        background-color: #fff;
+      }
+      #login-status ul li{
+        text-align: center;
+        margin-bottom: 14px;
+      }
+      /* 提示信息 */
+      #hintInfo {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        width: 100px;
+        height: 30px;
+        margin: auto;
+        border-radius: 10px;
+        background-color: rgba(0,0,0,.8);
+        color: #fff;
+        line-height: 30px;
+        text-align: center;
+        opacity: 0;
+        transition-duration: .3s;
+        z-index: 50;
+      }
+    </style></head><body><div id=container><div id=content><div id=hintInfo>没有对应的数据</div><ul class=userInfo><li class=title><ul><li>用户ID</li><li>昵称</li><li>电话</li><li>邮箱</li><li>学校</li><li>注册时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>登录次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>积分<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li></ul></li></ul></div><div id=search><i class="iconfont icon-sousuo"></i></div></div><div id=search-box><div class=close><i class="iconfont icon-guanbi"></i></div><div class=top><select name=search-check><option value=用户ID>用户ID</option><option value=昵称>昵称</option><option value=电话>电话</option><option value=邮箱>邮箱</option><option value=学校>学校</option></select><input type=text name=search-content></div><div class=bottom><ul class=userInfo><li class=title><ul><li>用户ID</li><li>昵称</li><li>电话</li><li>邮箱</li><li>学校</li><li>注册时间<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>登录次数<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li><li>积分<i class="iconfont icon-jiantoushang"></i><i class="iconfont icon-jiantouxia"></i></li></ul></li></ul></div></div><div id=book-list><div class=close><i class="iconfont icon-guanbi"></i></div><div class=head>该用户收藏的书籍: <span></span> <i>查看收藏的店铺</i></div><ul class=userName><li class=userId>ID:<span></span></li><li class=userNickName>昵称:<span></span></li></ul><ul class=userInfo><li class=title><ul><li>书名</li><li>出版社</li><li>类型</li><li>单价</li><li>书籍总量</li><li>上传时间</li></ul></li></ul></div><div id=stores-list><div class=close><i class="iconfont icon-guanbi"></i></div><div class=head>该用户收藏的店铺: <span></span></div><ul class=userName><li>ID:<span></span></li><li>昵称:<span></span></li></ul><ul class=userInfo><li class=title><ul><li>店铺名</li><li>店铺口号</li><li>书籍总量(本)</li><li>注册时间</li></ul></li></ul></div><div id=login-status><div class=close><i class="iconfont icon-guanbi"></i></div><div class=head>qpq</div><ul><li>2018-08-02 11:28:11</li><li>2018-08-02 11:28:11</li><li>2018-08-02 11:28:11</li></ul></div><script src=../commonJs/module/sea.js></script><script src=adminJs/usersDetails.js></script></body></html>

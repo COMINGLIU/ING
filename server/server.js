@@ -20,7 +20,10 @@ const conn  = mysql.createConnection({
   password: 'kkxxdgmyt67LIUQIONG',
   database: 'bookstore'
 });
+// 获取当前时间的函数
 let TIME=require('./module/getTime.js');
+// 执行sql语句的函数
+let HANDLESQL = require('./module/handleSql');
 let sessionArr = [];
 for(var i=0;i<100000;i++){
   sessionArr.push('sig_'+Math.random());
@@ -34,8 +37,6 @@ const preventSqlWords = /select|update|delete|insert|exec|count|'|"|=|<|>|%/i;
 // 接收任何文件
 server.use(storeInfoMulter.any());
 server.get('/',function(req,res){
-  //设置response编码为utf-8
-  // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
   console.log('url'+req.url);
   let reqUrl = req.query;
   let sql="";
@@ -44,101 +45,80 @@ server.get('/',function(req,res){
     // 获取主页的书籍
     case 'indexBook':
       sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,shopperName,schoolName FROM bookinfo,user,shopper where bookinfo.shopperId=user.userId and bookinfo.shopperId=shopper.userId;';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          res.send(data);
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log('成功');
+        res.send(data);
       })
       break;
     // 收藏书籍
     case 'collectBook':
-      let sql0 = 'SELECT bookId FROM booklike where userId="'+reqUrl.userId+'" and bookId="'+reqUrl.bookId+'" and likeType="书籍";';
-      conn.query(sql0,function(err,data){
-        if(err) {
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
+      let collectBook_sql0 = 'SELECT bookId FROM booklike where userId="'+reqUrl.userId+'" and bookId="'+reqUrl.bookId+'" and likeType="书籍";',
+          collectBook_sql1 = 'INSERT INTO booklike(userId,likeType,bookId) VALUES("'+reqUrl.userId+'","书籍","'+reqUrl.bookId+'");';
+      new Promise((resolve,reject) => {
+        HANDLESQL(conn,collectBook_sql0,function(data){
           if(data.toString() == ''){
-            console.log('还没有收藏过');
-            sql = 'INSERT INTO booklike(userId,likeType,bookId) VALUES("'+reqUrl.userId+'","书籍","'+reqUrl.bookId+'");';
-            conn.query(sql,function(err,data1){
-              console.log(sql);
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
-                console.log('收藏成功');
-                res.send({status: 'success',msg: '收藏成功'});
-              }
-            })
+            console.log('还没收藏过');
+            resolve();
           }else {
             console.log('收藏过了');
             res.send({status: 'success',msg: '收藏过了'});
           }
-        }
+        })
+      })
+      .then(data=> {
+        HANDLESQL(conn,collectBook_sql1,function(data){
+          console.log('收藏成功');
+          res.send({status: 'success',msg: '收藏成功'});
+        })
+      })
+      .catch(err => {
+        console.log(err);
       })
       break;
     // 取消收藏书籍
     case 'cancelCollectBook':
       sql = 'delete from booklike where userId="'+reqUrl.userId+'" and bookId="'+reqUrl.bookId+'" and likeType="书籍";';
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log('取消成功');
-          res.send({status: 'success',msg: '已取消收藏该书籍'});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log('取消成功');
+        res.send({status: 'success',msg: '已取消收藏该书籍'});
       })
       break;
     // 收藏店铺
     case 'collectStore':
       let collectStore_sql0 = 'SELECT * from booklike where userId="'+reqUrl.userId+'" and likeType="店铺" and storeId="'+reqUrl.storeId+'";';
-      conn.query(collectStore_sql0,function(err,data0){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          if(data0.toString()=='') {
-            sql = 'INSERT INTO booklike(userId,likeType,storeId) VALUES("'+reqUrl.userId+'","店铺","'+reqUrl.storeId+'");';
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
-                res.send({status: 'success',msg:'店铺收藏成功，请在个人中心查看'});
-              }
-            })
+          collectStore_sql1 = 'INSERT INTO booklike(userId,likeType,storeId) VALUES("'+reqUrl.userId+'","店铺","'+reqUrl.storeId+'");';
+      new Promise((resolve,reject) => {
+        HANDLESQL(conn,collectStore_sql0,function(data){
+          if(data.toString() == '') {
+            resolve();
           }else {
             res.send({status: 'success',msg: '该店铺已经被收藏过了，请在个人中心查看'});
           }
-        }
+        })
+      })
+      .then( data => {
+        HANDLESQL(conn,collectStore_sql1,function(data){
+          res.send({status: 'success',msg:'店铺收藏成功，请在个人中心查看'});
+        })
+      })
+      .catch(err => {
+        console.log(err);
       })
       break;
     // 取消收藏书店
     case 'cancelCollectStore':
       sql = 'delete from booklike where userId="'+reqUrl.userId+'" and storeId="'+reqUrl.storeId+'" and likeType="店铺";';
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log('取消成功');
-          res.send({status: 'success',msg: '已取消收藏该书店'});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log('取消成功');
+        res.send({status: 'success',msg: '已取消收藏该书店'});
       })
       break;
     // 获取收藏的书籍（客户端）
     case 'getColllectBooks':
       sql = 'SELECT booklike.bookId,bookinfo.bookName,bookinfo.bookPrice,user.schoolName FROM booklike,bookinfo,user where booklike.userId="'+reqUrl.userId+'" and booklike.likeType="书籍" and booklike.bookId=bookinfo.bookId and booklike.userId=user.userId';
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          res.send({status:'success',data: data});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        res.send({status:'success',data: data});
       })
       break;
     // 搜索书籍
@@ -156,190 +136,186 @@ server.get('/',function(req,res){
         bookCollege = reqUrl.bookCollege;
         sql+='and schoolName like "%'+bookCollege+'%"';
       }
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-          res.send({status:'fail',msg:'搜索失败'});
-        }else {
-          console.log(data);
-          res.send({status:'success',data:data});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        res.send({status:'success',data:data});
       })
       break;
     // 获取书籍详情
     case 'getBookDetail':
-      let bookId = reqUrl.bookId;
-      sql = 'SELECT bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+bookId+'";'
-      conn.query(sql,function(err,bookDetail){
-        console.log(sql);
-        if(err){
-          res.send(err.code);
-        }else {
-          console.log(bookDetail);
-          let bookName = bookDetail[0].bookName;
-          //以下处理anotherbook
-          let anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%'+bookName+'%" and bookId!="'+reqUrl.bookId+'";';
-          conn.query(anotherBookSql,function(err,anotherBook){
-            console.log(anotherBookSql);
-            if(err){
-              console.log(err.sqlMessage);
-            }else{
-              console.log('书籍详情获取成功');
-              res.send({status: 'success',bookDetail: bookDetail[0],anotherBook: anotherBook});
-            }
-          })
-        }
+      sql = 'SELECT bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+reqUrl.bookId+'";';
+      new Promise((resolve,reject) => {
+        HANDLESQL(conn,sql,function(data){
+          resolve(data);
+        })
+      })
+      .then(data => {
+        let bookName = data[0].bookName;
+        let anotherBookSql = 'SELECT bookId,bookSrc,bookName from bookinfo where bookName like "%'+bookName+'%" and bookId!="'+reqUrl.bookId+'";';
+        HANDLESQL(conn,anotherBookSql,function(data2){
+          console.log('书籍获取成功');
+          res.send({status: 'success',bookDetail: data[0],anotherBook: data2});
+        })
+      })
+      .catch(err => {
+        console.log(err);
       })
       break;
     // 获取某本书籍评论
     case 'getBookComment':
       sql = 'SELECT * FROM ask where bookId="'+reqUrl.bookId+'"';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.code);
-        }else {
-          console.log('书籍评论返回成功');
-          if(data.length>0){
-            for(var i=0,len=data.length;i<len;i++){
-              data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log('书籍评论返回成功');
+        if(data.length>0){
+          for(var i=0,len=data.length;i<len;i++){
+            data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
           }
-          res.send({status:'success',data:data});
         }
+        res.send({status:'success',data:data});
       })
       break;
     // 删除个人的书籍评论
     case 'delBookComment':
       sql = 'DELETE FROM ask where askId="'+reqUrl.askId+'";';
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log('评论删除成功');
-          res.send({status: 'success',msg: '书籍评论删除成功'});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log('评论删除成功');
+        res.send({status: 'success',msg: '书籍评论删除成功'});
       })
       break;
     // 获取所有的店铺
     case 'getAllStores':
       sql = 'SELECT * FROM shopper';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0){
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].shopperTime = moment(data.shopperTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0){
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].shopperTime = moment(data.shopperTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status: 'success',data:data});
         }
+        res.send({status: 'success',data:data});
       })
       break;
     // 获取某个店铺的所有书籍详情（游客）
     case 'getOneAllStoreBooks':
       sql = 'SELECT bookId,bookSrc,bookName,bookPublic,bookAllNum,bookPrice,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
+      new Promise((resolve,reject) => {
+        HANDLESQL(conn,sql,function(data){
           if(data.toString()==''){
             res.send({status:'fail',msg: '该小店还没有书籍'});
           }else {
-            let sql0 = 'SELECT shopperName,schoolName from shopper,user where shopper.userId="'+reqUrl.shopperId+'" and shopper.userId=user.userId;';
-            conn.query(sql0,function(err,data2){
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
-                console.log(data2[0]);
-                res.send({status:'success',data:data,shopperInfo:data2[0]});
-              }
-            })
+            resolve(data);
           }
-        }
+        })
+      })
+      .then(data => {
+        let sql2 = 'SELECT shopperName,schoolName from shopper,user where shopper.userId="'+reqUrl.shopperId+'" and shopper.userId=user.userId;';
+        HANDLESQL(conn,sql2,function(data2){
+          console.log(data2[0]);
+          res.send({status:'success',data:data,shopperInfo:data2[0]});
+        })
+      })
+      .catch(err => {
+        console.log(err);
       })
       break;
     // 获取某个店铺的所有书籍详情（店长）
     case 'getOneAllStoreBooksForShopper':
-      sql = 'SELECT bookId,bookSrc,bookName,bookAllNum,bookPublic,bookType,bookPrice,bookTime,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-          res.send({status:'fail',msg: '您所请求的资源不存在'});
-        }else {
-          console.log(data);
-          let sql0 = 'SELECT shopperName FROM shopper WHERE userId="'+reqUrl.shopperId+'";';
-          conn.query(sql0,function(err,data0){
-            console.log(sql0);
-            if(err){
-              console.log(err.sqlMessage);
-            }else {
-              console.log(data[0]);
-              res.send({status:'success',data:data,shopperName:data0[0].shopperName});
-            }
-          })
-        }
-      })
+      let getOneAllStoreBooksForShopper_sql0 = 'SELECT bookId,bookSrc,bookName,bookAllNum,bookPublic,bookType,bookPrice,bookTime,bookDescribe FROM bookinfo where shopperId="'+reqUrl.shopperId+'";';
+          getOneAllStoreBooksForShopper_sql1 = 'SELECT shopperName FROM shopper WHERE userId="'+reqUrl.shopperId+'";';
+       new Promise((resolve,reject) => {
+         HANDLESQL(conn,getOneAllStoreBooksForShopper_sql0,function(data){
+            resolve(data);
+         })
+       })
+       .then(data => {
+         HANDLESQL(conn,getOneAllStoreBooksForShopper_sql1,function(data2){
+           res.send({status:'success',data:data,shopperName:data2[0].shopperName});
+         })
+       })
+       .catch(err => {
+         console.log(err);
+       })
       break;
     //删除某本书籍
     case 'delShopperBook':
       let delShopperBook_slq0 = 'delete from ask where bookId="'+reqUrl.bookId+'";';
-      conn.query(delShopperBook_slq0,function(err,data0){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
+          delShopperBook_slq1 = 'delete from booklike where bookId="'+reqUrl.bookId+'";';
+          delShopperBook_slq2 = 'delete from bookscore where bookId="'+reqUrl.bookId+'";';
+          delShopperBook_slq3 = 'delete from bookinfo where bookId="'+reqUrl.bookId+'";';
+          delShopperBook_slq4 = 'UPDATE shopper SET booksNum=booksNum-1 where userId in (select shopperId from bookinfo where bookId="'+reqUrl.bookId+'");';
+      Promise.all([
+        HANDLESQL(conn,delShopperBook_slq0,function(){
           console.log('书籍评论删了');
-          let sql1 = 'delete from booklike where bookId="'+reqUrl.bookId+'";';
-          conn.query(sql1,function(err,data1){
-            if(err){
-              console.log(err.sqlMessage);
-            }else {
-              console.log('书籍收藏消息删了');
-              let sql2 = 'delete from bookscore where bookId="'+reqUrl.bookId+'";';
-              conn.query(sql2,function(err,data2){
-                if(err){
-                  console.log(err.sqlMessage);
-                }else {
-                  console.log('书籍成就删了');
-                  let sql3 = 'delete from bookinfo where bookId="'+reqUrl.bookId+'";';
-                  conn.query(sql3,function(err,data3){
-                    if(err){
-                      console.log(err.sqlMessage);
-                    }else {
-                      console.log('书籍删除完毕');
-                      let sql4 = 'UPDATE shopper SET booksNum=booksNum-1 where userId in (select shopperId from bookinfo where bookId="'+reqUrl.bookId+'");';
-                      conn.query(sql4,function(err,data4){
-                        if(err){
-                          console.log(err.sqlMessage);
-                        }else {
-                          console.log('shopper重置完成,书籍删除成功');
-                          res.send({status:'success',msg: '书籍删除成功'});
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
+        }),
+        HANDLESQL(conn,delShopperBook_slq1,function(){
+          console.log('书籍收藏消息删了');
+        }),
+        HANDLESQL(conn,delShopperBook_slq2,function(){
+          console.log('书籍成就删了');
+        }),
+        HANDLESQL(conn,delShopperBook_slq3,function(){
+          console.log('书籍删除完毕');
+        }),
+        HANDLESQL(conn,delShopperBook_slq4,function(){
+          console.log('shopper重置完成,书籍删除成功');
+          res.send({status:'success',msg: '书籍删除成功'});
+        })
+      ])
+      .then(() => {
+        console.log('删除成功');
+      })
+      .catch(err => {
+        console.log(err);
       })
       break;
     // 个人中心
     case 'getUserCenterInfo':
-      let userId = reqUrl.userId;
-      let myShopper,like_books,like_stores;
-      sql = 'SELECT * FROM shopper where userId="'+userId+'";';
+      let sql = 'SELECT * FROM shopper where userId="'+reqUrl.userId+'";';
+      // let getUserCenterInfo_sql0 = 'SELECT * FROM shopper where userId="'+reqUrl.userId+'";',
+      //     getUserCenterInfo_sql1 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+reqUrl.userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;',
+      //     getUserCenterInfo_sql2 = 'SELECT shopper.userId,shopper.shopperImg,shopper.shopperName FROM shopper where userId in (SELECT storeId FROM booklike where userId="'+reqUrl.userId+'" and likeType="店铺");';
+      // new Promise((resolve,reject) => {
+      //   let myShopper,like_books,like_stores;
+      //   HANDLESQL(conn,getUserCenterInfo_sql0,function(data1){
+      //     if(data1.toString()==""){
+      //       myShopper = {
+      //         userId: userId,
+      //         shopperImg: '暂无',
+      //         shopperName: '还未开启店铺哦',
+      //         shopperDescribe: '还未开启店铺哦',
+      //         shopperTime: '0'
+      //       };
+      //     }else {
+      //       myShopper = data1[0];
+      //     }
+      //     resolve(myShopper);
+      //   })
+      // })
+      // .then((data) => {
+      //   console.log(data);
+      //   HANDLESQL(conn,getUserCenterInfo_sql1,function(data2){
+      //     like_books = data2;
+      //     return like_books;
+      //   })
+      // })
+      // .then((data) => {
+      //   console.log(data);
+      //   HANDLESQL(conn,getUserCenterInfo_sql2,function(data3){
+      //     like_stores = data3;
+      //     // res.send({status: 'success',myShopper,like_books,like_stores});
+      //     // console.log("data");
+      //     // console.log(data);
+      //     // res.send({status: 'success',data[0],data[1],like_stores});
+      //   })
+      // })
+      // .catch(err => {
+      //   console.log(err);
+      // })
+
       conn.query(sql,function(err,data1){
         if(err){
           console.log(err.code);
-          console.log('data1错了');
         }else {
-          console.log('data1');
           console.log(data1);
           if(data1.toString()==""){
             myShopper = {
@@ -352,27 +328,23 @@ server.get('/',function(req,res){
           }else {
             myShopper = data1[0];
           }
-          let sql2 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;';
+          let sql2 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+reqUrl.userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;';
           conn.query(sql2,function(err,data2){
             if(err){
               console.log(err.code);
-              console.log('data2错了');
             }else {
-              console.log('data2')
               console.log(data2);
               like_books = data2;
               // let sql3 = 'SELECT booklike.*,shopper.shopperImg,shopper.shopperName FROM booklike,shopper where booklike.userId="'+userId+'" and likeType="店铺" and booklike.userId=shopper.userId';
-              let sql3 = 'SELECT shopper.userId,shopper.shopperImg,shopper.shopperName FROM shopper where userId in (SELECT storeId FROM booklike where userId="'+userId+'" and likeType="店铺");';
+              let sql3 = 'SELECT shopper.userId,shopper.shopperImg,shopper.shopperName FROM shopper where userId in (SELECT storeId FROM booklike where userId="'+reqUrl.userId+'" and likeType="店铺");';
               conn.query(sql3,function(err,data3){
                 console.log(sql3);
                 if(err){
                   console.log(err.sqlMessage);
-                  console.log('data3错了');
                 }else {
-                  console.log("data3");
                   console.log(data3);
                   like_stores = data3;
-                  res.send({myShopper,like_books,like_stores});
+                  res.send({status: 'success',myShopper,like_books,like_stores});
                 }
               })
             }
@@ -388,13 +360,9 @@ server.get('/',function(req,res){
         getVisitDetails_time = TIME();
       }
       sql = 'select DISTINCT(loginlog.userId),user.userName,COUNT(loginlog.userId) from loginlog,user where loginTime>"'+getVisitDetails_time+'" and loginlog.userId=user.userId;';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          res.send({status:'success',data:data});
-        }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        res.send({status:'success',data:data});
       })
       break;
     // 用户详情接口
@@ -407,19 +375,15 @@ server.get('/',function(req,res){
           if(adminA.split('_')[1]=="super") {
             // 超级管理员
             sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId;';
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
-                console.log('成功');
-                console.log(data);
-                if(data.length>0){
-                  for(var i=0,len=data.length;i<len;i++) {
-                    data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
-                  }
+            HANDLESQL(conn,sql,function(data){
+              console.log('成功');
+              console.log(data);
+              if(data.length>0){
+                for(var i=0,len=data.length;i<len;i++) {
+                  data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
                 }
-                res.send({status: 'success',data: data});
               }
+              res.send({status: 'success',data: data});
             })
           }else {
             // 普通管理员
@@ -457,53 +421,40 @@ server.get('/',function(req,res){
           break;
       }
       sql = 'select user.*,logintimes.loginTimes,logintimes.userScore from user,logintimes where user.userId=logintimes.userId and '+user_sqlKey+'="'+user_value+'";'
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log("err:"+err);
-        }else {
-          console.log(data);
-          if(data.length>0){
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0){
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].registTime = moment(data[i].registTime).format('YYYY-MM-DD HH:mm:ss');
           }
-          res.send({status:'success',data:data});
         }
+        res.send({status:'success',data:data});
       })
       break;
     // 用户收藏的书籍（管理员端）
     case 'getBookLikes':
       sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime from bookinfo where bookId in(select bookId from booklike where userId = "'+reqUrl.userId+'" and likeType="书籍");'
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH:mm:ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH:mm:ss');
           }
-          res.send({status:'success',data:data});
         }
+        res.send({status:'success',data:data});
       })
       break;
     // 用户收藏的店铺（管理员端）
     case 'getStoreLikes':
       sql = 'select shopperName,shopperDescribe,booksNum,shopperTime from shopper where userId in(select storeId from booklike where userId = "'+reqUrl.userId+'" and likeType="店铺");'
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log('error:'+err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status:'success',data:data});
         }
+        res.send({status:'success',data:data});
       })
       break;
     // 获取店铺详情
@@ -516,19 +467,15 @@ server.get('/',function(req,res){
           if(adminA.split('_')[1]=="super") {
             // 超级管理员
             sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId;';
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log('err:'+err.sqlMessage);
-              }else {
-                console.log(data);
-                if(data.length>0){
-                  for(var i=0,len=data.length;i<len;i++){
-                    data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
-                  }
-                }
-                res.send({status: 'success',data: data});
-              }
-            })
+             HANDLESQL(conn,sql,function(data){
+               console.log(data);
+               if(data.length>0){
+                 for(var i=0,len=data.length;i<len;i++){
+                   data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
+                 }
+               }
+               res.send({status: 'success',data: data});
+             })
           }else {
             // 普通管理员
             res.send({status: 'fail',msg: '您没有查看用户详情的权限，详情请查看:权限须知'});
@@ -567,19 +514,14 @@ server.get('/',function(req,res){
       }
       console.log(store_sqlKey);
       sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId and '+store_sqlKey+'="'+store_value+'";';
-      conn.query(sql,function(err,data){
-        console.log(sql);
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0){
-            for(var i=0,len=data.length;i<len;i++){
-              data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0){
+          for(var i=0,len=data.length;i<len;i++){
+            data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH:mm:ss');
           }
-          res.send({status: 'success',data: data});
         }
+        res.send({status: 'success',data: data});
       })
       break;
     // 删除某个书店
@@ -591,23 +533,19 @@ server.get('/',function(req,res){
       //   }else {
       //
       //   }
-      })
+      // })
       break;
     // 获取书籍信息
     case 'getBookInfo':
       sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime,shopperName,bookDescribe from bookinfo,shopper where bookinfo.shopperId=shopper.userId;';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status:'success',data:data});
         }
+        res.send({status:'success',data:data});
       })
       break;
     //搜索书籍信息
@@ -633,102 +571,53 @@ server.get('/',function(req,res){
           break;
       }
       sql = 'select bookId,bookName,bookPublic,bookType,bookPrice,bookAllNum,bookTime,shopperName,bookDescribe from bookinfo,shopper where bookinfo.shopperId=shopper.userId and '+book_keySql+'="'+book_value+'";';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].bookTime = moment(data[i].bookTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status: 'success',data: data});
         }
+        res.send({status: 'success',data: data});
       })
-      break;
-    // 删除某本书籍
-    case 'delSomeBook':
-      if(req.session['adminAcount']) {
-        if(reqUrl.adminAcount==req.session['adminAcount']){
-          console.log(req.session['adminAcount']);
-          var adminA = req.session['adminAcount'];
-          console.log(adminA.split('_')[1]);
-          if(adminA.split('_')[1]=="super") {
-            // 超级管理员
-            // sql = 'select shopper.userId,shopper.shopperName,shopper.booksNum,user.userName,user.tel,user.email,shopper.shopperTime,shopper.shopperDescribe from user,shopper where user.userId=shopper.userId;';
-            // 删除bookScore,booklike,bookinfo,ask,answer
-            sql = 'delete from '
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log('err:'+err.sqlMessage);
-              }else {
-                console.log(data);
-                res.send({status: 'success',data: data});
-              }
-            })
-          }else {
-            // 普通管理员
-            res.send({status: 'fail',msg: '您没有查看用户详情的权限，详情请查看:权限须知'});
-          }
-        }else {
-          // 账号不对的情况
-          res.send({status:'fail',msg: '您登录的账号有变，请立刻确认是否有被盗号。如非盗号，请确保不要同时登录多个账号'});
-        }
-      }else {
-        // 没有登录或登录过期的情况
-        res.send({status: 'fail',msg: '还没有登录哦，请刷新登录'});
-      }
       break;
     // 获取所有的书籍评论
     case 'getAllBookComment':
       sql = 'SELECT ask.bookId,bookinfo.bookName,ask.shopperId,askUserId,askUserName,askTime,askContent FROM ask,bookinfo where ask.bookId=bookinfo.bookId';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].askTime = moment(data[i].askTime).format('YYYY-MM-DD HH:mm:ss');
           }
-          res.send({status:'success',data: data});
         }
+        res.send({status:'success',data: data});
       })
       break;
     // 获取留言条
     case 'getMessageNote':
       sql = 'select message.*,user.userName from message,user where message.userId=user.userId;';
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status:'success',data: data});
         }
+        res.send({status:'success',data: data});
       })
       break;
     // 获取公屏语录
     case 'getScreenMsg':
       sql = 'select * from screenmsg;'
-      conn.query(sql,function(err,data){
-        if(err){
-          console.log(err.sqlMessage);
-        }else {
-          console.log(data);
-          if(data.length>0) {
-            for(var i=0,len=data.length;i<len;i++) {
-              data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
-            }
+      HANDLESQL(conn,sql,function(data){
+        console.log(data);
+        if(data.length>0) {
+          for(var i=0,len=data.length;i<len;i++) {
+            data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
           }
-          res.send({status:'success',data: data});
         }
+        res.send({status:'success',data: data});
       })
       break;
     // 删除公屏语录
@@ -741,13 +630,9 @@ server.get('/',function(req,res){
           if(adminA.split('_')[1]=="super") {
             // 超级管理员
             sql = 'DELETE FROM screenmsg WHERE msgId="'+reqUrl.msgId+'";';
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
-                console.log('删除成功');
-                res.send({status:'success',msg:'删除成功'});
-              }
+            HANDLESQL(conn,sql,function(data){
+              console.log('删除成功');
+              res.send({status:'success',msg:'删除成功'});
             })
           }else {
             // 普通管理员
@@ -778,7 +663,6 @@ server.post('/',function(req,res){
       case 'storeInfo':
         // 将店存进去
         let file = req.files[0];
-        // console.log(pathLib.parse(req.files[0].originalname).ext);
         let store_sql_name = file.filename + pathLib.parse(file.originalname).ext;
         let newName = file.path + pathLib.parse(file.originalname).ext;
         fs.rename(file.path,newName,function(err){
@@ -1217,4 +1101,4 @@ server.post('/',function(req,res){
   }
 })
 server.use(expressStatic('./main'));
-server.listen(8080);
+server.listen(8000);

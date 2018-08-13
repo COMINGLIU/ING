@@ -62,7 +62,7 @@
                 for(var i=0,len=data.length;i<len;i++) {
                   var item = doc.createElement('li');
                   item.className = 'transfrom-speedup';
-                  item.innerHTML = '<a href="detail.html?bookId='+data[i].bookId+'" target="blank"><div class="img"><img src="imgs/storeImg/'+data[i].bookSrc+'"></div></a><i class="isconfont icon-heart-fill"></i><h3 class="book-name">'+data[i].bookName+'</h3><p class="book-describe">'+data[i].bookDescribe+'</p><p class="book-public">'+data[i].bookPublic+'</p><p>库存：<span class="book-allNum">'+data[i].bookAllNum+'</span>本</p><p>单价：￥<span class="book-price">'+data[i].bookPrice+'</span></p>';
+                  item.innerHTML = '<a href="detail.html?bookId='+data[i].bookId+'" target="blank"><div class="img"><img src="imgs/storeImg/'+data[i].bookSrc+'"></div></a><i class="iconfont icon-heart-fill"></i><h3 class="book-name">'+data[i].bookName+'</h3><p class="book-describe">'+data[i].bookDescribe+'</p><p class="book-public">'+data[i].bookPublic+'</p><p>库存：<span class="book-allNum">'+data[i].bookAllNum+'</span>本</p><p>单价：￥<span class="book-price">'+data[i].bookPrice+'</span></p>';
                   frag.appendChild(item);
                 }
                 oBookUl.appendChild(frag);

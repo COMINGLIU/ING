@@ -151,11 +151,10 @@
 			for(var i=0,len=searchData.length-1;i<len;i++) {
 				searchValue[searchData[i].split('=')[0]] = searchData[i].split('=')[1];
 				keyWord[searchData[i].split('=')[0]].innerHTML = searchData[i].split('=')[1];
-				}
+			}
 			this.getAjaxModule(function(ajax){
 				ajax({
 					url:'/',
-					// data: {act:'searchBook',bookName: sentData},
 					data: {
 						act: 'searchBook',
 						bookName: searchValue.bookName,
@@ -206,7 +205,7 @@
       // 点击收藏
       Search.prototype.collectBook();
 		},
-    // 
+    //
 		getAddStoreModule: function(){
 			seajs.use('addStore.js',function(ADDSTORE){
 			})

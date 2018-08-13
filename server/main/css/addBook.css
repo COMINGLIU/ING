@@ -200,6 +200,11 @@ ul#uped {
 	line-height: 30px;
 	color: #fff;
 	cursor: default;
+  transition-duration: .3s;
+}
+#add input:focus,
+#add textarea:focus {
+  border-bottom: 1px solid #999;
 }
 #add textarea {
 	height: 50px;
