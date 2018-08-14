@@ -44,7 +44,8 @@ server.get('/',function(req,res){
   switch(reqUrl.act){
     // 获取主页的书籍
     case 'indexBook':
-      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,shopperName,schoolName FROM bookinfo,user,shopper where bookinfo.shopperId=user.userId and bookinfo.shopperId=shopper.userId;';
+    // 挑选最新10本
+      sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,shopperName,schoolName FROM bookinfo,user,shopper where bookinfo.shopperId=user.userId and bookinfo.shopperId=shopper.userId order by bookinfo.bookId DESC LIMIT 20;';
       console.log(sql);
       HANDLESQL(conn,sql,function(data){
         console.log('成功');

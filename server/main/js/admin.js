@@ -21,6 +21,7 @@
       var adminUser;
       if(window.sessionStorage.getItem('adminUser')) {
         adminUser = window.sessionStorage.getItem('adminUser');
+        console.log(adminUser);
         doc.getElementById('loginBox').style.display = 'none';
       }
     },

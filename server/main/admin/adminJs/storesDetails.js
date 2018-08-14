@@ -28,6 +28,7 @@
               }
             }else {
               alert(res.msg);
+              window.sessionStorage.removeItem('adminUser');
             }
           }
         })
