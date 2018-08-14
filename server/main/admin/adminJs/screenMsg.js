@@ -21,7 +21,7 @@
               if(data.length>0) {
                 // 渲染数据
                 sreenMsg.renderData(data,oMsgUl);
-                sreenMsg.openAdd();
+                sreenMsg.openAdd(data);
                 sreenMsg.delMsg(data);
               }
             }else {
@@ -41,7 +41,7 @@
       oUl.appendChild(frag);
     },
     // 打开add
-    openAdd: function(){
+    openAdd: function(data){
       var oAddBtn = doc.querySelector('#addMsg .top'),
           oAddBtnI = doc.querySelector('#addMsg .top i'),
           oAddBox = doc.querySelector('#addMsg .bottom'),
@@ -88,6 +88,8 @@
                   item.innerHTML = '<div class="msg">'+oAddContent.value+'</div><div class="time">'+sreenMsg.getNowTime()+'<i class="iconfont icon-lajixiang"></i></div>';
                   oMsgUl.appendChild(item);
                   oAddContent.value = '';
+                  // 添加删除事件
+                  sreenMsg.delMsg(data);
                 }else {
                   alert(res.msg);
                 }

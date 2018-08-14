@@ -58,15 +58,17 @@
 								if(res.status =='success'){
 									doc.getElementById('userName').innerHTML = res.shopperName+' ('+oUserName+')';
 									var data = res.data;
-									// 渲染数据
-									AddBook.prototype.renderData(data);
-									// 给每个li绑定删除书籍的操作
-									AddBook.prototype.delBook();
-									// 给每个li绑定修改书籍信息的操作
-									AddBook.prototype.editBookInfo();
+                  if(data.length>0) {
+                    // 渲染数据
+  									AddBook.prototype.renderData(data);
+                    // 给每个li绑定删除书籍的操作
+  									AddBook.prototype.delBook();
+  									// 给每个li绑定修改书籍信息的操作
+  									AddBook.prototype.editBookInfo();
+                  }
 									// 添加书籍
 									AddBook.prototype.addBook(data);
-									//挑战到store
+									//跳转到store
 									AddBook.prototype.gotoStore(oUserId);
 								}else {
 									alert('您请求的信息不存在');
@@ -208,9 +210,11 @@
 							var res = JSON.parse(xhr.responseText);
 							console.log(res);
 							if(res.status=='success'){
-								alert(res.msg);
 								oForm.reset();
 								book_img.src = '';
+                // 创建一个节点
+                history.go(0);
+                doc.getElementById('uped').scrollTop = doc.getElementById('uped').scrollHeight;
 							}else {
 								alert(res.msg);
 							}

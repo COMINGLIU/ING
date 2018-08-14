@@ -39,12 +39,13 @@ server.use(storeInfoMulter.any());
 server.get('/',function(req,res){
   console.log('url'+req.url);
   let reqUrl = req.query;
-  let sql="";
+  let sql = "";
   console.log(reqUrl);
   switch(reqUrl.act){
     // 获取主页的书籍
     case 'indexBook':
       sql = 'SELECT bookId,bookSrc,bookName,bookPrice,shopperId,shopperName,schoolName FROM bookinfo,user,shopper where bookinfo.shopperId=user.userId and bookinfo.shopperId=shopper.userId;';
+      console.log(sql);
       HANDLESQL(conn,sql,function(data){
         console.log('成功');
         res.send(data);
@@ -270,7 +271,7 @@ server.get('/',function(req,res){
       break;
     // 个人中心
     case 'getUserCenterInfo':
-      let sql = 'SELECT * FROM shopper where userId="'+reqUrl.userId+'";';
+      sql = 'SELECT * FROM shopper where userId="'+reqUrl.userId+'";';
       // let getUserCenterInfo_sql0 = 'SELECT * FROM shopper where userId="'+reqUrl.userId+'";',
       //     getUserCenterInfo_sql1 = 'SELECT booklike.*,bookinfo.bookId,bookinfo.bookSrc,bookinfo.bookName FROM booklike,bookinfo where userId="'+reqUrl.userId+'" and likeType="书籍" and booklike.bookId=bookinfo.bookId;',
       //     getUserCenterInfo_sql2 = 'SELECT shopper.userId,shopper.shopperImg,shopper.shopperName FROM shopper where userId in (SELECT storeId FROM booklike where userId="'+reqUrl.userId+'" and likeType="店铺");';
@@ -597,7 +598,7 @@ server.get('/',function(req,res){
     // 获取留言条
     case 'getMessageNote':
       sql = 'select message.*,user.userName from message,user where message.userId=user.userId;';
-      HANDLESQL(conn,sql,function(){
+      HANDLESQL(conn,sql,function(data){
         console.log(data);
         if(data.length>0) {
           for(var i=0,len=data.length;i<len;i++) {
@@ -671,22 +672,21 @@ server.post('/',function(req,res){
             res.send('图片上传失败');
           }else {
             sql = 'INSERT INTO shopper(userId,shopperName,shopperDescribe,shopperImg,booksNum) VALUES("'+comingData.userId+'","'+comingData.storeName+'","'+comingData.storeDescribe+'","'+store_sql_name+'","0");';
-            conn.query(sql,function(err,data){
-              if(err){
-                console.log('上传失败:'+err);
-                res.send({status:'fail',msg:err});
-              }else{
+            let sql2 = "UPDATE user SET user.isSeller='1' where user.userId='"+comingData.userId+"';";
+            new Promise((resolve,reject) => {
+              HANDLESQL(conn,sql,function(data){
                 console.log('上传成功');
-                let sql2 = "UPDATE user SET user.isSeller='1' where user.userId='"+comingData.userId+"';";
-                conn.query(sql2,function(err,data2){
-                  if(err){
-                    console.log('更新店铺信息失败');
-                  }else {
-                    res.send({status:'success'});
-                    console.log('上传成功');
-                  }
-                })
-              }
+                resolve();
+              })
+            })
+            .then(() => {
+              HANDLESQL(conn,sql2,function() {
+                console.log('上传成功');
+                res.send({status:'success'});
+              })
+            })
+            .catch(err => {
+              console.log(err);
             })
           }
         });
@@ -703,59 +703,45 @@ server.post('/',function(req,res){
             console.log('图片上传成功');
             // 先传入出版社和类型
             console.log('看有没有类型');
-            let sql0 = 'SELECT bookType from booktype where bookType="'+comingData.bookClass+'"';
-            conn.query(sql0,function(err,data0){
-              if(err){
-                console.log(err.sqlMessage);
-              }else {
+            let sql0 = 'SELECT bookType from booktype where bookType="'+comingData.bookClass+'";',
+                sql1 = 'INSERT INTO bookType(bookType) VALUES("'+comingData.bookClass+'");',
+                sql2 = 'SELECT publish from bookpublic where publish="'+comingData.bookPublic+'";',
+                sql3 = 'INSERT INTO bookpublic(publish) VALUES("'+comingData.bookPublic+'");',
+                sql4 = 'INSERT INTO bookinfo(bookName,bookSrc,bookType,bookAllNum,bookPublic,bookPrice,bookDescribe,shopperId) VALUES("'+comingData.bookName+'","'+addBook_sqlName+'","'+comingData.bookClass+'","'+comingData.bookAllNum+'","'+comingData.bookPublic+'","'+comingData.bookPrice+'","'+comingData.bookDes+'","'+comingData.shopperId+'");',
+                sql5 = 'UPDATE shopper SET booksNum=booksNum+1 where shopper.userId="'+comingData.shopperId+'";';
+
+            Promise.all([
+              HANDLESQL(conn,sql0,function(data0){
                 if(data0.toString()==""){
                   console.log('没有对应的书籍类型');
-                  let sql1 = 'INSERT INTO bookType(bookType) VALUES("'+comingData.bookClass+'");';
-                  conn.query(sql1,function(err,data1){
-                    if(err){
-                      console.log(err.sqlMessage);
-                    }else {
-                      console.log('已经插入对应的书籍类型');
-                    }
+                  HANDLESQL(conn,sql1,function(){
+                    console.log('已经插入对应的书籍类型');
                   })
                 }
-                let sql2 = 'SELECT publish from bookpublic where publish="'+comingData.bookPublic+'";';
+              }),
+              HANDLESQL(conn,sql2,function(data2){
                 console.log('看有没有出版社');
-                conn.query(sql2,function(err,data2){
-                  if(err){
-                    console.log(err.sqlMessage);
-                  }else {
-                    if(data2.toString()==''){
-                      console.log('没有对应的出版社');
-                      let sql3 = 'INSERT INTO bookpublic(publish) VALUES("'+comingData.bookPublic+'");';
-                      conn.query(sql3,function(err,data3){
-                        if(err){
-                          console.log(err.sqlMessage);
-                        }else{
-                          console.log('已经插入对应的出版社');
-                        }
-                      })
-                    }
-                    let sql4 = 'INSERT INTO bookinfo(bookName,bookSrc,bookType,bookAllNum,bookPublic,bookPrice,bookDescribe,shopperId) VALUES("'+comingData.bookName+'","'+addBook_sqlName+'","'+comingData.bookClass+'","'+comingData.bookAllNum+'","'+comingData.bookPublic+'","'+comingData.bookPrice+'","'+comingData.bookDes+'","'+comingData.shopperId+'");';
-                    conn.query(sql4,function(err,data4){
-                      if(err){
-                        console.log(err.sqlMessage);
-                      }else {
-                        console.log('书籍插入成功');
-                        let sql5 = 'UPDATE shopper SET booksNum=booksNum+1 where shopper.userId="'+comingData.shopperId+'";';
-                        conn.query(sql5,function(err,data5){
-                          if(err){
-                            console.log(err.sqlMessage);
-                          }else {
-                            console.log('shopper更新成功');
-                            res.send({status:'success',msg:'书籍插入成功'});
-                          }
-                        })
-                      }
-                    })
-                  }
-                })
-              }
+                if(data2.toString()==''){
+                  console.log('没有对应的出版社');
+                  let sql3 = 'INSERT INTO bookpublic(publish) VALUES("'+comingData.bookPublic+'");';
+                  HANDLESQL(conn,sql3,function(data3){
+                    console.log('已经插入对应的出版社');
+                  })
+                }
+              }),
+              HANDLESQL(conn,sql4,function(data4){
+                console.log('书籍插入成功');
+              }),
+              HANDLESQL(conn,sql5,function(data5){
+                console.log('shopper更新成功');
+                res.send({status:'success',msg:'书籍插入成功'});
+              })
+            ])
+            .then(() => {
+              console.log('插入成功');
+            })
+            .catch(err => {
+              console.log(err);
             })
           }
         })
@@ -785,13 +771,9 @@ server.post('/',function(req,res){
               console.log(editBookInfo_str);
               sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
               console.log(sql);
-              conn.query(sql,function(err,data){
-                if(err){
-                  console.log(err.sqlMessage);
-                }else {
-                  console.log('修改成功啦');
-                  res.send({status:'success',msg:'修改成功'});
-                }
+              HANDLESQL(conn,sql,function(data){
+                console.log('修改成功啦');
+                res.send({status:'success',msg:'修改成功'});
               })
             }
           })
@@ -799,13 +781,9 @@ server.post('/',function(req,res){
           editBookInfo_str = editBookInfo_str.substr(0,editBookInfo_str.length-1);
           sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
           console.log('无file：'+sql);
-          conn.query(sql,function(err,data){
-            if(err){
-              console.log(err.sqlMessage);
-            }else {
-              console.log('修改成功啦');
-              res.send({status:'success',msg:'修改成功'});
-            }
+          HANDLESQL(conn,sql,function(data){
+            console.log('修改成功啦');
+            res.send({status:'success',msg:'修改成功'});
           })
         }
         break;
@@ -944,67 +922,65 @@ server.post('/',function(req,res){
         // 添加书籍评论
         case 'addBookComment':
           let addBookComment_sql0 = 'SELECT shopperId from bookinfo where bookId="'+POST.bookId+'";';
-          conn.query(addBookComment_sql0,function(err,data){
-            if(err){
-              console.log(err.sqlMessage);
-            }else {
-              console.log(data);
-              let shopperId = data[0].shopperId;
-              sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.askUserId+'","'+POST.askUserName+'","'+POST.askContent+'");';
-              conn.query(sql,function(err,data2){
-                console.log(sql);
-                if(err) {
-                  console.log(err.sqlMessage);
-                }else {
-                  console.log('评论成功');
-                  // let addBookComment_sql1 = 'SELECT askId FROM ask where '
-                  console.log(data2);
-                  res.send({status: 'success',msg: '评论成功',askId:data2.insertId});
-                }
-              })
-            }
+          new Promise((resolve,reject) => {
+            HANDLESQL(conn,addBookComment_sql0,function(data){
+              if(!data){
+                reject();
+              }else {
+                resolve(data);
+              }
+            })
+          })
+          .then(data => {
+            let shopperId = data[0].shopperId;
+            sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.askUserId+'","'+POST.askUserName+'","'+POST.askContent+'");';
+            HANDLESQL(conn,sql,function(data2){
+              console.log(data2);
+              console.log('评论成功');
+              res.send({status: 'success',msg: '评论成功',askId:data2.insertId});
+            })
+          })
+          .catch(err => {
+            console.log(err);
           })
           break;
         case 'replyBookComment':
           let replyBookComment_sql0 = 'SELECT shopperId from bookinfo where bookId="'+POST.bookId+'";';
-          conn.query(replyBookComment_sql0,function(err,data){
-            if(err){
-              console.log(err.sqlMessage);
-            }else {
-              console.log(data);
-              let shopperId = data[0].shopperId;
-              sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent,toWhoId,toWhoName) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.replyId+'","'+POST.replyName+'","'+POST.replyContent+'","'+POST.toWhoId+'","'+POST.toWhoName+'");';
-              conn.query(sql,function(err,data2){
-                console.log(sql);
-                if(err) {
-                  console.log(err.sqlMessage);
-                }else {
-                  console.log('评论成功');
-                  res.send({status: 'success',msg: '评论成功'});
-                }
-              })
-            }
+          new Promise((resolve,reject) => {
+            HANDLESQL(conn,replyBookComment_sql0,function(data){
+              if(data) {
+                resolve(data);
+              }else {
+                reject();
+              }
+            })
+          })
+          .then(data => {
+            let shopperId = data[0].shopperId;
+            sql = 'INSERT INTO ask(bookId,shopperId,askUserId,askUserName,askContent,toWhoId,toWhoName) VALUES("'+POST.bookId+'","'+shopperId+'","'+POST.replyId+'","'+POST.replyName+'","'+POST.replyContent+'","'+POST.toWhoId+'","'+POST.toWhoName+'");';
+            HANDLESQL(conn,sql,function(data2){
+              console.log('评论成功');
+              res.send({status: 'success',msg: '评论成功'});
+            })
+          })
+          .catch(err => {
+            console.log(err);
           })
           break;
         case 'modifyUserInfo':
           console.log(POST);
-          sql = 'UPDATE user SET userName="'+POST.nickName+'",schoolName="'+POST.college+'" where userId="'+POST.userId+'";';
-          conn.query(sql,function(err,data1){
-            if(err){
-              console.log(err.code);
-            }else {
-              console.log(data1);
-              let sql2 = 'UPDATE shopper SET shopperName="'+POST.storeName+'",shopperDescribe="'+POST.storeSlogan+'" where userId="'+POST.userId+'";';
-              conn.query(sql2,function(err,data2){
-                if(err){
-                  console.log(err.code);
-                  res.send({status:'fail',msg:'500'});
-                }else {
-                  console.log(data2);
-                  res.send({status: 'success'});
-                }
-              })
-            }
+          let modifyUserInfo_sql0 = 'UPDATE user SET userName="'+POST.nickName+'",schoolName="'+POST.college+'" where userId="'+POST.userId+'";';
+              modifyUserInfo_sql2 = 'UPDATE shopper SET shopperName="'+POST.storeName+'",shopperDescribe="'+POST.storeSlogan+'" where userId="'+POST.userId+'";';
+          Promise.all([
+            HANDLESQL(conn,modifyUserInfo_sql0),
+            HANDLESQL(conn,modifyUserInfo_sql2)
+          ])
+          .then(() => {
+            res.send({status: 'success'});
+          })
+          .catch(err => {
+            console.log(err);
+            res.send({status:'fail',msg:'500'});
           })
           break;
         case 'sendMsg':
@@ -1015,12 +991,8 @@ server.post('/',function(req,res){
           }else {
             sql = 'INSERT INTO message(msg) VALUES("'+msg+'");';
           }
-          conn.query(sql,function(err,data){
-            if(err){
-              console.log('err:'+err.code);
-            }else {
-              res.send({status:'success',msg:'感谢您的留言，小编已收到'});
-            }
+          HANDLESQL(conn,sql,function(){
+            res.send({status:'success',msg:'感谢您的留言，小编已收到'});
           })
           break;
         case 'adminLogin':
@@ -1075,13 +1047,9 @@ server.post('/',function(req,res){
               if(adminA.split('_')[1]=="super") {
                 // 超级管理员
                 sql = 'INSERT INTO screenmsg(msg) VALUES("'+POST.msg+'");';
-                conn.query(sql,function(err,data){
-                  if(err){
-                    console.log(err.sqlMessage);
-                  }else {
-                    console.log('添加成功');
-                    res.send({status:'success',msg: '添加成功'});
-                  }
+                HANDLESQL(conn,sql,function(){
+                  console.log('添加成功');
+                  res.send({status:'success',msg: '添加成功'});
                 })
               }else {
                 // 普通管理员
