@@ -11,6 +11,8 @@ user guid:  https://comingliu.github.io/ING/server/main/asking.html
 
 后台： node.js （代码： server.js）
 
+暂时托管至： http://120.79.45.44:8000/index.html
+
 
 
 
