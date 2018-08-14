@@ -1,4 +1,4 @@
-# ING (inroduce)
+# ING (introduce)
 something that's doing……
 
 user guid:  https://comingliu.github.io/ING/server/main/asking.html
