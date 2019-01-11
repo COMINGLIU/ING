@@ -17,7 +17,7 @@ const server = express();
 const conn  = mysql.createConnection({
   hostname: 'localhost',
   user: 'root',
-  password: 'kkxxdgmyt67LIUQIONG',
+  password: '180504',
   database: 'bookstore'
 });
 // 获取当前时间的函数
