@@ -184,7 +184,7 @@ ul#uped {
 	background-color: rgba(0,0,0,.5);
 	transition-duration: .3s;
 	z-index: 10;
-	color: #fff;
+	color: #000;
 }
 #add-img {
 	overflow: hidden;
@@ -192,7 +192,6 @@ ul#uped {
 	width: 150px;
 	height: 150px;
 	margin: auto;
-	/* background-color: #; */
 	border: 1px solid #000;
 }
 #add-img img {
@@ -246,7 +245,7 @@ ul#uped {
 	border-bottom: 1px solid #999;
 	background-color: transparent;
 	line-height: 30px;
-	color: #fff;
+	color: #000;
 	cursor: default;
  	transition-duration: .3s;
 }

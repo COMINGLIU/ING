@@ -145,7 +145,7 @@ server.get('/',function(req,res){
       break;
     // 获取书籍详情
     case 'getBookDetail':
-      sql = 'SELECT bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+reqUrl.bookId+'";';
+      sql = 'SELECT bookSrc,bookName,bookPrice,bookAllNum,bookPublic,bookDescribe,tel,schoolName FROM bookinfo,user where bookinfo.shopperId=user.userId and bookId="'+reqUrl.bookId+'";';
       new Promise((resolve,reject) => {
         HANDLESQL(conn,sql,function(data){
           resolve(data);
@@ -191,7 +191,7 @@ server.get('/',function(req,res){
         console.log(data);
         if(data.length>0){
           for(var i=0,len=data.length;i<len;i++) {
-            data[i].shopperTime = moment(data.shopperTime).format('YYYY-MM-DD HH-mm-ss');
+            data[i].shopperTime = moment(data[i].shopperTime).format('YYYY-MM-DD HH-mm-ss');
           }
         }
         res.send({status: 'success',data:data});
@@ -599,14 +599,32 @@ server.get('/',function(req,res){
     // 获取留言条
     case 'getMessageNote':
       sql = 'select message.*,user.userName from message,user where message.userId=user.userId;';
-      HANDLESQL(conn,sql,function(data){
-        console.log(data);
-        if(data.length>0) {
-          for(var i=0,len=data.length;i<len;i++) {
-            data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
+      getMessageNoteSql2 = 'select * from message where userId IS NULL';
+      new Promise((resolve,reject) =>{
+        HANDLESQL(conn,sql,function(data){
+          console.log(data);
+          if(data.length>0) {
+            for(var i=0,len=data.length;i<len;i++) {
+              data[i].msgTime = moment(data[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
+            }
           }
-        }
-        res.send({status:'success',data: data});
+          resolve(data);
+        })
+      })
+      .then(data => {
+        HANDLESQL(conn,getMessageNoteSql2,function(data2){
+          console.log(data2);
+          if(data2.length>0) {
+            for(var i=0,len=data2.length;i<len;i++) {
+              data2[i].msgTime = moment(data2[i].msgTime).format('YYYY-MM-DD HH-mm-ss');
+            }
+          }
+          res.send({status:'success',nameData: data,noNameData:data2});
+        })
+      })
+      .catch(err => {
+        console.log('获取留言条失败');
+        res.send({status:'fail',msg: '获取留言条失败'});
       })
       break;
     // 获取公屏语录
@@ -763,10 +781,15 @@ server.post('/',function(req,res){
             editBookInfo_str +=key+'="'+comingData[key]+'",';
           }
         }
+        // 如果有图片
         if(req.files[0]){
           editBookInfo_file = req.files[0];
           editBookInfo_sqlimgName = editBookInfo_file.filename+pathLib.parse(editBookInfo_file.originalname).ext;
           editBookInfo_imgNewName = editBookInfo_file.path+pathLib.parse(editBookInfo_file.originalname).ext;
+          console.log('路径');
+          console.log(editBookInfo_file.path);
+          console.log('文件名');
+          console.log(editBookInfo_imgNewName);
           fs.rename(editBookInfo_file.path,editBookInfo_imgNewName,function(err){
             if(err){
               console.log('图片修改失败');
@@ -774,15 +797,38 @@ server.post('/',function(req,res){
               console.log('图片修改成功');
               editBookInfo_str+='bookSrc="'+editBookInfo_sqlimgName+'"';
               console.log(editBookInfo_str);
-              sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
-              console.log(sql);
-              HANDLESQL(conn,sql,function(data){
-                console.log('修改成功啦');
-                res.send({status:'success',msg:'修改成功'});
+              // 删除原来的图片
+              let deleteOldBookImgSql = 'select bookSrc from bookinfo where bookId="'+comingData.bookId+'";',
+                  //修改数据库 
+                  sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
+              new Promise((resolve,reject) =>{
+                HANDLESQL(conn,deleteOldBookImgSql,function(data){
+                  console.log('原来的图片');
+                  console.log(data);
+                  if(data){
+                    resolve(data[0].bookSrc);
+                  }
+                })
+              })
+              .then(data =>{
+                // 删除原来的图片
+                fs.unlink(req.files[0].destination+'\\'+data,function(){
+                  console.log('原来图片删除成功');
+                  // 修改数据库
+                  HANDLESQL(conn,sql,function(data){
+                    console.log('数据库修改成功啦');
+                    res.send({status:'success',msg:'修改成功'});
+                  })
+                })
+              })
+              .catch(err => {
+                console.log('修改失败');
+                res.send({status: 'fail',msg: '修改失败'});
               })
             }
           })
         }else {
+          // 没有图片的情况
           editBookInfo_str = editBookInfo_str.substr(0,editBookInfo_str.length-1);
           sql = "update bookinfo set "+editBookInfo_str+' where bookId="'+comingData.bookId+'";';
           console.log('无file：'+sql);

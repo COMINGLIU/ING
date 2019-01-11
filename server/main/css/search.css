@@ -104,6 +104,9 @@
 #content .books li a {
 	color: #000;
 }
+#content .books a:hover {
+	color: #666;
+}
 #content .books div {
 	overflow: hidden;
 	width: 200px;

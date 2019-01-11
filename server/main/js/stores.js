@@ -42,11 +42,11 @@
 						// 渲染数据
 						if(data.length>0){
 							var frag = doc.createDocumentFragment();
-											for(var i=0,len=data.length;i<len;i++) {
-												var item = doc.createElement('li');
-								item.innerHTML = '<div class="store-info"><a target="_blank" href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span><i class="iconfont icon-heart-fill"></i></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p></div><p class="store-time">'+data[i].shopperTime+'</p>';
-												frag.appendChild(item);
-											}
+							for(var i=0,len=data.length;i<len;i++) {
+								var item = doc.createElement('li');
+								item.innerHTML = '<div class="store-info"><a target="_blank" href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p><P>收藏<i class="iconfont icon-heart-fill"></i></P></div><p class="store-time">'+data[i].shopperTime+'</p>';
+								frag.appendChild(item);
+							}
 							storeUl.appendChild(frag);
 						}
 						// 添加书籍收藏
@@ -60,7 +60,7 @@
 		},
 		// 添加书店收藏
 		addStoreLike: function(){
-			var aLikeBtn = doc.querySelectorAll('#store-list .store-name i'),
+			var aLikeBtn = doc.querySelectorAll('#store-list i.icon-heart-fill'),
 			 		aStoreHref = doc.querySelectorAll('.store-info a');
 			for(var i=0,len=aLikeBtn.length;i<len;i++) {
 				(function(i){
@@ -97,7 +97,7 @@
 								var con = confirm('登录才能保存您收藏的书店，登录吗?');
 								if(con) {
 									doc.getElementById('regitLog').style.display = 'block';
-	    						doc.getElementsByClassName('login')[0].style.display = 'block';
+	    							doc.getElementsByClassName('login')[0].style.display = 'block';
 								}
 							}
 						})

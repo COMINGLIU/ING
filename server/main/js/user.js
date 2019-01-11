@@ -119,7 +119,22 @@
 						oRegistLogin.style.display = 'block';
 						oLogin.style.display = 'block';
 					}
-				})
+				});
+				document.onclick = function(e){
+					e = e||window.e;
+					console.log('document');
+					e.stopPropagation?e.stopPropagation():e.cancelBubble = true;
+					// 重新获取一下user，否则会被全局变量null覆盖
+					user = JSON.parse(cookieModule.get('user'));
+					console.log(user);
+					if(user) {
+						oWelPage.style.height = '0';
+					}else {
+						// 显示登录框
+						oRegistLogin.style.display = 'block';
+						oLogin.style.display = 'block';
+					}
+				};
 			})
 			User.prototype.doEvent.addEvent(oWelBtn,'mouseenter',function(){
 				oWelBtn.style.transform = "translate(20px)";

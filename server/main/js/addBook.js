@@ -212,9 +212,10 @@
 							if(res.status=='success'){
 								oForm.reset();
 								book_img.src = '';
-                // 创建一个节点
-                history.go(0);
-                doc.getElementById('uped').scrollTop = doc.getElementById('uped').scrollHeight;
+                				// 创建一个节点
+                				history.go(0);
+								// doc.getElementById('uped').scrollTop = doc.getElementById('uped').scrollHeight;
+								document.documentElement.scrollTop = doc.getElementById('uped').scrollHeight;
 							}else {
 								alert(res.msg);
 							}
@@ -262,19 +263,19 @@
 			for(var i=0,len=aEditBtns.length;i<len;i++) {
 				(function(i){
 					var aBookInput = bookList[i].getElementsByTagName("input"),
-							oBookTextarea = bookList[i].getElementsByTagName("textarea")[0],
-							aEditSubResetBtn = bookList[i].getElementsByTagName("button"),
-							aBookImgLi = bookList[i].querySelector('li:first-child'),
-							bookId = booksInfo.href[i].href.split('?')[1].split('=')[1],
-							bookListInfo = {
-								bookSrc: booksInfo.imgFile[i],
-								bookName: booksInfo.name[i],
-								bookAllNum: booksInfo.num[i],
-								bookPublic: booksInfo.public[i],
-								bookType: booksInfo.class[i],
-								bookPrice: booksInfo.price[i],
-								bookDescribe: booksInfo.describe[i]
-							};
+						oBookTextarea = bookList[i].getElementsByTagName("textarea")[0],
+						aEditSubResetBtn = bookList[i].getElementsByTagName("button"),
+						aBookImgLi = bookList[i].querySelector('li:first-child'),
+						bookId = booksInfo.href[i].href.split('?')[1].split('=')[1],
+						bookListInfo = {
+							bookSrc: booksInfo.imgFile[i],
+							bookName: booksInfo.name[i],
+							bookAllNum: booksInfo.num[i],
+							bookPublic: booksInfo.public[i],
+							bookType: booksInfo.class[i],
+							bookPrice: booksInfo.price[i],
+							bookDescribe: booksInfo.describe[i]
+						};
 					// 修改书籍信息
 					var newEditBookInfo,newImgFile;
 					// 创建formdata
@@ -360,7 +361,7 @@
 							aBookInput[j].style.borderBottom = '0';
 							aEditSubResetBtn[0].style.width = '0';
 							aEditSubResetBtn[1].style.width = '0';
-              aBookImgLi.style.visibility = 'hidden';
+              				aBookImgLi.style.visibility = 'hidden';
 							// 重新渲染数据
 						}
 					};
@@ -393,27 +394,27 @@
 		},
 		// 创建ajax的对象实例
 		createXHR: function(){
-				if(typeof XMLHttpRequest!="undefined"){
-						return new XMLHttpRequest();
-				}else if(typeof ActiveXObject!="undefined"){
-						if(typeof arguments.callee.activeXString!="string"){
-								// 兼容到IE7之前的版本
-								var versions=['MSXML2.XMLHttp.6.0','MSXML2.XMLHttp.3.0','MSXML2.XMLHttp'];
-								for(var i=0,len=versions.length;i<len;i++) {
-										try{
-												new ActiveXObject(versions[i]);
-												arguments.callee.activeXString=versions[i];
-												break;
-										}catch(ex){
-												throw new Error();
-										}
-								}
-						}
-						// 兼容IE
-						return new ActiveXObject(arguments.callee.activeXString);
-				}else {
-						throw new Error("No XHR object available");
+			if(typeof XMLHttpRequest!="undefined"){
+				return new XMLHttpRequest();
+			}else if(typeof ActiveXObject!="undefined"){
+				if(typeof arguments.callee.activeXString!="string"){
+					// 兼容到IE7之前的版本
+					var versions=['MSXML2.XMLHttp.6.0','MSXML2.XMLHttp.3.0','MSXML2.XMLHttp'];
+					for(var i=0,len=versions.length;i<len;i++) {
+							try{
+									new ActiveXObject(versions[i]);
+									arguments.callee.activeXString=versions[i];
+									break;
+							}catch(ex){
+									throw new Error();
+							}
+					}
 				}
+				// 兼容IE
+				return new ActiveXObject(arguments.callee.activeXString);
+			}else {
+				throw new Error("No XHR object available");
+			}
 		},
 		getAjaxModule: function(cb){
 			seajs.use('ajax.js',function(ajax){

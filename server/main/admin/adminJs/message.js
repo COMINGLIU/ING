@@ -19,10 +19,11 @@
             res = JSON.parse(res);
             console.log(res);
             if(res.status=='success'){
-              var data = res.data;
-              if(data.length>0) {
+              var nameData = res.nameData,
+                  noNameData = res.noNameData;
+              if(nameData.length>0) {
                 // 渲染数据
-                message.renderData(data,messageUl);
+                message.renderData(nameData,noNameData,messageUl);
                 message.openMsgDetail();
               }
             }
@@ -31,14 +32,23 @@
       })
     },
     // 渲染数据
-    renderData: function(data,oUl){
-      var frag = doc.createDocumentFragment();
-      for(var i=0,len=data.length;i<len;i++) {
+    renderData: function(nameData,noNameData,oUl){
+      var frag1 = doc.createDocumentFragment(),
+          frag2 = doc.createDocumentFragment();
+      for(var i=0,len=nameData.length;i<len;i++) {
         var item = doc.createElement('li');
-        item.innerHTML = '<ul><li>'+data[i].userId+'</li><li>'+data[i].userName+'</li><li>'+data[i].msgTime+'</li><li>'+data[i].msg+'</li><li><i class="iconfont icon-wodefankui"></i></li></ul>';
-        frag.appendChild(item);
+        item.innerHTML = '<ul><li>'+nameData[i].userId+'</li><li>'+nameData[i].userName+'</li><li>'+nameData[i].msgTime+'</li><li>'+nameData[i].msg+'</li><li><i class="iconfont icon-wodefankui"></i></li></ul>';
+        frag1.appendChild(item);
       }
-      oUl.appendChild(frag);
+      oUl.appendChild(frag1);
+      if(noNameData.length>0) {
+        for(var i=0,len=noNameData.length;i<len;i++) {
+          var item = doc.createElement('li');
+          item.innerHTML = '<ul><li></li><li></li><li>'+noNameData[i].msgTime+'</li><li>'+noNameData[i].msg+'</li><li><i class="iconfont icon-wodefankui"></i></li></ul>';
+          frag2.appendChild(item);
+        }
+      }
+      oUl.appendChild(frag2);
     },
     // 打开留言详情
     openMsgDetail: function(){

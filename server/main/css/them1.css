@@ -1,4 +1,4 @@
-@charset 'utf-8';
+@charset "utf-8";
 /* header */
 #header {
 	box-sizing: border-box;
@@ -25,9 +25,32 @@
 	bottom: 0;
 	margin: auto;
 	font-size: 14px;
-	/* line-height: 80px; */
 }
-
+#header #storeInfo {
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 60px;
+	padding: 2px 0;
+	margin: auto;
+	border-radius: 8px;
+	background-color: #000;
+	color: #fff;
+}
+#header #storeInfo:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -12px;
+	width:0;
+	height: 0;
+	margin: auto;
+	border: 6px solid #000;
+	border-left-color: transparent;
+	border-bottom-color: transparent;
+	border-right-color: transparent;
+}
 /*content*/
 #content {
 	padding-top: 80px;

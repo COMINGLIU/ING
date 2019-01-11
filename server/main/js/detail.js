@@ -23,6 +23,7 @@
 				bookNum: doc.querySelector('.bookins .book-num span'),
 				bookPublic: doc.querySelector('.bookins .book-public span'),
 				bookTel: doc.querySelector('.bookins .book-tel span'),
+				bookAddr: doc.querySelector('.bookins .book-addr span'),
 				bookDescribe: doc.querySelector('.bookins .book-describe span')
 			};
 			// 收藏按钮
@@ -60,17 +61,18 @@
 							bookInfo.bookNum.innerHTML = res.bookDetail.bookAllNum;
 							bookInfo.bookPublic.innerHTML = res.bookDetail.bookPublic;
 							bookInfo.bookTel.innerHTML = res.bookDetail.tel;
+							bookInfo.bookAddr.innerHTML = res.bookDetail.schoolName;
 							bookInfo.bookDescribe.innerHTML = res.bookDetail.bookDescribe;
-              // 渲染相关书籍
-              if(res.anotherBook.length>0) {
-                var frag = doc.createDocumentFragment();
-                for(var i=0,len = res.anotherBook.length;i<len;i++) {
-                  var item = doc.createElement('li');
-                  item.innerHTML = '<li><a href="detail.html?bookId='+res.anotherBook[i].bookId+'" target="blank"><img src="imgs/storeImg/'+res.anotherBook[i].bookSrc+'" alt="otherbook"></a><p>'+res.anotherBook[i].bookName+'</p></li>';
-                  frag.appendChild(item);
-                }
-                relaBookUl.appendChild(frag);
-              }
+							// 渲染相关书籍
+							if(res.anotherBook.length>0) {
+								var frag = doc.createDocumentFragment();
+								for(var i=0,len = res.anotherBook.length;i<len;i++) {
+								var item = doc.createElement('li');
+								item.innerHTML = '<li><a href="detail.html?bookId='+res.anotherBook[i].bookId+'" target="blank"><img src="imgs/storeImg/'+res.anotherBook[i].bookSrc+'" alt="otherbook"></a><p>'+res.anotherBook[i].bookName+'</p></li>';
+								frag.appendChild(item);
+								}
+								relaBookUl.appendChild(frag);
+							}
 							// 点击收藏
 							collectBtn.onclick = function() {
 								Detail.prototype.getCookieModule(function(cookie){
