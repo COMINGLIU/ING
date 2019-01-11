@@ -5,6 +5,8 @@
 		this.init();
 		// 获取header模块方法并执行
 		this.getHeaderModule();
+		// 执行footer模块方法
+		this.getFooterModule();
 		// 获取DoEventModule模块方法并执行
 		this.getDoEventModule();
 		// 获取add-store模块方法
@@ -202,7 +204,7 @@
 											oUl.appendChild(item);
 											commentContent.value = '';
 											// 添加删除函数
-											Detail.prototype.delReply();
+											Detail.prototype.delReply(oCommentN);
 										}else {
 											// 评论失败
 											Detail.prototype.getLikeInfo('评论失败');
@@ -265,7 +267,8 @@
 										if(res.status=='success'){
 											// 删除成功
 											Detail.prototype.getLikeInfo('删除成功');
-											oCommentNum.innerHTML = parseInt(oCommentNum.innerHTML)-1;
+											console.log(oCommentNum);
+											oCommentNum.innerHTML = doc.querySelectorAll('#comments ul li').length;
 										}else {
 											// 删除失败
 											Detail.prototype.getLikeInfo('删除失败');
@@ -282,7 +285,7 @@
 		// 渲染书籍评论
 		renderBookComment: function(data,oUl){
 			var frag = doc.createDocumentFragment();
-      console.log('user:'+user);
+      		console.log('user:'+user);
 			for(var i=0,len=data.length;i<len;i++) {
 				var item = doc.createElement('li');
 				var commentName = '';
@@ -311,7 +314,7 @@
 				likeInfo.style.opacity = '0';
 			},1000)
 		},
-    // 获取header模块
+    	// 获取header模块
 		getHeaderModule: function(){
 			seajs.use('header.js',function(header){
 				// header部分的事件委托
@@ -322,7 +325,12 @@
 		        header.scrollHeader();
 			})
 		},
-    // 获取当前时间
+		getFooterModule: function(){
+			seajs.use('footer.js',function(footer){
+			  // console.log(footer);
+			})
+		  },
+    	// 获取当前时间
 		getNowTime: function(){
 			var TIME = '';
 		  var date = new Date(),

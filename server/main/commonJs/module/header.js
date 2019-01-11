@@ -193,58 +193,58 @@ define(function(require,exports,module){
 	    		oTelEmail: loginForm.querySelector("input[name='telEmail']"),
 	    		oLoginPass: loginForm.querySelector("input[name='pass']"),
 	    	};
-				// 表单输入完进行判断
-				// preventSqlWords
-				for(var key in registEle) {
-					(function(key){
-						registEle[key].onchange = function(){
-							if(preventSqlWords.test(registEle[key].value)){
-								// 在此处阻止
-								// alert('请不要尝试输入sql特殊字符，没戏');
-								console.log('错了');
-								doc.getElementById(key).innerHTML = '请不要尝试输入sql特殊字符或脚本，没戏';
-								registEle[key].style.borderColor = 'red';
-								if(registArr.indexOf(key)==-1){
-									registArr.push(key);
-								}
-							}else {
-								doc.getElementById(key).innerHTML = "";
-								registEle[key].style.borderColor = '#ccc';
+			// 表单输入完进行判断
+			// preventSqlWords
+			for(var key in registEle) {
+				(function(key){
+					registEle[key].onchange = function(){
+						if(preventSqlWords.test(registEle[key].value)){
+							// 在此处阻止
+							// alert('请不要尝试输入sql特殊字符，没戏');
+							console.log('错了');
+							doc.getElementById(key).innerHTML = '请不要尝试输入sql特殊字符或脚本，没戏';
+							registEle[key].style.borderColor = 'red';
+							if(registArr.indexOf(key)==-1){
+								registArr.push(key);
 							}
-							if(key=='oTel'&&(/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/).test(registEle[key].value)==false) {
-								doc.getElementById(key).innerHTML = '手机号格式错误';
-								registEle[key].style.borderColor = 'red';
-								if(registArr.indexOf(key)==-1){
-									registArr.push(key);
-								}
-							}
-							if(key=='oEmail'&&(/^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$/).test(registEle[key].value)==false){
-								doc.getElementById(key).innerHTML = '邮箱格式错误';
-								registEle[key].style.borderColor = 'red';
-								if(registArr.indexOf(key)==-1){
-									registArr.push(key);
-								}
+						}else {
+							doc.getElementById(key).innerHTML = "";
+							registEle[key].style.borderColor = '#ccc';
+						}
+						if(key=='oTel'&&(/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/).test(registEle[key].value)==false) {
+							doc.getElementById(key).innerHTML = '手机号格式错误';
+							registEle[key].style.borderColor = 'red';
+							if(registArr.indexOf(key)==-1){
+								registArr.push(key);
 							}
 						}
-					})(key)
-				}
-				// 判断login
-				for(var key2 in loginEle) {
-					(function(key2){
-						loginEle[key2].onchange = function(){
-							if(key2=='oTelEmail'&&(/(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\d{9}$)/).test(loginEle[key2].value)==false) {
-								doc.getElementById(key2).innerHTML = '格式错误';
-								loginEle[key2].style.borderColor = 'red';
-								if(loginArr.indexOf(key2)==-1){
-									loginArr.push(key2);
-								}
-							}else {
-								doc.getElementById(key2).innerHTML = "";
-								loginEle[key2].style.borderColor = '#ccc';
+						if(key=='oEmail'&&(/^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$/).test(registEle[key].value)==false){
+							doc.getElementById(key).innerHTML = '邮箱格式错误';
+							registEle[key].style.borderColor = 'red';
+							if(registArr.indexOf(key)==-1){
+								registArr.push(key);
 							}
 						}
-					})(key2)
-				}
+					}
+				})(key)
+			}
+			// 判断login
+			for(var key2 in loginEle) {
+				(function(key2){
+					loginEle[key2].onchange = function(){
+						if(key2=='oTelEmail'&&(/(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\d{9}$)/).test(loginEle[key2].value)==false) {
+							doc.getElementById(key2).innerHTML = '格式错误';
+							loginEle[key2].style.borderColor = 'red';
+							if(loginArr.indexOf(key2)==-1){
+								loginArr.push(key2);
+							}
+						}else {
+							doc.getElementById(key2).innerHTML = "";
+							loginEle[key2].style.borderColor = '#ccc';
+						}
+					}
+				})(key2)
+			}
 	    	// 阻止表单默认事件
 	    	registForm.onsubmit = function(e){
 	    		e = e||window.e;
