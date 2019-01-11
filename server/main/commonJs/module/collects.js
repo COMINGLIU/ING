@@ -42,7 +42,7 @@ define(function(require,exports,module){
                 }
                 for(var i=0,len=data.length;i<len;i++) {
                   var item = document.createElement('li');
-                  item.innerHTML = '<a href="detail.html?bookId='+data[i].bookId+'"><h3>'+data[i].bookName+'</h3><p><i class="iconfont icon-liebiaoyedizhi"></i><span class="addr">'+data[i].schoolName+'</span></p><p>￥<span class="price">'+data[i].bookPrice+'</span></p></a><i class="iconfont icon-lajixiang"></i>';
+                  item.innerHTML = '<a target="blank" href="detail.html?bookId='+data[i].bookId+'"><h3>'+data[i].bookName+'</h3><p><i class="iconfont icon-liebiaoyedizhi"></i><span class="addr">'+data[i].schoolName+'</span></p><p>￥<span class="price">'+data[i].bookPrice+'</span></p></a><i class="iconfont icon-lajixiang"></i>';
                   frag.appendChild(item);
                 }
                 oCollectBox.appendChild(frag);

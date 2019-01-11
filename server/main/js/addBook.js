@@ -58,14 +58,14 @@
 								if(res.status =='success'){
 									doc.getElementById('userName').innerHTML = res.shopperName+' ('+oUserName+')';
 									var data = res.data;
-                  if(data.length>0) {
-                    // 渲染数据
-  									AddBook.prototype.renderData(data);
-                    // 给每个li绑定删除书籍的操作
-  									AddBook.prototype.delBook();
-  									// 给每个li绑定修改书籍信息的操作
-  									AddBook.prototype.editBookInfo();
-                  }
+                  				if(data.length>0) {
+									// 渲染数据
+									AddBook.prototype.renderData(data);
+									// 给每个li绑定删除书籍的操作
+									AddBook.prototype.delBook();
+									// 给每个li绑定修改书籍信息的操作
+									AddBook.prototype.editBookInfo();
+								}
 									// 添加书籍
 									AddBook.prototype.addBook(data);
 									//跳转到store
@@ -144,13 +144,13 @@
 									success: function(res){
 										res = JSON.parse(res);
 										console.log(res);
-                    if(res.status=='success'){
-                      AddBook.prototype.editOkInfo('删除成功');
-                      // 删除节点
-                      oBookUl.removeChild(oBookList[j]);
-                      // 给每个li绑定修改书籍信息的操作
-    									AddBook.prototype.editBookInfo();
-                    }
+										if(res.status=='success'){
+										AddBook.prototype.editOkInfo('删除成功');
+										// 删除节点
+										oBookUl.removeChild(oBookList[j]);
+										// 给每个li绑定修改书籍信息的操作
+															AddBook.prototype.editBookInfo();
+										}
 									}
 								})
 							})
@@ -367,10 +367,10 @@
 				})(i);
 			}
 		},
-    // 提示信息
+    	// 提示信息
 		editOkInfo: function(msg){
 			var oInfo = doc.getElementById('editOkInfo');
-      oInfo.innerHTML = msg;
+      		oInfo.innerHTML = msg;
 			oInfo.style.opacity = '1';
 			var timer = setTimeout(function(){
 				oInfo.style.opacity = '0';
@@ -387,7 +387,8 @@
 		gotoStore: function(storeId){
 			var oBtn = doc.getElementById('userName');
 			oBtn.onclick = function(){
-				window.location.href = 'them1.html?storeId='+storeId;
+				oBtn.parentNode.href='them1.html?storeId='+storeId;
+				// window.location.href = 'them1.html?storeId='+storeId;
 			};
 		},
 		// 创建ajax的对象实例

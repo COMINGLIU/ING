@@ -1,4 +1,4 @@
-@charset 'utf-8';
+@charset "utf-8";
 /* header */
 #header {
 	box-sizing: border-box;
@@ -184,9 +184,37 @@ a:hover {
 		margin-top: 5px;
 	}
 	ul#nav li{
+		position: relative;
 		display: inline-block;
 		color: #aaa;
 		transition-duration: .2s;
+	}
+	ul#nav li span:after {
+		content: '';
+		position: absolute;
+		top: 15px;
+		left: 0;
+		right: 0;
+		width: 0;
+		height: 0;
+		border: 6px solid #000;
+		margin: auto;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		border-right-color: transparent;
+	}
+	ul#nav li span {
+		position: absolute;
+		top: -20px;
+		left: 0;
+		right: 0;
+		width: 100px;
+		margin: auto;
+		border-radius: 8px;
+		background-color: #000;
+		color: #fff;
+		transition-duration: .3s;
+		transform: scale(0);
 	}
 	ul#nav li:not(:last-child) {
 		margin-right: 40px;
@@ -194,6 +222,9 @@ a:hover {
 	ul#nav li:hover{
 		border-bottom: 1px solid #000;
 		color: #000;
+	}
+	ul#nav li:hover span {
+		transform: scale(1);
 	}
 	#menu {
 		display: none;
@@ -231,6 +262,9 @@ a:hover {
 		color: #fff;
 		background-color: #aaa;
 		transition-duration: .2s;
+	}
+	ul#nav li span {
+		display: none;
 	}
 	ul#nav li:hover {
 		background-color: #000;

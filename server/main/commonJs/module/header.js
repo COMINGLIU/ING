@@ -104,7 +104,8 @@ define(function(require,exports,module){
 									user = JSON.parse(Header.prototype.getCookieModule().get('user'));
 									if(con) {
 										// 打开书店
-										window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
+										// window.location.href = 'addBook.html?userId='+user.userId+'&userName='+user.userName;
+										window.location.href = 'them1.html?storeId='+ user.userId;
 									}
 								}else {
 									oAddStore.style.height = "100%";

@@ -39,17 +39,17 @@
 						if(res.status=='success'){
 							data = res.data;
 							console.log(data);
-              // 渲染数据
-              if(data.length>0){
-                var frag = doc.createDocumentFragment();
-  								for(var i=0,len=data.length;i<len;i++) {
-  									var item = doc.createElement('li');
-                    item.innerHTML = '<div class="store-info"><a href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span><i class="iconfont icon-heart-fill"></i></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p></div><p class="store-time">'+data[i].shopperTime+'</p>';
-  									frag.appendChild(item);
-  								}
-                 storeUl.appendChild(frag);
-              }
-              // 添加书籍收藏
+						// 渲染数据
+						if(data.length>0){
+							var frag = doc.createDocumentFragment();
+											for(var i=0,len=data.length;i<len;i++) {
+												var item = doc.createElement('li');
+								item.innerHTML = '<div class="store-info"><a target="_blank" href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span><i class="iconfont icon-heart-fill"></i></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p></div><p class="store-time">'+data[i].shopperTime+'</p>';
+												frag.appendChild(item);
+											}
+							storeUl.appendChild(frag);
+						}
+						// 添加书籍收藏
 							Stores.prototype.addStoreLike();
 						}else {
 							console.log('数据拉去失败');

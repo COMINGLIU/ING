@@ -28,7 +28,9 @@
               }
             }else {
               alert(res.msg);
-              window.sessionStorage.removeItem('adminUser');
+              if(res.msg == '还没有登录哦，请刷新登录') {
+                window.sessionStorage.removeItem('adminUser');
+              }
             }
           }
         })

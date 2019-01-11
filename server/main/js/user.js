@@ -240,7 +240,8 @@
 								window.location.href = 'index.html';
 							}
 						}else {
-							window.location.href = 'them1.html?storeId='+user.userId;
+							target.href = 'them1.html?storeId='+user.userId;
+							// window.location.href = 'them1.html?storeId='+user.userId;
 						}
 						break;
 					case 'toMyStoreCenter':
@@ -251,7 +252,8 @@
 								window.location.href = 'index.html';
 							}
 						}else {
-							window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
+							target.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
+							// window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
 						}
 						break;
 				}
@@ -300,7 +302,8 @@
 								window.location.href = 'index.html';
 							}
 						}else {
-							window.location.href = 'them1.html?storeId='+user.userId;
+							target.href='them1.html?storeId='+user.userId;
+							// window.location.href = 'them1.html?storeId='+user.userId;
 						}
 						break;
 					case 'openStoreCenter-li':
@@ -311,7 +314,8 @@
 								window.location.href = 'index.html';
 							}
 						}else {
-							window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
+							target.href='addBook.html?uerId='+user.userId+'&userName='+user.userName;
+							// window.location.href = 'addBook.html?uerId='+user.userId+'&userName='+user.userName;
 						}
 						break;
 				}

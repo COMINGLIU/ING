@@ -651,6 +651,10 @@ server.get('/',function(req,res){
       break;
   }
 })
+/*
+bodyParser.urlencoded用来解析request中body的urlendcoded字符，只支持utf-8编码的字符，也能自动解析gzip和zlib。
+返回的对象是一个键值对，当extended为false的时候，键值对中的值就为string或array形式，为true时，则可谓任何数据类型
+*/
 server.post(bodyParser.urlencoded({extended: true}));
 server.post('/',function(req,res){
   //设置response编码为utf-8
