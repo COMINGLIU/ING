@@ -44,83 +44,83 @@
 			        	console.log(target);
 			        	switch(target.id) {
 			        		case 'menu':
-			        		count++;
-			        		if(count%2!=0) {
-			        			oNav.style.transform = 'translateX(0)';
-			        			target.className = "iconfont icon-pause";
-			        		}else {
-			        			oNav.style.transform = 'translateX(100%)';
-			        			target.className = "iconfont icon-menu";
-			        		}
-			        		break;
-									case 'userCenter':
-									case 'userCenterBtn':
-										if(doc.getElementById('regitBtn').innerHTML=='LOGIN') {
-											var con = confirm('登录后才能访问个人中心，登录吗?');
-											if(con) {
-												// 登录
-												doc.getElementById('regitLog').style.display = 'block';
-												doc.getElementsByClassName('login')[0].style.display = 'block';
-											}
-										}else {
-											window.location.href = 'user.html';
-										}
-										break;
+								count++;
+								if(count%2!=0) {
+									oNav.style.transform = 'translateX(0)';
+									target.className = "iconfont icon-pause";
+								}else {
+									oNav.style.transform = 'translateX(100%)';
+									target.className = "iconfont icon-menu";
+								}
+			        			break;
+							case 'userCenter':
+							case 'userCenterBtn':
+								if(doc.getElementById('regitBtn').innerHTML=='LOGIN') {
+									var con = confirm('登录后才能访问个人中心，登录吗?');
+									if(con) {
+										// 登录
+										doc.getElementById('regitLog').style.display = 'block';
+										doc.getElementsByClassName('login')[0].style.display = 'block';
+									}
+								}else {
+									window.location.href = 'user.html';
+								}
+								break;
 			        		case 'searchBtnLi':
 			        		case 'searchBtn':
-					        		oSearchBox.style.height = "138px";
-								    if(HEADER.getStyle(oNav,'right')=="0px") 	{
-								  	    oNav.style.transform = 'translateX(100%)';
-								  	    count++;
-								    }
-								    oSearchInput.focus();
-								    doc.getElementById("menu").className = "iconfont icon-menu";
-										break;
-							    case 'searchCloseBtn':
-							  	    oSearchBox.style.height = "0";
-							    	break;
-							    case 'addStoreBtn':
-										if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
-											var con = confirm('需要登录后才能添加属于您自己的书店，登录吗？');
-											if(con) {
-												doc.getElementById('regitLog').style.display = "block";
-												doc.getElementsByClassName('login')[0].style.display = 'block';
-											}
-										}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
-											var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
-											window.location.href = 'them1.html?storeId='+ user.userId;
-										}else {
-											var con = confirm('您还没有注册书店，是否注册?');
-											if(con) {
-												// 打开注册书店
-												oAddStore.style.height = "100%";
-												if(Search.prototype.getStyle(oMenu,"display")=="none"){
-													count++;
-												}
-											}
-										}
-					        break;
-								case 'openStoreBtn':
-									if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
-										var con = confirm('需要登录后才能进入您的书店中心，登录吗？');
-										if(con) {
-											doc.getElementById('regitLog').style.display = "block";
-											doc.getElementsByClassName('login')[0].style.display = 'block';
-										}
-									}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
-										var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
-										window.location.href = 'them1.html?storeId='+ user.userId;
-									}else {
-										var con = confirm('您还没有注册书店，是否注册?');
-										if(con) {
-											// 打开注册书店
-											oAddStore.style.height = "100%";
-											if(Search.prototype.getStyle(oMenu,"display")=="none"){
-												count++;
-											}
+								oSearchBox.style.height = "138px";
+								if(HEADER.getStyle(oNav,'right')=="0px") 	{
+									oNav.style.transform = 'translateX(100%)';
+									count++;
+								}
+								oSearchInput.focus();
+								doc.getElementById("menu").className = "iconfont icon-menu";
+									break;
+							case 'searchCloseBtn':
+								oSearchBox.style.height = "0";
+								break;
+							case 'addStoreBtn':
+								if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+									var con = confirm('需要登录后才能添加属于您自己的书店，登录吗？');
+									if(con) {
+										doc.getElementById('regitLog').style.display = "block";
+										doc.getElementsByClassName('login')[0].style.display = 'block';
+									}
+								}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
+									var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
+									window.location.href = 'them1.html?storeId='+ user.userId;
+								}else {
+									var con = confirm('您还没有注册书店，是否注册?');
+									if(con) {
+										// 打开注册书店
+										oAddStore.style.height = "100%";
+										if(Search.prototype.getStyle(oMenu,"display")=="none"){
+											count++;
 										}
 									}
-									break;
+								}
+								break;
+							case 'openStoreBtn':
+								if(doc.getElementById('regitBtn').innerHTML == 'LOGIN') {
+									var con = confirm('需要登录后才能进入您的书店中心，登录吗？');
+									if(con) {
+										doc.getElementById('regitLog').style.display = "block";
+										doc.getElementsByClassName('login')[0].style.display = 'block';
+									}
+								}else if(JSON.parse(Search.prototype.getCookieModule().get('user')).isSeller!=null){
+									var user = JSON.parse(Search.prototype.getCookieModule().get('user'));
+									window.location.href = 'them1.html?storeId='+ user.userId;
+								}else {
+									var con = confirm('您还没有注册书店，是否注册?');
+									if(con) {
+										// 打开注册书店
+										oAddStore.style.height = "100%";
+										if(Search.prototype.getStyle(oMenu,"display")=="none"){
+											count++;
+										}
+									}
+								}
+							break;
 						}
 					})
 					HEADER.DoEvent.addEvent(oKeySearch,'click',function(){

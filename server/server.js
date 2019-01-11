@@ -17,7 +17,7 @@ const server = express();
 const conn  = mysql.createConnection({
   hostname: 'localhost',
   user: 'root',
-  password: '180504',
+  password: 'kkxxdgmyt67LIUQIONG',
   database: 'bookstore'
 });
 // 获取当前时间的函数
@@ -186,7 +186,7 @@ server.get('/',function(req,res){
       break;
     // 获取所有的店铺
     case 'getAllStores':
-      sql = 'SELECT * FROM shopper';
+      sql = 'SELECT shopper.*,user.schoolName FROM shopper,user where shopper.userId=user.userId';
       HANDLESQL(conn,sql,function(data){
         console.log(data);
         if(data.length>0){

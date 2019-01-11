@@ -44,7 +44,7 @@
 							var frag = doc.createDocumentFragment();
 							for(var i=0,len=data.length;i<len;i++) {
 								var item = doc.createElement('li');
-								item.innerHTML = '<div class="store-info"><a target="_blank" href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span></h3><p class="store-slogan">'+data[i].shopperDescribe+'</p><P>收藏<i class="iconfont icon-heart-fill"></i></P></div><p class="store-time">'+data[i].shopperTime+'</p>';
+								item.innerHTML = '<div class="store-info"><a target="_blank" href="them1.html?storeId='+data[i].userId+'"><div class="store-img"><img src="imgs/storeImg/'+data[i].shopperImg+'"></div></a><h3 class="store-name"><span class="storeName">'+data[i].shopperName+'</span></h3><p class="store-slogan"><i class="iconfont icon-detail"></i>'+data[i].shopperDescribe+'</p><p><i class="iconfont icon-liebiaoyedizhi"></i>'+data[i].schoolName+'</p><P><i class="iconfont icon-heart-fill"></i>收藏</P></div><p class="store-time">'+data[i].shopperTime+'</p>';
 								frag.appendChild(item);
 							}
 							storeUl.appendChild(frag);
